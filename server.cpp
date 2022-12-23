@@ -4,7 +4,20 @@ namespace ft
 {
 	int const server::_buffer_size = 512;
 
-	server::server(uint16_t port) : _port(port), _fds(), _commands_funct() {}
+	server::server(void) : _fds(), _commands_funct() {}
+
+	bool server::validate_args(std::string port, std::string password)
+	{
+		std::stringstream ss;
+
+		if (password.empty() || port.empty() || port.size() > 5
+				|| port.find_first_not_of("0123456789") != std::string::npos)
+			return false;
+		ss << port;
+		ss >> _port;
+		_password = password;
+		return true;
+	}
 
 	// basic socket initialization
 	int server::init_socket(void)

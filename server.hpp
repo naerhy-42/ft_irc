@@ -35,11 +35,12 @@ namespace ft
 			typedef std::string (server::*funct)(void);
 
 		public:
-			server(uint16_t port);
+			server(void);
 			// server(server const& x);
 			// server& operator=(server const& x);
 			// ~server(void);
 
+			bool validate_args(std::string port, std::string password);
 			int init_socket(void);
 			void init_select(void);
 			void wait_connections(void);
@@ -54,6 +55,7 @@ namespace ft
 
 			static int const _buffer_size;
 			uint16_t _port;
+			std::string _password;
 			int _socket;
 			std::vector<int> _fds;
 			fd_set _rfds;
