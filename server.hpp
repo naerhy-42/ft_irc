@@ -18,26 +18,34 @@
 #include <map>
 #include <utility>
 
-#include "Message.hpp"
+#include "message.hpp"
 
-namespace ft_irc
+namespace ft
 {
 
-	class Server
+	class server
 	{
-		public:
+		private:
+			// using typedef in order to avoid typing struct + type
 			typedef struct sockaddr sockaddr_st;
 			typedef struct sockaddr_in sockaddr_in_st;
 			typedef struct sockaddr_storage sockaddr_storage_st;
 			typedef struct addrinfo addrinfo_st;
+			// typedef for clearer syntax:
+			typedef std::string (server::*funct)(void);
 
-			Server(uint16_t port);
+		public:
+			server(uint16_t port);
+			// server(server const& x);
+			// server& operator=(server const& x);
+			// ~server(void);
+
 			int init_socket(void);
 			void init_select(void);
 			void wait_connections(void);
 			void parse_command(std::string message);
 
-			void reply(Message msg);
+			void reply(message msg);
 			std::string test_func(void);
 
 		private:
@@ -51,9 +59,9 @@ namespace ft_irc
 			fd_set _rfds;
 			fd_set _rfds_temp;
 
-			typedef std::string (Server::*funcp)(void);
-			std::map<std::string, funcp> _reply_functions;
-			// std::vector<Users> _users;
+			std::map<std::string, funct> _commands_funct;
+			// std::vector<user> _users; -- to hold every users informations
+			// std::vector<channel> _channels; -- to hold every channels informations
 	};
 }
 

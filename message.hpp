@@ -5,14 +5,14 @@
 #include <string>
 #include <vector>
 
-#include <iostream> // temp
+#include <iostream>
 
-namespace ft_irc
+namespace ft
 {
-	class Message
+	class message
 	{
 		public:
-			Message(std::string const& base_message);
+			message(std::string const& base_message);
 			void split(void);
 			void print(void) const;
 

@@ -1,12 +1,13 @@
-#include "Server.hpp"
+#include "server.hpp"
 
-namespace ft_irc
+namespace ft
 {
-	int const Server::_buffer_size = 512;
+	int const server::_buffer_size = 512;
 
-	Server::Server(uint16_t port) : _port(port), _fds(), _reply_functions() {}
+	server::server(uint16_t port) : _port(port), _fds(), _commands_funct() {}
 
-	int Server::init_socket(void)
+	// basic socket initialization
+	int server::init_socket(void)
 	{
 		sockaddr_in_st socket_info;
 		int sockopt;
@@ -27,7 +28,8 @@ namespace ft_irc
 		return 1;
 	}
 
-	void Server::wait_connections(void)
+	// then we use select() to wait for an incoming connection
+	void server::wait_connections(void)
 	{
 		sockaddr_in_st client_info;
 		socklen_t client_info_size;
@@ -40,14 +42,15 @@ namespace ft_irc
 		{
 			_rfds_temp = _rfds;
 			if (select(_get_max_fd() + 1, &_rfds_temp, NULL, NULL, NULL) == -1)
-				continue; // = error - we continue to loop
+				continue; // = error - we continue to loop - do we handle it?
 			for (size_t i = 0; i < _fds.size(); i++)
 			{
 				if (FD_ISSET(_fds[i], &_rfds_temp))
 				{
-					if (_fds[i] == _socket)
+					if (_fds[i] == _socket) // if "activity" on our server socket = new incoming connection
 					{
 						client_info_size = sizeof(sockaddr_st);
+						// we accept the connection and add the fd to our vector
 						inc_socket = accept(_socket, (sockaddr_st*)&client_info, &client_info_size);
 						// check error
 						FD_SET(inc_socket, &_rfds);
@@ -55,13 +58,15 @@ namespace ft_irc
 					}
 					else
 					{
+						// we reset the buffer
 						memset(buffer, 0, _buffer_size);
 						nb_bytes = recv(_fds[i], buffer, _buffer_size - 1, 0);
 						// if (nb_bytes == -1)
 							// error
-						if (!nb_bytes) // = connection ended -> closing socket
+						if (!nb_bytes) // if 0 bytes to read = client had terminated the connection
 						{
-							// close(_fds[i]);
+							// close(_fds[i]); -- subject doesn't allow us to use close(), find alternative ?
+							// we remove the client fd from our vector
 							FD_CLR(_fds[i], &_rfds);
 							_fds.erase(_fds.begin() + i);
 							i--; // i can't be -1 because we will never erase the _socket fd in pos 0
@@ -70,6 +75,10 @@ namespace ft_irc
 						{
 							std::string str_buffer(buffer, nb_bytes);
 							parse_command(buffer);
+
+							// the next lines of code were just a test to check when multiple clients
+							// were connected and if they were all receiving the message sent by
+							// another client
 							/*for (int j = 0; j <= _fd_max; j++)
 							{
 								if (FD_ISSET(j, &_rfds) && j != _socket && i != j)
@@ -82,7 +91,7 @@ namespace ft_irc
 		}
 	}
 
-	void Server::parse_command(std::string message)
+	void server::parse_command(std::string client_msg)
 	{
 		std::string line;
 		size_t pos;
@@ -90,52 +99,55 @@ namespace ft_irc
 
 		do
 		{
-			pos = message.find("\r\n");
-			line = message.substr(0, pos);
+			// we split our string using "\r\n" as delimiter
+			// if there is only 1 message in the string, no problem we just remove "\r\n"
+			pos = client_msg.find("\r\n");
+			line = client_msg.substr(0, pos);
 			if (!line.empty())
 				lines.push_back(line);
-			message.erase(0, pos + 2);
-		}
-		while (pos != std::string::npos);
+			client_msg.erase(0, pos + 2);
+		} while (pos != std::string::npos);
 
+		// just a test to check the vector
 		for (size_t i = 0; i < lines.size(); i++)
 			std::cout << "line = " << lines[i] << std::endl;
 
+		// test to check message parsing and functions pointers
 		for (size_t i = 0; i < lines.size(); i++)
 		{
-			Message msg(lines[i]);
+			message msg(lines[i]);
 			msg.split();
-			// msg.print();
+			msg.print();
 			reply(msg);
 		}
 	}
 
 	// temporary:
 	// temporary:
-	void Server::reply(Message msg)
+	void server::reply(message msg)
 	{
-		_reply_functions.insert(std::pair<std::string, funcp>("USER", &Server::test_func));
-		if (_reply_functions.count(msg.get_command()))
-			std::cout << (this->*_reply_functions[msg.get_command()])() << std::endl;
+		_commands_funct.insert(std::pair<std::string, funct>("USER", &server::test_func));
+		if (_commands_funct.count(msg.get_command()))
+			std::cout << (this->*_commands_funct[msg.get_command()])() << std::endl;
 		// else
 			// error -> send unknown command reply
 	}
 
 	// temporary:
 	// temporary:
-	std::string Server::test_func(void)
+	std::string server::test_func(void)
 	{
 		return "this is a valid text message\n";
 	}
 
-	void Server::_init_select(void)
+	void server::_init_select(void)
 	{
 		FD_ZERO(&_rfds);
 		FD_ZERO(&_rfds_temp);
 		FD_SET(_socket, &_rfds);
 	}
 
-	int Server::_get_max_fd(void) const
+	int server::_get_max_fd(void) const
 	{
 		int max_fd;
 
