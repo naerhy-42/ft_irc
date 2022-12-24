@@ -13,17 +13,25 @@ namespace ft
 		int sockopt;
 
 		_socket = socket(AF_INET, SOCK_STREAM, 0);
-		// check error
+		if (_socket == -1) {
+		    perror("Error creating socket");
+		}
 		sockopt = 1;
 		setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt));
-		// check error [?]
+		if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt)) == -1) {
+		    perror("Error setting socket option");
+		}
 		socket_info.sin_family = AF_INET;
 		socket_info.sin_port = htons(_port);
 		socket_info.sin_addr.s_addr = htonl(INADDR_ANY);
 		bind(_socket, (sockaddr_st*)&socket_info, sizeof(socket_info));
-		// check error
+		if (bind(_socket, (sockaddr_st*)&socket_info, sizeof(socket_info)) == -1) {
+		    perror("Error binding socket");
+		}
 		listen(_socket, 10);
-		// check error
+		if (listen(_socket, 10) == -1) {
+		    perror("Error listening for connections");
+		}
 		_fds.push_back(_socket);
 		return 1;
 	}
