@@ -2,7 +2,7 @@
 
 #include <string>
 #include "Socket.hpp"
-#include "Protocol.hpp"
+// #include "Protocol.hpp"
 
 class Client
 {
@@ -22,7 +22,7 @@ class Client
         Socket _socket;
     
         // Protocol handler for the IRC connection : Access to all the message handlers
-        Protocol _protocol;
+        // Protocol _protocol;
 };
 
 

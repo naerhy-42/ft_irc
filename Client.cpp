@@ -3,11 +3,35 @@
 Client::Client() {}
 Client::~Client() {}
 
+// 
+int get_address_family(const std::string& server)
+{
+    // Try parsing the server address as an IPv4 address
+    in_addr ipv4_addr;
+    if (inet_pton(AF_INET, server.c_str(), &ipv4_addr) == 1)
+    {
+        // Server address is an IPv4 address
+        return AF_INET;
+    }
+
+    // Try parsing the server address as an IPv6 address
+    in6_addr ipv6_addr;
+    if (inet_pton(AF_INET6, server.c_str(), &ipv6_addr) == 1)
+    {
+        // Server address is an IPv6 address
+        return AF_INET6;
+    }
+
+    // Server address is neither an IPv4 nor an IPv6 address
+    return -1;
+}
+
 
 void Client::connect(std::string const &server, std::string const &port)
 {
+    int addr_family = get_address_family(server); // No protection for -1, but do we really call our client/server with wrong address ?
     // Create a socket
-    if (_socket.create(AF_INET, SOCK_STREAM, 0) == -1)
+    if (_socket.create(addr_family, SOCK_STREAM, 0) == -1)
     {
         // An error occurred creating the socket
         return;
@@ -50,6 +74,7 @@ void Client::connect(std::string const &server, std::string const &port)
         return;
     }
 }
+
 
 
 void Client::disconnect()
