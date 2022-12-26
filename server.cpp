@@ -4,7 +4,7 @@ namespace ft
 {
 	int const server::_buffer_size = 512;
 
-	server::server(void) : _fds(), _commands_funct() {}
+	server::server(void) : _fds(), _protocol() {}
 
 	bool server::validate_args(std::string port, std::string password)
 	{
@@ -130,27 +130,9 @@ namespace ft
 		{
 			message msg(lines[i]);
 			msg.split();
-			msg.print();
-			reply(msg);
+			// msg.print();
+			_protocol.handle_message(msg);
 		}
-	}
-
-	// temporary:
-	// temporary:
-	void server::reply(message msg)
-	{
-		_commands_funct.insert(std::pair<std::string, funct>("USER", &server::test_func));
-		if (_commands_funct.count(msg.get_command()))
-			std::cout << (this->*_commands_funct[msg.get_command()])() << std::endl;
-		// else
-			// error -> send unknown command reply
-	}
-
-	// temporary:
-	// temporary:
-	std::string server::test_func(void)
-	{
-		return "this is a valid text message\n";
 	}
 
 	void server::_init_select(void)
