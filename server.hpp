@@ -18,7 +18,7 @@
 #include <map>
 #include <utility>
 
-#include "message.hpp"
+#include "client.hpp"
 #include "protocol.hpp"
 
 namespace ft
@@ -43,7 +43,6 @@ namespace ft
 			int init_socket(void);
 			void init_select(void);
 			void wait_connections(void);
-			void parse_command(std::string message);
 
 		private:
 			void _init_select(void);
@@ -57,8 +56,7 @@ namespace ft
 			fd_set _rfds;
 			fd_set _rfds_temp;
 			protocol _protocol;
-
-			// std::vector<user> _users; -- to hold every users informations
+			std::vector<client> _clients;
 			// std::vector<channel> _channels; -- to hold every channels informations
 	};
 }

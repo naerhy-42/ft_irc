@@ -16,6 +16,8 @@ namespace ft
 		public:
 			protocol(void);
 			~protocol(void);
+
+			void parse_client_input(std::string& client_msg);
 			void handle_message(message msg);
 
 			std::string nick_function(void);

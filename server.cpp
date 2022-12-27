@@ -87,7 +87,7 @@ namespace ft
 						else
 						{
 							std::string str_buffer(buffer, nb_bytes);
-							parse_command(buffer);
+							_protocol.parse_client_input(str_buffer);
 
 							// the next lines of code were just a test to check when multiple clients
 							// were connected and if they were all receiving the message sent by
@@ -101,37 +101,6 @@ namespace ft
 					}
 				}
 			}
-		}
-	}
-
-	void server::parse_command(std::string client_msg)
-	{
-		std::string line;
-		size_t pos;
-		std::vector<std::string> lines;
-
-		do
-		{
-			// we split our string using "\r\n" as delimiter
-			// if there is only 1 message in the string, no problem we just remove "\r\n"
-			pos = client_msg.find("\r\n");
-			line = client_msg.substr(0, pos);
-			if (!line.empty())
-				lines.push_back(line);
-			client_msg.erase(0, pos + 2);
-		} while (pos != std::string::npos);
-
-		// just a test to check the vector
-		for (size_t i = 0; i < lines.size(); i++)
-			std::cout << "line = " << lines[i] << std::endl;
-
-		// test to check message parsing and functions pointers
-		for (size_t i = 0; i < lines.size(); i++)
-		{
-			message msg(lines[i]);
-			msg.split();
-			// msg.print();
-			_protocol.handle_message(msg);
 		}
 	}
 

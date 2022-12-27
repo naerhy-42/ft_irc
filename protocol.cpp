@@ -15,6 +15,30 @@ namespace ft
 
 	protocol::~protocol(void) {}
 
+	void protocol::parse_client_input(std::string& client_msg)
+	{
+		std::string line;
+		size_t pos;
+		std::vector<std::string> lines;
+
+		do
+		{
+			pos = client_msg.find("\r\n");
+			line = client_msg.substr(0, pos);
+			if (!line.empty())
+				// if message only contained "\r\n", then it is empty now
+				// is it an error to not add it to the vector and return an error??
+				lines.push_back(line);
+			client_msg.erase(0, pos + 2);
+		} while (pos != std::string::npos);
+		for (size_t i = 0; i < lines.size(); i++)
+		{
+			message msg(lines[i]);
+			msg.split();
+			handle_message(msg);
+		}
+	}
+
 	void protocol::handle_message(message msg)
 	{
 		if (_functions.count(msg.get_command()))
@@ -28,6 +52,9 @@ namespace ft
 		// check if nickname contains only valid characters
 		// check if nickname is free
 		std::cout << "nick function has been called" << std::endl;
+		// get the client
+		// set client nickname
+		// return reply
 		return "";
 	}
 }
