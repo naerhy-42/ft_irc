@@ -16,16 +16,19 @@ namespace ft
 			void split(void);
 			void print(void) const;
 
+			std::string const& get_origin(void) const;
 			std::string const& get_command(void) const;
+			std::vector<std::string> const& get_parameters(void) const;
+			std::string const& get_remainder(void) const;
 
 		private:
 			static int const _max_chars;
 			static int const _max_params;
 
 			std::string _base_message;
-			std::string _origin; // user who sent the message
+			std::string _origin;
 			std::string _command;
-			std::vector<std::string> _command_params;
+			std::vector<std::string> _parameters;
 			std::string _remainder;
 	};
 }

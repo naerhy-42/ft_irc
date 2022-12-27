@@ -43,7 +43,7 @@ namespace ft
 				if (_command.empty())
 					_command = word;
 				else
-					_command_params.push_back(word);
+					_parameters.push_back(word);
 			}
 		}
 	}
@@ -52,10 +52,16 @@ namespace ft
 	{
 		std::cout << "origin = " << _origin << std::endl;
 		std::cout << "command = " << _command << std::endl;
-		for (size_t i = 0; i < _command_params.size(); i++)
-			std::cout << "parameter = " << _command_params[i] << std::endl;
+		for (size_t i = 0; i < _parameters.size(); i++)
+			std::cout << "parameter = " << _parameters[i] << std::endl;
 		std::cout << "remainder = " << _remainder << std::endl;
 	}
 
+	std::string const& message::get_origin(void) const { return _origin; }
+
 	std::string const& message::get_command(void) const { return _command; }
+
+	std::vector<std::string> const& message::get_parameters(void) const { return _parameters; }
+
+	std::string const& message::get_remainder(void) const { return _remainder; }
 }
