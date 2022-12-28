@@ -68,8 +68,7 @@ namespace ft
 						// check error
 						FD_SET(inc_socket, &_rfds);
 						_fds.push_back(inc_socket);
-						// protocol => create new client with fd as parameter
-						// _clients.push_back(client(inc_socket));
+						_protocol.add_client(inc_socket);
 					}
 					else
 					{
@@ -83,8 +82,8 @@ namespace ft
 							// close(_fds[i]); -- subject doesn't allow us to use close(), find alternative ?
 							// we remove the client fd from our vector
 							FD_CLR(_fds[i], &_rfds);
+							_protocol.delete_client(_fds[i]);
 							_fds.erase(_fds.begin() + i);
-							// call protocol to remove client
 							i--; // i can't be -1 because we will never erase the _socket fd in pos 0
 						}
 						else

@@ -15,6 +15,20 @@ namespace ft
 
 	protocol::~protocol(void) {}
 
+	void protocol::add_client(int socket)
+	{
+		_clients.push_back(client(socket));
+	}
+
+	void protocol::delete_client(int socket)
+	{
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_socket() == socket)
+				_clients.erase(_clients.begin() + i);
+		}
+	}
+
 	void protocol::parse_client_input(std::string& client_msg, int client_socket)
 	{
 		std::string line;

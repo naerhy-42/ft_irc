@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "client.hpp"
 #include "message.hpp"
@@ -17,6 +18,9 @@ namespace ft
 		public:
 			protocol(void);
 			~protocol(void);
+
+			void add_client(int socket);
+			void delete_client(int socket);
 
 			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(message msg);
