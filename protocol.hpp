@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 #include "client.hpp"
 #include "message.hpp"
 
@@ -13,7 +16,7 @@ namespace ft
 	class protocol
 	{
 		private:
-			typedef std::string (protocol::*fncts)(void);
+			typedef void (protocol::*fncts)(message);
 
 		public:
 			protocol(void);
@@ -25,9 +28,11 @@ namespace ft
 			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(message msg);
 
-			std::string nick_function(void);
+			void nick_function(message msg);
 
 		private:
+			size_t _get_client_pos_from_socket(int socket);
+
 			protocol(protocol const& x);
 			protocol& operator=(protocol const& x);
 

@@ -55,19 +55,35 @@ namespace ft
 	void protocol::handle_message(message msg)
 	{
 		if (_functions.count(msg.get_command()))
-			(this->*_functions[msg.get_command()])();
+			(this->*_functions[msg.get_command()])(msg);
 		// else do something if command is unknown??
 	}
 
-	std::string protocol::nick_function(void)
+	void protocol::nick_function(message msg)
 	{
+		size_t pos;
+		std::string reply; // find a more appropriate name
+
 		// check if parameter in message in not empty
 		// check if nickname contains only valid characters
 		// check if nickname is free
 		std::cout << "nick function has been called" << std::endl;
-		// get the client
-		// set client nickname
+		pos = _get_client_pos_from_socket(msg.get_socket());
+		_clients[pos].set_nickname(msg.get_parameters()[0]);
 		// return reply
-		return "";
+		// for tests, we should only send reply if errors
+		reply += "Your nickname is now " + _clients[pos].get_nickname() + "\r\n";
+		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
+	}
+
+	size_t protocol::_get_client_pos_from_socket(int socket)
+	{
+		size_t i = 0;
+		for (i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_socket() == socket)
+				return i;
+		}
+		return -1;
 	}
 }
