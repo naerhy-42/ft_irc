@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 
+#include "client.hpp"
 #include "message.hpp"
 
 namespace ft
@@ -17,7 +18,7 @@ namespace ft
 			protocol(void);
 			~protocol(void);
 
-			void parse_client_input(std::string& client_msg);
+			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(message msg);
 
 			std::string nick_function(void);
@@ -27,6 +28,7 @@ namespace ft
 			protocol& operator=(protocol const& x);
 
 			std::map<std::string, fncts> _functions;
+			std::vector<client> _clients;
 	};
 }
 

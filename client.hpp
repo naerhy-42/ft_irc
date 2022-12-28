@@ -8,12 +8,12 @@ namespace ft
 	class client
 	{
 		public:
-			client(void);
+			client(int socket);
 			// client(client const& x);
 			// client& operator=(client const& x);
 			// ~client(void);
 
-			// int get_socket(void) const;
+			int get_socket(void) const;
 			std::string const& get_nickname(void) const;
 
 			void set_nickname(std::string const& nickname);

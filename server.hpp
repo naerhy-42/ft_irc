@@ -56,8 +56,6 @@ namespace ft
 			fd_set _rfds;
 			fd_set _rfds_temp;
 			protocol _protocol;
-			std::vector<client> _clients;
-			// std::vector<channel> _channels; -- to hold every channels informations
 	};
 }
 

@@ -68,6 +68,8 @@ namespace ft
 						// check error
 						FD_SET(inc_socket, &_rfds);
 						_fds.push_back(inc_socket);
+						// protocol => create new client with fd as parameter
+						// _clients.push_back(client(inc_socket));
 					}
 					else
 					{
@@ -82,21 +84,13 @@ namespace ft
 							// we remove the client fd from our vector
 							FD_CLR(_fds[i], &_rfds);
 							_fds.erase(_fds.begin() + i);
+							// call protocol to remove client
 							i--; // i can't be -1 because we will never erase the _socket fd in pos 0
 						}
 						else
 						{
 							std::string str_buffer(buffer, nb_bytes);
-							_protocol.parse_client_input(str_buffer);
-
-							// the next lines of code were just a test to check when multiple clients
-							// were connected and if they were all receiving the message sent by
-							// another client
-							/*for (int j = 0; j <= _fd_max; j++)
-							{
-								if (FD_ISSET(j, &_rfds) && j != _socket && i != j)
-									send(j, buffer, nb_bytes, 0);
-							}*/
+							_protocol.parse_client_input(str_buffer, _fds[i]);
 						}
 					}
 				}

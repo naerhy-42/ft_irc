@@ -2,7 +2,9 @@
 
 namespace ft
 {
-	client::client(void) {}
+	client::client(int socket) : _socket(socket) {}
+
+	int client::get_socket(void) const { return _socket; }
 
 	std::string const& client::get_nickname(void) const { return _nickname; }
 

@@ -8,14 +8,14 @@
 
 namespace ft
 {
-	protocol::protocol(void) : _functions()
+	protocol::protocol(void) : _functions(), _clients()
 	{
 		_functions.insert(std::pair<std::string, fncts>("NICK", &protocol::nick_function));
 	}
 
 	protocol::~protocol(void) {}
 
-	void protocol::parse_client_input(std::string& client_msg)
+	void protocol::parse_client_input(std::string& client_msg, int client_socket)
 	{
 		std::string line;
 		size_t pos;
@@ -33,8 +33,7 @@ namespace ft
 		} while (pos != std::string::npos);
 		for (size_t i = 0; i < lines.size(); i++)
 		{
-			message msg(lines[i]);
-			msg.split();
+			message msg(lines[i], client_socket);
 			handle_message(msg);
 		}
 	}
