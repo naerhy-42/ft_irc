@@ -11,6 +11,7 @@ namespace ft
 	protocol::protocol(void) : _functions(), _clients()
 	{
 		_functions.insert(std::pair<std::string, fncts>("NICK", &protocol::nick_function));
+		_functions.insert(std::pair<std::string, fncts>("USER", &protocol::user_function));
 	}
 
 	protocol::~protocol(void) {}
@@ -73,6 +74,23 @@ namespace ft
 		// return reply
 		// for tests, we should only send reply if errors
 		reply += "Your nickname is now " + _clients[pos].get_nickname() + "\r\n";
+		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
+	}
+
+	void protocol::user_function(message msg)
+	{
+		size_t pos;
+		std::string reply; // find a more appropriate name
+
+		std::cout << "user function has been called" << std::endl;
+		pos = _get_client_pos_from_socket(msg.get_socket());
+		_clients[pos].set_username(msg.get_parameters()[0]);
+		_clients[pos].set_hostname(msg.get_parameters()[1]);
+		// we do not store servername because useless if we don't handle multi server?
+		_clients[pos].set_real_name(msg.get_remainder());
+		reply += "Your informations are now " + _clients[pos].get_nickname() + " "
+			+ _clients[pos].get_username() + " " + _clients[pos].get_hostname() + " "
+			+ _clients[pos].get_real_name() + "\r\n";
 		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
 	}
 

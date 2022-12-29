@@ -29,7 +29,7 @@ namespace ft
 			std::string _nickname;
 			std::string _username;
 			std::string _hostname;
-			std::stirng _real_name;
+			std::string _real_name;
 	};
 }
 

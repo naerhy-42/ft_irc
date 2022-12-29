@@ -29,6 +29,7 @@ namespace ft
 			void handle_message(message msg);
 
 			void nick_function(message msg);
+			void user_function(message msg);
 
 		private:
 			size_t _get_client_pos_from_socket(int socket);
