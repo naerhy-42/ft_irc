@@ -30,6 +30,7 @@ namespace ft
 			// using typedef in order to avoid typing struct + type
 			typedef struct sockaddr sockaddr_st;
 			typedef struct sockaddr_in sockaddr_in_st;
+			typedef struct sockaddr_in6 sockaddr_in6_st;
 			typedef struct sockaddr_storage sockaddr_storage_st;
 			typedef struct addrinfo addrinfo_st;
 
