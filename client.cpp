@@ -8,5 +8,17 @@ namespace ft
 
 	std::string const& client::get_nickname(void) const { return _nickname; }
 
+	std::string const& client::get_username(void) const { return _username; }
+
+	std::string const& client::get_hostname(void) const { return _hostname; }
+
+	std::string const& client::get_real_name(void) const { return _real_name; }
+
 	void client::set_nickname(std::string const& nickname) { _nickname = nickname; }
+
+	void client::set_username(std::string const& username) { _username = username; }
+
+	void client::set_hostname(std::string const& hostname) { _hostname = hostname; }
+
+	void client::set_real_name(std::string const& real_name) { _real_name = real_name; }
 }
