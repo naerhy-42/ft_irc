@@ -10,7 +10,6 @@
 namespace ft
 {
 	// might delete origin -> useless if messages are only sent by clients
-	// move const to protocol class -> validation might happen before constructing message
 	class message
 	{
 		public:
@@ -19,8 +18,6 @@ namespace ft
 			// message& operator=(message const& x);
 			// ~message(void);
 
-			void print(void) const;
-
 			int get_socket(void) const;
 			std::string const& get_origin(void) const;
 			std::string const& get_command(void) const;
@@ -28,9 +25,6 @@ namespace ft
 			std::string const& get_remainder(void) const;
 
 		private:
-			static int const _max_chars;
-			static int const _max_params;
-
 			int _socket;
 			std::string _origin;
 			std::string _command;

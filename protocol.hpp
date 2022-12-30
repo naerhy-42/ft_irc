@@ -34,6 +34,9 @@ namespace ft
 		private:
 			size_t _get_client_pos_from_socket(int socket);
 
+			static size_t const _message_max_characters;
+			static size_t const _message_max_parameters;
+
 			protocol(protocol const& x);
 			protocol& operator=(protocol const& x);
 

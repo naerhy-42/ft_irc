@@ -8,6 +8,10 @@
 
 namespace ft
 {
+	size_t const protocol::_message_max_characters = 512;
+
+	size_t const protocol::_message_max_parameters = 15;
+
 	protocol::protocol(void) : _functions(), _clients()
 	{
 		_functions.insert(std::pair<std::string, fncts>("NICK", &protocol::nick_function));
@@ -36,20 +40,27 @@ namespace ft
 		size_t pos;
 		std::vector<std::string> lines;
 
+		// if message is > 512 chars, we truncate it and add CRLF at the end
+		if (client_msg.size() > _message_max_characters)
+		{
+			client_msg.resize(_message_max_characters - 2);
+			client_msg.append("\r\n");
+		}
 		do
 		{
 			pos = client_msg.find("\r\n");
 			line = client_msg.substr(0, pos);
+			// we do not care about empty messages
 			if (!line.empty())
-				// if message only contained "\r\n", then it is empty now
-				// is it an error to not add it to the vector and return an error??
 				lines.push_back(line);
 			client_msg.erase(0, pos + 2);
 		} while (pos != std::string::npos);
 		for (size_t i = 0; i < lines.size(); i++)
 		{
 			message msg(lines[i], client_socket);
-			handle_message(msg);
+			// we do not care about messages with more than 15 parameters
+			if (msg.get_parameters().size() <= _message_max_parameters)
+				handle_message(msg);
 		}
 	}
 
