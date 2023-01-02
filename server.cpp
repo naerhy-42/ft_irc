@@ -35,7 +35,7 @@ namespace ft
 	        if (_socket == -1)
 	        {
 	            perror("Error creating socket");
-	            return -1;
+	            return EXIT_FAILURE;
 	        }
 	    }
 
@@ -46,13 +46,13 @@ namespace ft
 	    if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt)) == -1)
 	    {
 	        perror("Error setting socket option");
-	        return -1;
+	        return EXIT_FAILURE;
 	    }
 		socklen_t addrlen = sizeof(socket_info);
     	if (getsockname(_socket, reinterpret_cast<sockaddr*>(&socket_info), &addrlen) == -1)
     	{
     	    perror("Error setting socket info");
-    	    return -1;
+    	    return EXIT_FAILURE;
     	}
 	    // Set up the sockaddr_storage_st structure
 	    if (socket_info.ss_family == AF_INET)
@@ -72,26 +72,26 @@ namespace ft
 	    else
 	    {
 	        perror("Error: unknown address family");
-	        return -1;
+	        return EXIT_FAILURE;
 	    }
 
 	    // Bind the socket to the specified address and port
 	    if (bind(_socket, reinterpret_cast<sockaddr_st*>(&socket_info), sizeof(socket_info)) == -1)
 	    {
 	        perror("Error binding socket");
-	        return -1;
+	        return EXIT_FAILURE;
 	    }
 
 	    // Put the socket into a state where it is listening for incoming connections
 	    if (listen(_socket, 10) == -1)
 	    {
 	        perror("Error listening on socket");
-	        return -1;
+	        return EXIT_FAILURE;
 	    }
 
 	    // Add the socket file descriptor to the
 		_fds.push_back(_socket);
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 

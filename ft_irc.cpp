@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 	// server.init_socket();
-	if (!server.init_socket())
+	if (server.init_socket() == EXIT_FAILURE)
 		return EXIT_FAILURE;
 	server.wait_connections();
 	return EXIT_SUCCESS;
