@@ -12,15 +12,15 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <netinet/in.h> // for ipv6
 
 #include <sstream>
 #include <vector>
 #include <map>
 #include <utility>
 
-#include <netinet/in.h> // for ipv6
-
-#include "message.hpp"
+#include "client.hpp"
+#include "protocol.hpp"
 
 namespace ft
 {
@@ -34,8 +34,6 @@ namespace ft
 			typedef struct sockaddr_in6 sockaddr_in6_st;
 			typedef struct sockaddr_storage sockaddr_storage_st;
 			typedef struct addrinfo addrinfo_st;
-			// typedef for clearer syntax:
-			typedef std::string (server::*funct)(void);
 
 		public:
 			server(void);
@@ -49,10 +47,6 @@ namespace ft
 			int init_socket(void);
 			void init_select(void);
 			void wait_connections(void);
-			void parse_command(std::string message);
-
-			void reply(message msg);
-			std::string test_func(void);
 
 		private:
 			void _init_select(void);
@@ -65,10 +59,7 @@ namespace ft
 			std::vector<int> _fds;
 			fd_set _rfds;
 			fd_set _rfds_temp;
-
-			std::map<std::string, funct> _commands_funct;
-			// std::vector<user> _users; -- to hold every users informations
-			// std::vector<channel> _channels; -- to hold every channels informations
+			protocol _protocol;
 	};
 }
 

@@ -4,9 +4,7 @@ namespace ft
 {
 	int const server::_buffer_size = 512;
 
-	server::server() {}
-	server::server(uint16_t port) : _port(port), _fds(), _commands_funct() {}
-	server::~server() {}
+	server::server(void) : _fds(), _protocol() {}
 
 	bool server::validate_args(std::string port, std::string password)
 	{
@@ -23,7 +21,7 @@ namespace ft
 
 	int server::init_socket(void)
 	{
-	    sockaddr_storage_st socket_info; // Generic socket address structure 
+	    sockaddr_storage_st socket_info; // Generic socket address structure
 	    int sockopt;
 
 	    // Create the socket
@@ -41,19 +39,19 @@ namespace ft
 
 	    // Set the SO_REUSEADDR socket option and tell the operating system that it
 	    // is okay for your socket to bind to a port that is already in use by
-	    // another socket. 
-	    sockopt = 1; 
+	    // another socket.
+	    sockopt = 1;
 	    if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(sockopt)) == -1)
 	    {
 	        perror("Error setting socket option");
 	        return EXIT_FAILURE;
 	    }
 		socklen_t addrlen = sizeof(socket_info);
-    	if (getsockname(_socket, reinterpret_cast<sockaddr*>(&socket_info), &addrlen) == -1)
-    	{
-    	    perror("Error setting socket info");
-    	    return EXIT_FAILURE;
-    	}
+		if (getsockname(_socket, reinterpret_cast<sockaddr*>(&socket_info), &addrlen) == -1)
+		{
+			perror("Error setting socket info");
+			return EXIT_FAILURE;
+		}
 	    // Set up the sockaddr_storage_st structure
 	    if (socket_info.ss_family == AF_INET)
 	    {
@@ -93,7 +91,6 @@ namespace ft
 		_fds.push_back(_socket);
 		return EXIT_SUCCESS;
 	}
-
 
 	void server::wait_connections(void)
 	{
@@ -147,6 +144,7 @@ namespace ft
 
 	                // Add the client file descriptor to the set of file descriptors
 	                _fds.push_back(client_fd);
+					_protocol.add_client(client_fd);
 	            }
 	            else
 	            {
@@ -173,6 +171,7 @@ namespace ft
 					            {
 					                if (*it == client_fd)
 					                {
+										_protocol.delete_client(*it);
 					                    _fds.erase(it);
 					                    break;
 					                }
@@ -184,67 +183,14 @@ namespace ft
 					        {
 					            // Data was received from the client
 					            // Process the data
-					            std::string message(buffer, bytes_received);
-					            parse_command(message);
-					            // Send a reply to the client
-					            // reply(message);
+								std::string str_buffer(buffer, bytes_received);
+								_protocol.parse_client_input(str_buffer, client_fd);
 					        }
 					    }
 					}
 	            }
 	        }
 		}
-	}
-
-
-
-	void server::parse_command(std::string client_msg)
-	{
-		std::string line;
-		size_t pos;
-		std::vector<std::string> lines;
-
-		do
-		{
-			// we split our string using "\r\n" as delimiter
-			// if there is only 1 message in the string, no problem we just remove "\r\n"
-			pos = client_msg.find("\r\n");
-			line = client_msg.substr(0, pos);
-			if (!line.empty())
-				lines.push_back(line);
-			client_msg.erase(0, pos + 2);
-		} while (pos != std::string::npos);
-
-		// just a test to check the vector
-		for (size_t i = 0; i < lines.size(); i++)
-			std::cout << "line = " << lines[i] << std::endl;
-
-		// test to check message parsing and functions pointers
-		for (size_t i = 0; i < lines.size(); i++)
-		{
-			message msg(lines[i]);
-			msg.split();
-			msg.print();
-			reply(msg);
-		}
-	}
-
-	// temporary:
-	// temporary:
-	void server::reply(message msg)
-	{
-		_commands_funct.insert(std::pair<std::string, funct>("USER", &server::test_func));
-		if (_commands_funct.count(msg.get_command()))
-			std::cout << (this->*_commands_funct[msg.get_command()])() << std::endl;
-		// else
-			// error -> send unknown command reply
-	}
-
-	// temporary:
-	// temporary:
-	std::string server::test_func(void)
-	{
-		return "this is a valid text message\n";
 	}
 
 	void server::_init_select(void)
