@@ -9,8 +9,8 @@ int main(int argc, char** argv)
 		std::cout << "Error: you have to enter a valid port and password" << std::endl;
 		return EXIT_FAILURE;
 	}
-	server.init_socket();
-	if (!server.init_socket())
+	// server.init_socket();
+	if (server.init_socket() == EXIT_FAILURE)
 		return EXIT_FAILURE;
 	server.wait_connections();
 	return EXIT_SUCCESS;
