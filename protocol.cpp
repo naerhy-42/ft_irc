@@ -76,16 +76,14 @@ namespace ft
 		size_t pos;
 		std::string reply; // find a more appropriate name
 
+		std::cout << "nick function has been called" << std::endl;
 		// check if parameter in message in not empty
 		// check if nickname contains only valid characters
 		// check if nickname is free
-		std::cout << "nick function has been called" << std::endl;
 		pos = _get_client_pos_from_socket(msg.get_socket());
 		_clients[pos].set_nickname(msg.get_parameters()[0]);
-		// return reply
-		// for tests, we should only send reply if errors
-		reply += "Your nickname is now " + _clients[pos].get_nickname() + "\r\n";
-		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
+		// return replies to other members if needed
+		// send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
 	void protocol::user_function(message msg)
@@ -99,9 +97,9 @@ namespace ft
 		_clients[pos].set_hostname(msg.get_parameters()[1]);
 		// we do not store servername because useless if we don't handle multi server?
 		_clients[pos].set_real_name(msg.get_remainder());
-		reply += "Your informations are now " + _clients[pos].get_nickname() + " "
-			+ _clients[pos].get_username() + " " + _clients[pos].get_hostname() + " "
-			+ _clients[pos].get_real_name() + "\r\n";
+		reply += ":localhost 001 " + _clients[pos].get_nickname() + " :Welcome to the Internet Relay \
+			  Network " + _clients[pos].get_nickname() + "!" + _clients[pos].get_username()
+			  + "@" + _clients[pos].get_hostname() + "\r\n";
 		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
