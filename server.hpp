@@ -37,8 +37,6 @@ namespace ft
 
 		public:
 			server(void);
-			server(uint16_t);
-			~server();
 			// server(server const& x);
 			// server& operator=(server const& x);
 			// ~server(void);
