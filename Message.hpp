@@ -10,10 +10,10 @@
 namespace ft
 {
 	// might delete origin -> useless if messages are only sent by clients
-	class message
+	class Message
 	{
 		public:
-			message(std::string& base_message, int socket);
+			Message(std::string& base_message, int socket);
 			// message(message const& x);
 			// message& operator=(message const& x);
 			// ~message(void);

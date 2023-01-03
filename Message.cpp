@@ -1,8 +1,8 @@
-#include "message.hpp"
+#include "Message.hpp"
 
 namespace ft
 {
-	message::message(std::string& base_message, int socket) : _socket(socket)
+	Message::Message(std::string& base_message, int socket) : _socket(socket)
 	{
 		std::string remainder;
 		size_t remainder_pos;
@@ -31,13 +31,13 @@ namespace ft
 		}
 	}
 
-	int message::get_socket(void) const { return _socket; }
+	int Message::get_socket(void) const { return _socket; }
 
-	std::string const& message::get_origin(void) const { return _origin; }
+	std::string const& Message::get_origin(void) const { return _origin; }
 
-	std::string const& message::get_command(void) const { return _command; }
+	std::string const& Message::get_command(void) const { return _command; }
 
-	std::vector<std::string> const& message::get_parameters(void) const { return _parameters; }
+	std::vector<std::string> const& Message::get_parameters(void) const { return _parameters; }
 
-	std::string const& message::get_remainder(void) const { return _remainder; }
+	std::string const& Message::get_remainder(void) const { return _remainder; }
 }

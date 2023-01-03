@@ -5,13 +5,13 @@
 
 namespace ft
 {
-	class client
+	class Client
 	{
 		public:
-			client(int socket);
-			// client(client const& x);
-			// client& operator=(client const& x);
-			// ~client(void);
+			Client(int socket);
+			// Client(Client const& x);
+			// Client& operator=(Client const& x);
+			// ~Client(void);
 
 			int get_socket(void) const;
 			std::string const& get_nickname(void) const;

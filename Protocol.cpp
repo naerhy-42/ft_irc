@@ -1,4 +1,4 @@
-#include "protocol.hpp"
+#include "Protocol.hpp"
 
 // remove after test
 // remove after test
@@ -8,24 +8,24 @@
 
 namespace ft
 {
-	size_t const protocol::_message_max_characters = 512;
+	size_t const Protocol::_message_max_characters = 512;
 
-	size_t const protocol::_message_max_parameters = 15;
+	size_t const Protocol::_message_max_parameters = 15;
 
-	protocol::protocol(void) : _functions(), _clients()
+	Protocol::Protocol(void) : _functions(), _clients()
 	{
-		_functions.insert(std::pair<std::string, fncts>("NICK", &protocol::nick_function));
-		_functions.insert(std::pair<std::string, fncts>("USER", &protocol::user_function));
+		_functions.insert(std::pair<std::string, fncts>("NICK", &Protocol::nick_function));
+		_functions.insert(std::pair<std::string, fncts>("USER", &Protocol::user_function));
 	}
 
-	protocol::~protocol(void) {}
+	Protocol::~Protocol(void) {}
 
-	void protocol::add_client(int socket)
+	void Protocol::add_client(int socket)
 	{
-		_clients.push_back(client(socket));
+		_clients.push_back(Client(socket));
 	}
 
-	void protocol::delete_client(int socket)
+	void Protocol::delete_client(int socket)
 	{
 		for (size_t i = 0; i < _clients.size(); i++)
 		{
@@ -34,7 +34,7 @@ namespace ft
 		}
 	}
 
-	void protocol::parse_client_input(std::string& client_msg, int client_socket)
+	void Protocol::parse_client_input(std::string& client_msg, int client_socket)
 	{
 		std::string line;
 		size_t pos;
@@ -57,21 +57,21 @@ namespace ft
 		} while (pos != std::string::npos);
 		for (size_t i = 0; i < lines.size(); i++)
 		{
-			message msg(lines[i], client_socket);
+			Message msg(lines[i], client_socket);
 			// we do not care about messages with more than 15 parameters
 			if (msg.get_parameters().size() <= _message_max_parameters)
 				handle_message(msg);
 		}
 	}
 
-	void protocol::handle_message(message msg)
+	void Protocol::handle_message(Message msg)
 	{
 		if (_functions.count(msg.get_command()))
 			(this->*_functions[msg.get_command()])(msg);
 		// else do something if command is unknown??
 	}
 
-	void protocol::nick_function(message msg)
+	void Protocol::nick_function(Message msg)
 	{
 		size_t pos;
 		std::string reply; // find a more appropriate name
@@ -86,7 +86,7 @@ namespace ft
 		// send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
-	void protocol::user_function(message msg)
+	void Protocol::user_function(Message msg)
 	{
 		size_t pos;
 		std::string reply; // find a more appropriate name
@@ -103,7 +103,7 @@ namespace ft
 		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
-	size_t protocol::_get_client_pos_from_socket(int socket)
+	size_t Protocol::_get_client_pos_from_socket(int socket)
 	{
 		size_t i = 0;
 		for (i = 0; i < _clients.size(); i++)

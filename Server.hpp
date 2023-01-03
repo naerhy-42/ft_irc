@@ -19,13 +19,13 @@
 #include <map>
 #include <utility>
 
-#include "client.hpp"
-#include "protocol.hpp"
+#include "Client.hpp"
+#include "Protocol.hpp"
 
 namespace ft
 {
 
-	class server
+	class Server
 	{
 		private:
 			// using typedef in order to avoid typing struct + type
@@ -36,18 +36,16 @@ namespace ft
 			typedef struct addrinfo addrinfo_st;
 
 		public:
-			server(void);
-			// server(server const& x);
-			// server& operator=(server const& x);
-			// ~server(void);
+			Server(void);
+			// Server(Server const& x);
+			// Server& operator=(Server const& x);
+			// ~Server(void);
 
 			bool validate_args(std::string port, std::string password);
 			int init_socket(void);
-			void init_select(void);
 			void wait_connections(void);
 
 		private:
-			void _init_select(void);
 			int _get_max_fd(void) const;
 
 			static int const _buffer_size;
@@ -57,7 +55,7 @@ namespace ft
 			std::vector<int> _fds;
 			fd_set _rfds;
 			fd_set _rfds_temp;
-			protocol _protocol;
+			Protocol _protocol;
 	};
 }
 

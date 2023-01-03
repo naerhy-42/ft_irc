@@ -1,12 +1,12 @@
-#include "server.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-	int const server::_buffer_size = 512;
+	int const Server::_buffer_size = 512;
 
-	server::server(void) : _fds(), _protocol() {}
+	Server::Server(void) : _fds(), _protocol() {}
 
-	bool server::validate_args(std::string port, std::string password)
+	bool Server::validate_args(std::string port, std::string password)
 	{
 		std::stringstream ss;
 
@@ -19,7 +19,7 @@ namespace ft
 		return true;
 	}
 
-	int server::init_socket(void)
+	int Server::init_socket(void)
 	{
 	    sockaddr_storage_st socket_info; // Generic socket address structure
 	    int sockopt;
@@ -92,7 +92,7 @@ namespace ft
 		return EXIT_SUCCESS;
 	}
 
-	void server::wait_connections(void)
+	void Server::wait_connections(void)
 	{
 	    sockaddr_storage_st client_addr;
 	    socklen_t addr_size = sizeof(client_addr);
@@ -193,14 +193,7 @@ namespace ft
 		}
 	}
 
-	void server::_init_select(void)
-	{
-		FD_ZERO(&_rfds);
-		FD_ZERO(&_rfds_temp);
-		FD_SET(_socket, &_rfds);
-	}
-
-	int server::_get_max_fd(void) const
+	int Server::_get_max_fd(void) const
 	{
 		int max_fd;
 

@@ -1,8 +1,8 @@
-#include "server.hpp"
+#include "Server.hpp"
 
 int main(int argc, char** argv)
 {
-	ft::server server;
+	ft::Server server;
 
 	if (argc != 3 || !server.validate_args(*(argv + 1), *(argv + 2)))
 	{
