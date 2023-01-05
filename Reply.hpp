@@ -178,6 +178,9 @@ namespace ft
 
     // ERR_BANNEDFROMCHAN (474)
     std::string err_bannedfromchan(const std::string &client, const std::string &channel);
+
+    // ERR_BADCHANNELKEY (475)
+    std::string err_badchannelkey(const std::string &client, const std::string &channel);
 }
 
 #endif
