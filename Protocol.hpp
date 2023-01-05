@@ -28,6 +28,7 @@ namespace ft
 			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(Message msg);
 
+			void pass_function(Message msg);
 			void nick_function(Message msg);
 			void user_function(Message msg);
 
