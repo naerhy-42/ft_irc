@@ -265,7 +265,7 @@ namespace ft
     }
 
 
-    // ERR_ERRONEUSNICKNAME (431)
+    // ERR_NONICKNAMEGIVEN (431)
     std::string err_nonicknamegiven(const std::string &client)
     {
         return ":irc.forty-two.com 431 " + client + " :No nickname given\r\n";
