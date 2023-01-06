@@ -14,11 +14,14 @@ namespace ft
 
 	Protocol::Protocol(void) : _functions(), _clients()
 	{
+		_functions.insert(std::pair<std::string, fncts>("PASS", &Protocol::pass_function));
 		_functions.insert(std::pair<std::string, fncts>("NICK", &Protocol::nick_function));
 		_functions.insert(std::pair<std::string, fncts>("USER", &Protocol::user_function));
 	}
 
 	Protocol::~Protocol(void) {}
+
+	void Protocol::set_password(std::string const& password) { _password = password; }
 
 	void Protocol::add_client(int socket)
 	{
@@ -51,6 +54,7 @@ namespace ft
 			pos = client_msg.find("\r\n");
 			line = client_msg.substr(0, pos);
 			// we do not care about empty messages
+			std::cout << "line = " << line << std::endl; // TEST TEST TEST TEST TEST
 			if (!line.empty())
 				lines.push_back(line);
 			client_msg.erase(0, pos + 2);
@@ -71,36 +75,120 @@ namespace ft
 		// else do something if command is unknown??
 	}
 
+	void Protocol::pass_function(Message msg)
+	{
+		std::vector<std::string> parameters;
+		std::string error;
+		size_t pos;
+
+		pos = _get_client_pos_from_socket(msg.get_socket());
+		if (_clients[pos].get_password_status())
+		{
+			error = err_alreadyregistered(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		parameters = msg.get_parameters();
+		if (parameters.empty())
+		{
+			error = err_needmoreparams(_clients[pos].get_nickname(), "PASS");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		if (parameters.at(0) != _password)
+		{
+			error = err_passwdmismatch(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		_clients[pos].set_password_status(true);
+	}
+
 	void Protocol::nick_function(Message msg)
 	{
+		std::vector<std::string> parameters;
+		std::string nickname;
+		std::string error;
 		size_t pos;
-		std::string reply; // find a more appropriate name
 
-		std::cout << "nick function has been called" << std::endl;
-		// check if parameter in message in not empty
-		// check if nickname contains only valid characters
-		// check if nickname is free
 		pos = _get_client_pos_from_socket(msg.get_socket());
-		_clients[pos].set_nickname(msg.get_parameters()[0]);
-		// return replies to other members if needed
-		// send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
+		if ((_clients[pos].get_nickname() == "*" && !_clients[pos].get_password_status())
+				|| (_clients[pos].get_nickname() != "*" && !_clients[pos].get_registration_status()))
+		{
+			error = err_notregistered(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		parameters = msg.get_parameters();
+		if (parameters.empty() || parameters.at(0).empty())
+		{
+			error = err_nonicknamegiven(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		else
+			nickname = parameters.at(0);
+		if (nickname.length() > 9 || nickname.find_first_of(" ,*?!@.#&()[]") != std::string::npos)
+		{
+			error = err_erroneusnickname(_clients[pos].get_nickname(), nickname);
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
+		{
+			if (cit->get_nickname() == nickname)
+			{
+				error = err_nicknameinuse(_clients[pos].get_nickname(), nickname);
+				send(msg.get_socket(), error.c_str(), error.size(), 0);
+				return ;
+			}
+		}
+		_clients[pos].set_nickname(nickname);
+		// return replies to other members if needed [?]
 	}
 
 	void Protocol::user_function(Message msg)
 	{
+		std::vector<std::string> parameters;
+		std::string error;
 		size_t pos;
-		std::string reply; // find a more appropriate name
 
-		std::cout << "user function has been called" << std::endl;
 		pos = _get_client_pos_from_socket(msg.get_socket());
-		_clients[pos].set_username(msg.get_parameters()[0]);
-		_clients[pos].set_hostname(msg.get_parameters()[1]);
-		// we do not store servername because useless if we don't handle multi server?
+		if (!_clients[pos].get_password_status())
+		{
+			error = err_notregistered(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		if (_clients[pos].get_nickname() == "*")
+		{
+			error = err_nonicknamegiven(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		parameters = msg.get_parameters();
+		if (parameters.size() < 4 || parameters.at(0).empty() || parameters.at(1).empty()
+				|| parameters.at(2).empty() || parameters.at(3).empty())
+		{
+			error = err_needmoreparams(_clients[pos].get_nickname(), "USER");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		if (_clients[pos].get_registration_status())
+		{
+			error = err_alreadyregistered(_clients[pos].get_nickname());
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return ;
+		}
+		_clients[pos].set_username(parameters.at(0));
+		_clients[pos].set_hostname(parameters.at(1));
+		// we do not store servername because useless if we don't handle multi server [?]
 		_clients[pos].set_real_name(msg.get_remainder());
-		reply += ":localhost 001 " + _clients[pos].get_nickname() + " :Welcome to the Internet Relay \
-			  Network " + _clients[pos].get_nickname() + "!" + _clients[pos].get_username()
-			  + "@" + _clients[pos].get_hostname() + "\r\n";
-		send(_clients[pos].get_socket(), reply.c_str(), reply.size(), 0);
+		_clients[pos].set_registration_status(true);
+		// return RPL_WELCOME
+		// return RPL_YOURHOST
+		// return RPL_CREATED
+		// return RPL_MYINFO
 	}
 
 	size_t Protocol::_get_client_pos_from_socket(int socket)

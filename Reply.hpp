@@ -142,6 +142,9 @@ namespace ft
     // ERR_UNKNOWNCOMMAND (421)
     std::string err_unknowncommand(const std::string &client, const std::string &command);
 
+	// ERR_NONICKNAMEGIVEN (431)
+    std::string err_nonicknamegiven(const std::string &client);
+
     // ERR_ERRONEUSNICKNAME (432)
     std::string err_erroneusnickname(const std::string &client, const std::string &nick);
 

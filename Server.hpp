@@ -50,7 +50,6 @@ namespace ft
 
 			static int const _buffer_size;
 			uint16_t _port;
-			std::string _password;
 			int _socket;
 			std::vector<int> _fds;
 			fd_set _rfds;

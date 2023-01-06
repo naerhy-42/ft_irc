@@ -10,6 +10,7 @@
 
 #include "Client.hpp"
 #include "Message.hpp"
+#include "Reply.hpp"
 
 namespace ft
 {
@@ -22,12 +23,15 @@ namespace ft
 			Protocol(void);
 			~Protocol(void);
 
+			void set_password(std::string const& password);
+
 			void add_client(int socket);
 			void delete_client(int socket);
 
 			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(Message msg);
 
+			void pass_function(Message msg);
 			void nick_function(Message msg);
 			void user_function(Message msg);
 
@@ -40,6 +44,7 @@ namespace ft
 			Protocol(Protocol const& x);
 			Protocol& operator=(Protocol const& x);
 
+			std::string _password;
 			std::map<std::string, fncts> _functions;
 			std::vector<Client> _clients;
 	};
