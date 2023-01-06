@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	Client::Client(int socket) : _socket(socket), _registration_status(false) {}
+	Client::Client(int socket) : _socket(socket), _nickname("*"), _registration_status(false) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
@@ -16,6 +16,8 @@ namespace ft
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
 
+	bool Client::get_password_status(void) const { return _password_status; }
+
 	void Client::set_nickname(std::string const& nickname) { _nickname = nickname; }
 
 	void Client::set_username(std::string const& username) { _username = username; }
@@ -25,4 +27,6 @@ namespace ft
 	void Client::set_real_name(std::string const& real_name) { _real_name = real_name; }
 
 	void Client::set_registration_status(bool status) { _registration_status = status; }
+
+	void Client::set_password_status(bool status) { _password_status = status; }
 }

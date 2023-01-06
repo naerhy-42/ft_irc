@@ -15,7 +15,7 @@ namespace ft
 			return false;
 		ss << port;
 		ss >> _port;
-		_password = password;
+		_protocol.set_password(password);
 		return true;
 	}
 
