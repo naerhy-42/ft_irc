@@ -2,6 +2,15 @@
 
 namespace ft
 {
+
+    template <typename T>
+    std::string to_string(T value)
+    {
+        std::ostringstream os;
+        os << value;
+        return os.str();
+    }
+
     // RPL_WELCOME (001)
     std::string rpl_welcome(const std::string &client, const std::string &networkname,
                             const std::string &nick, const std::string &user,
@@ -44,7 +53,7 @@ namespace ft
     std::string rpl_bounce(const std::string &client, const std::string &hostname,
                            int port, const std::string &info)
     {
-        return ":irc.forty-two.com 010 " + client + " " + hostname + " " + std::to_string(port) + " :" + info + "\r\n";
+        return ":irc.forty-two.com 010 " + client + " " + hostname + " " + to_string(port) + " :" + info + "\r\n";
     }
 
     // RPL_UMODEIS (221)
@@ -56,7 +65,7 @@ namespace ft
     // RPL_LUSERSCHANNELS (254)
     std::string rpl_luserchannels(const std::string &client, int channels)
     {
-        return ":irc.forty-two.com 254 " + client + " " + std::to_string(channels) + " :channels formed\r\n";
+        return ":irc.forty-two.com 254 " + client + " " + to_string(channels) + " :channels formed\r\n";
     }
 
     // RPL_WHOREPLY (352)
@@ -67,7 +76,7 @@ namespace ft
                              const std::string &realname)
     {
         return ":irc.forty-two.com 352 " + client + " " + channel + " " + username + " " + host + " " +
-               server + " " + nick + " " + flags + " " + std::to_string(hopcount) +
+               server + " " + nick + " " + flags + " " + to_string(hopcount) +
                " " + realname + "\r\n";
     }
 
@@ -107,7 +116,7 @@ namespace ft
 
     // RPL_WHOISCHANNELS (319)
     std::string rpl_whoischannels(const std::string &client, const std::string &nick,
-                                  const std::vector<std::pair<char, std::string>> &channels)
+                                  const std::vector<std::pair<char, std::string> > &channels)
     {
         std::string message = ":irc.forty-two.com 319 " + client + " " + nick + " :";
         for (unsigned int i = 0; i < channels.size(); ++i)
@@ -127,7 +136,7 @@ namespace ft
     std::string rpl_list(const std::string &client, const std::string &channel, int client_count,
                          const std::string &topic)
     {
-        return ":irc.forty-two.com 322 " + client + " " + channel + " " + std::to_string(client_count) + " :" + topic + "\r\n";
+        return ":irc.forty-two.com 322 " + client + " " + channel + " " + to_string(client_count) + " :" + topic + "\r\n";
     }
 
     // RPL_LISTEND (323)
@@ -163,7 +172,7 @@ namespace ft
         if (!who.empty())
             message += " " + who;
         if (set_ts > 0)
-            message += " " + std::to_string(set_ts);
+            message += " " + to_string(set_ts);
         return message + "\r\n";
     }
 
@@ -191,7 +200,7 @@ namespace ft
         }
         if (ts_offset != 0)
         {
-            message += std::to_string(ts_offset) + " ";
+            message += to_string(ts_offset) + " ";
         }
         message += ":" + human_readable_time;
         return message + "\r\n";
@@ -263,7 +272,6 @@ namespace ft
     {
         return ":irc.forty-two.com 421 " + client + " " + command + " :Unknown command\r\n";
     }
-
 
     // ERR_NONICKNAMEGIVEN (431)
     std::string err_nonicknamegiven(const std::string &client)
