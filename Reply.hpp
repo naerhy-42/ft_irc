@@ -4,9 +4,17 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <string>
+
+
+#include <sstream>
+
+
+
 
 namespace ft
 {
+
     // RPL_WELCOME (001)
     std::string rpl_welcome(const std::string &client, const std::string &networkname,
                             const std::string &nick, const std::string &user,
@@ -66,8 +74,7 @@ namespace ft
 
     // RPL_WHOISCHANNELS (319)
     std::string rpl_whoischannels(const std::string &client, const std::string &nick,
-                                  const std::vector<std::pair<char, std::string>> &channels);
-
+                                  const std::vector<std::pair<char, std::string> > &channels);
 
     // RPL_LISTSTART (321)
     std::string rpl_liststart(const std::string &client);
@@ -144,7 +151,6 @@ namespace ft
     // ERR_USERNOTINCHANNEL (441)
     std::string err_usernotinchannel(const std::string &client, const std::string &nick,
                                      const std::string &channel);
-    
 
     // ERR_NOTONCHANNEL (442)
     std::string err_notonchannel(const std::string &client, const std::string &channel);
