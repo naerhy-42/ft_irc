@@ -111,13 +111,13 @@ namespace ft
 	        // Set up the file descriptor set for the select function
 	        FD_ZERO(&read_fds);
 	        FD_SET(_socket, &read_fds);
-	        for (int i = 0; i < _fds.size(); i++)
+	        for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
 	        {
 	            FD_SET(_fds[i], &read_fds);
 	        }
 
 	        // Wait for activity on any of the file descriptors
-	        int result = select(_get_max_fd()+1, &read_fds, nullptr, nullptr, &timeout);
+	        int result = select(_get_max_fd()+1, &read_fds, NULL, NULL, &timeout);
 	        if (result == -1)
 	        {
 	            perror("Error waiting for activity on sockets");
@@ -149,7 +149,7 @@ namespace ft
 	            else
 	            {
 	                // Activity occurred on one of the client sockets
-					for (int i = 0; i < _fds.size(); i++)
+					for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
 					{
 					    int client_fd = _fds[i];
 					    if (FD_ISSET(client_fd, &read_fds))
