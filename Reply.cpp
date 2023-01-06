@@ -21,7 +21,7 @@ namespace ft
     // RPL_CREATED (003)
     std::string rpl_created(const std::string &client, const std::string &date)
     {
-        return ":irc.forty-two.com 003 " + client + " :This server was created " + date +"\r\n";
+        return ":irc.forty-two.com 003 " + client + " :This server was created " + date + "\r\n";
     }
 
     // RPL_MYINFO (004)
@@ -139,7 +139,7 @@ namespace ft
     // RPL_INVITELIST (336)
     std::string rpl_invitelist(const std::string &client, const std::string &channel)
     {
-        return ":irc.forty-two.com 336 " + client + " " + channel +"\r\n";
+        return ":irc.forty-two.com 336 " + client + " " + channel + "\r\n";
     }
 
     // RPL_ENDOFINVITELIST (337)
@@ -262,6 +262,13 @@ namespace ft
     std::string err_unknowncommand(const std::string &client, const std::string &command)
     {
         return ":irc.forty-two.com 421 " + client + " " + command + " :Unknown command\r\n";
+    }
+
+
+    // ERR_ERRONEUSNICKNAME (431)
+    std::string err_nonicknamegiven(const std::string &client)
+    {
+        return ":irc.forty-two.com 431 " + client + " :No nickname given\r\n";
     }
 
     // ERR_ERRONEUSNICKNAME (432)
