@@ -13,7 +13,7 @@ namespace ft
 
 	size_t const Protocol::_message_max_parameters = 15;
 
-	Protocol::Protocol(Server const* server) : _server(server), _functions(), _clients()
+	Protocol::Protocol(Server const *server) : _server(server), _functions(), _clients()
 	{
 		_functions.insert(std::pair<std::string, fncts>("PASS", &Protocol::pass_function));
 		_functions.insert(std::pair<std::string, fncts>("NICK", &Protocol::nick_function));
@@ -22,7 +22,7 @@ namespace ft
 
 	Protocol::~Protocol(void) {}
 
-	void Protocol::set_password(std::string const& password) { _password = password; }
+	void Protocol::set_password(std::string const &password) { _password = password; }
 
 	void Protocol::add_client(int socket)
 	{
@@ -38,7 +38,7 @@ namespace ft
 		}
 	}
 
-	void Protocol::parse_client_input(std::string& client_msg, int client_socket)
+	void Protocol::parse_client_input(std::string &client_msg, int client_socket)
 	{
 		std::string line;
 		size_t pos;
@@ -80,26 +80,26 @@ namespace ft
 	{
 		std::vector<std::string> parameters;
 		std::string error;
-		Client& client = _get_client_from_socket(msg.get_socket());
+		Client &client = _get_client_from_socket(msg.get_socket());
 
 		if (client.get_password_status())
 		{
 			error = err_alreadyregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		parameters = msg.get_parameters();
 		if (parameters.empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "PASS");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		if (parameters[0] != _password)
 		{
 			error = err_passwdmismatch(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		client.set_password_status(true);
 	}
@@ -109,21 +109,20 @@ namespace ft
 		std::vector<std::string> parameters;
 		std::string nickname;
 		std::string error;
-		Client& client = _get_client_from_socket(msg.get_socket());
+		Client &client = _get_client_from_socket(msg.get_socket());
 
-		if ((client.get_nickname() == "*" && !client.get_password_status())
-				|| (client.get_nickname() != "*" && !client.get_registration_status()))
+		if ((client.get_nickname() == "*" && !client.get_password_status()) || (client.get_nickname() != "*" && !client.get_registration_status()))
 		{
 			error = err_notregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		parameters = msg.get_parameters();
 		if (parameters.empty() || parameters[0].empty())
 		{
 			error = err_nonicknamegiven(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		else
 			nickname = parameters[0];
@@ -131,7 +130,7 @@ namespace ft
 		{
 			error = err_erroneusnickname(client.get_nickname(), nickname);
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
 		{
@@ -139,7 +138,7 @@ namespace ft
 			{
 				error = err_nicknameinuse(client.get_nickname(), nickname);
 				send(msg.get_socket(), error.c_str(), error.size(), 0);
-				return ;
+				return;
 			}
 		}
 		client.set_nickname(nickname);
@@ -151,34 +150,33 @@ namespace ft
 		std::vector<std::string> parameters;
 		std::string error;
 		std::string reply;
-		Client& client = _get_client_from_socket(msg.get_socket());
+		Client &client = _get_client_from_socket(msg.get_socket());
 
 		if (!client.get_password_status())
 		{
 			error = err_notregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		if (client.get_nickname() == "*")
 		{
 			error = err_nonicknamegiven(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		parameters = msg.get_parameters();
 
-		if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty()
-				|| parameters[2].empty() || msg.get_remainder().empty())
+		if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty() || parameters[2].empty() || msg.get_remainder().empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "USER");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		if (client.get_registration_status())
 		{
 			error = err_alreadyregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return ;
+			return;
 		}
 		client.set_username(parameters[0]);
 		client.set_hostname(parameters[1]);
@@ -186,18 +184,18 @@ namespace ft
 		client.set_real_name(msg.get_remainder());
 		client.set_registration_status(true);
 		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
-				client.get_username(), client.get_hostname());
+							client.get_username(), client.get_hostname());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
-				"TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
+						   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
-	Client& Protocol::_get_client_from_socket(int socket)
+	Client &Protocol::_get_client_from_socket(int socket)
 	{
 		size_t pos;
 
@@ -207,5 +205,88 @@ namespace ft
 				pos = i;
 		}
 		return _clients[pos];
+	}
+
+	Client &Protocol::_get_client_from_nickname(const std::string &nickname)
+	{
+		size_t pos;
+
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_nickname() == nickname)
+				pos = i;
+		}
+
+		// Return a reference to the client at the found position
+		return _clients[pos];
+	}
+
+	void Protocol::cmd_privmsg(Message msg)
+	{
+		// Get the client sending the message
+		Client &current_client = _get_client_from_socket(msg.get_socket());
+
+		// Extract the parameters from the message
+		std::vector<std::string> parameters = msg.get_parameters();
+
+		// Ensure that the message has at least one parameter (the target)
+		if (parameters.size() < 1)
+		{
+			// If there is no target parameter, send an error message
+			std::string error = err_needmoreparams(current_client.get_nickname(), "PRIVMSG");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return;
+		}
+
+		// Determine if the target is a user or a channel
+		bool is_channel = false;
+		if (parameters[0][0] == '#')
+		{
+			is_channel = true;
+		}
+
+		// Extract the message text from the parameters
+		std::string message;
+		for (size_t i = 1; i < parameters.size(); i++)
+		{
+			message += " " + parameters[i];
+		}
+		// Remove the space character
+		message = message.substr(1);
+
+		// Send the message to the target/channel
+		if (is_channel)
+		{
+			// TODO: CHANNEL
+		}
+		else
+		{
+			// Check if the nickname exists
+			std::string const target_nickname = parameters[0];
+			bool nickname_exists = false;
+			for (size_t i = 0; i < _clients.size(); i++)
+			{
+				if (_clients[i].get_nickname() == target_nickname)
+				{
+					nickname_exists = true;
+					break;
+				}
+			}
+			if (nickname_exists)
+			{
+				// Send the message if the target exists
+				Client &target_client = _get_client_from_nickname(target_nickname);
+				std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_nickname + " :" + message + "\r\n";
+				send(target_client.get_socket(), send_msg.c_str(), send_msg.size(), 0);
+				return;
+			}
+			else
+			{
+				// If there is no target nickname, send an error message
+				std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
+				send(msg.get_socket(), error.c_str(), error.size(), 0);
+				return;
+			}
+		}
 	}
 }
