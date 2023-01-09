@@ -14,13 +14,15 @@
 
 namespace ft
 {
+	class Server; // to avoid "cyclic dependency"
+
 	class Protocol
 	{
 		private:
 			typedef void (Protocol::*fncts)(Message);
 
 		public:
-			Protocol(void);
+			Protocol(Server const* server);
 			~Protocol(void);
 
 			void set_password(std::string const& password);
@@ -44,6 +46,7 @@ namespace ft
 			Protocol(Protocol const& x);
 			Protocol& operator=(Protocol const& x);
 
+			Server const* _server;
 			std::string _password;
 			std::map<std::string, fncts> _functions;
 			std::vector<Client> _clients;
