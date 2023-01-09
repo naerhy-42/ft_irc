@@ -197,7 +197,7 @@ namespace ft
 			if (_clients[i].get_socket() == socket)
 				pos = i;
 		}
-			// we always return a valid object -> otherwise we should have returnered pointer
-			return _clients[pos];
+		// we always return a valid object -> otherwise we should have returnered pointer
+		return _clients[pos];
 	}
 }
