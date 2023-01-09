@@ -94,7 +94,7 @@ namespace ft
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
 			return ;
 		}
-		if (parameters.at(0) != _password)
+		if (parameters[0] != _password)
 		{
 			error = err_passwdmismatch(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
@@ -118,14 +118,14 @@ namespace ft
 			return ;
 		}
 		parameters = msg.get_parameters();
-		if (parameters.empty() || parameters.at(0).empty())
+		if (parameters.empty() || parameters[0].empty())
 		{
 			error = err_nonicknamegiven(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
 			return ;
 		}
 		else
-			nickname = parameters.at(0);
+			nickname = parameters[0];
 		if (nickname.length() > 9 || nickname.find_first_of(" ,*?!@.#&()[]") != std::string::npos)
 		{
 			error = err_erroneusnickname(client.get_nickname(), nickname);
@@ -164,8 +164,8 @@ namespace ft
 			return ;
 		}
 		parameters = msg.get_parameters();
-		if (parameters.size() < 4 || parameters.at(0).empty() || parameters.at(1).empty()
-				|| parameters.at(2).empty() || parameters.at(3).empty())
+		if (parameters.size() < 4 || parameters[0].empty() || parameters[1].empty()
+				|| parameters[2].empty() || parameters[3].empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "USER");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
@@ -177,8 +177,8 @@ namespace ft
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
 			return ;
 		}
-		client.set_username(parameters.at(0));
-		client.set_hostname(parameters.at(1));
+		client.set_username(parameters[0]);
+		client.set_hostname(parameters[1]);
 		// we do not store servername because useless if we don't handle multi server [?]
 		client.set_real_name(msg.get_remainder());
 		client.set_registration_status(true);
