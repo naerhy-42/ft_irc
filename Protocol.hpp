@@ -36,9 +36,13 @@ namespace ft
 			void pass_function(Message msg);
 			void nick_function(Message msg);
 			void user_function(Message msg);
+			void cmd_privmsg(Message msg);
+
 
 		private:
 			Client& _get_client_from_socket(int socket);
+			Client&	_get_client_from_nickname(const std::string &nickname);
+
 
 			static size_t const _message_max_characters;
 			static size_t const _message_max_parameters;
