@@ -25,7 +25,6 @@
 
 namespace ft
 {
-
 	class Server
 	{
 		private:
@@ -46,9 +45,9 @@ namespace ft
 			int init_socket(void);
 			void wait_connections(void);
 
-			std::string const& getHostname(void) const;
-			std::string const& getVersion(void) const;
-			std::string const& getCreationTime(void) const;
+			std::string const& get_hostname(void) const;
+			std::string const& get_version(void) const;
+			std::string const& get_creation_time(void) const;
 
 		private:
 			int _get_max_fd(void) const;
@@ -61,7 +60,7 @@ namespace ft
 			fd_set _rfds_temp;
 			std::string _hostname;
 			std::string _version;
-			std::string _creationTime;
+			std::string _creation_time;
 			Protocol _protocol;
 	};
 }

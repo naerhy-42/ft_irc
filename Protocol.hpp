@@ -14,7 +14,7 @@
 
 namespace ft
 {
-	class Server; // to avoid "cyclic dependency"
+	class Server;
 
 	class Protocol
 	{
