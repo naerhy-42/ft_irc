@@ -1,4 +1,5 @@
 #include "Protocol.hpp"
+#include "Server.hpp"
 
 // remove after test
 // remove after test
@@ -165,8 +166,9 @@ namespace ft
 			return ;
 		}
 		parameters = msg.get_parameters();
-		if (parameters.size() < 4 || parameters[0].empty() || parameters[1].empty()
-				|| parameters[2].empty() || parameters[3].empty())
+
+		if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty()
+				|| parameters[2].empty() || msg.get_remainder().empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "USER");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
@@ -180,19 +182,18 @@ namespace ft
 		}
 		client.set_username(parameters[0]);
 		client.set_hostname(parameters[1]);
+		client.set_servername(parameters[2]);
 		client.set_real_name(msg.get_remainder());
 		client.set_registration_status(true);
-		// return RPL_WELCOME
-		// reply = rpl_welcome();
+		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
+				client.get_username(), client.get_hostname());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
-		// return RPL_YOURHOST
-		// reply = rpl_yourhost();
+		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
-		// return RPL_CREATED
-	//	reply = rpl_created();
+		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
-		// return RPL_MYINFO
-		//reply = rpl_myinfo();
+		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
+				"TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 	}
 

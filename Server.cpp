@@ -8,7 +8,7 @@ namespace ft
 	{
 		time_t now = std::time(0);
 
-		_creationTime = ctime(&now);
+		_creation_time = ctime(&now);
 	}
 
 	bool Server::validate_args(std::string port, std::string password)
@@ -198,11 +198,11 @@ namespace ft
 		}
 	}
 
-	std::string const& Server::getHostname(void) const { return _hostname; }
+	std::string const& Server::get_hostname(void) const { return _hostname; }
 
-	std::string const& Server::getVersion(void) const { return _version; }
+	std::string const& Server::get_version(void) const { return _version; }
 
-	std::string const& Server::getCreationTime(void) const { return _creationTime; }
+	std::string const& Server::get_creation_time(void) const { return _creation_time; }
 
 	int Server::_get_max_fd(void) const
 	{

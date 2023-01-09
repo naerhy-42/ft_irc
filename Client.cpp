@@ -12,6 +12,8 @@ namespace ft
 
 	std::string const& Client::get_hostname(void) const { return _hostname; }
 
+	std::string const& Client::get_servername(void) const { return _servername; }
+
 	std::string const& Client::get_real_name(void) const { return _real_name; }
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
@@ -23,6 +25,8 @@ namespace ft
 	void Client::set_username(std::string const& username) { _username = username; }
 
 	void Client::set_hostname(std::string const& hostname) { _hostname = hostname; }
+
+	void Client::set_servername(std::string const& servername) { _servername = servername; }
 
 	void Client::set_real_name(std::string const& real_name) { _real_name = real_name; }
 
