@@ -4,7 +4,12 @@ namespace ft
 {
 	int const Server::_buffer_size = 512;
 
-	Server::Server(void) : _fds(), _protocol() {}
+	Server::Server(void) : _fds(), _hostname("localhost"), _version("0.42"), _protocol(this)
+	{
+		time_t now = std::time(0);
+
+		_creationTime = ctime(&now);
+	}
 
 	bool Server::validate_args(std::string port, std::string password)
 	{
@@ -192,6 +197,12 @@ namespace ft
 	        }
 		}
 	}
+
+	std::string const& Server::getHostname(void) const { return _hostname; }
+
+	std::string const& Server::getVersion(void) const { return _version; }
+
+	std::string const& Server::getCreationTime(void) const { return _creationTime; }
 
 	int Server::_get_max_fd(void) const
 	{

@@ -5,6 +5,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 
 #include <string.h>
 #include <unistd.h>
@@ -45,6 +46,10 @@ namespace ft
 			int init_socket(void);
 			void wait_connections(void);
 
+			std::string const& getHostname(void) const;
+			std::string const& getVersion(void) const;
+			std::string const& getCreationTime(void) const;
+
 		private:
 			int _get_max_fd(void) const;
 
@@ -54,6 +59,9 @@ namespace ft
 			std::vector<int> _fds;
 			fd_set _rfds;
 			fd_set _rfds_temp;
+			std::string _hostname;
+			std::string _version;
+			std::string _creationTime;
 			Protocol _protocol;
 	};
 }

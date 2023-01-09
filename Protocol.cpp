@@ -12,7 +12,7 @@ namespace ft
 
 	size_t const Protocol::_message_max_parameters = 15;
 
-	Protocol::Protocol(void) : _functions(), _clients()
+	Protocol::Protocol(Server const* server) : _server(server), _functions(), _clients()
 	{
 		_functions.insert(std::pair<std::string, fncts>("PASS", &Protocol::pass_function));
 		_functions.insert(std::pair<std::string, fncts>("NICK", &Protocol::nick_function));
@@ -149,6 +149,7 @@ namespace ft
 	{
 		std::vector<std::string> parameters;
 		std::string error;
+		std::string reply;
 		Client& client = _get_client_from_socket(msg.get_socket());
 
 		if (!client.get_password_status())
@@ -179,13 +180,20 @@ namespace ft
 		}
 		client.set_username(parameters[0]);
 		client.set_hostname(parameters[1]);
-		// we do not store servername because useless if we don't handle multi server [?]
 		client.set_real_name(msg.get_remainder());
 		client.set_registration_status(true);
 		// return RPL_WELCOME
+		// reply = rpl_welcome();
+		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		// return RPL_YOURHOST
+		// reply = rpl_yourhost();
+		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		// return RPL_CREATED
+	//	reply = rpl_created();
+		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 		// return RPL_MYINFO
+		//reply = rpl_myinfo();
+		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
 	Client& Protocol::_get_client_from_socket(int socket)
@@ -197,7 +205,6 @@ namespace ft
 			if (_clients[i].get_socket() == socket)
 				pos = i;
 		}
-		// we always return a valid object -> otherwise we should have returnered pointer
 		return _clients[pos];
 	}
 }
