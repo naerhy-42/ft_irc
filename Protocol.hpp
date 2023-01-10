@@ -33,9 +33,9 @@ namespace ft
 			void parse_client_input(std::string& client_msg, int client_socket);
 			void handle_message(Message msg);
 
-			void pass_function(Message msg);
-			void nick_function(Message msg);
-			void user_function(Message msg);
+			void cmd_pass(Message msg);
+			void cmd_nick(Message msg);
+			void cmd_user(Message msg);
 			void cmd_privmsg(Message msg);
 
 
@@ -52,7 +52,7 @@ namespace ft
 
 			Server const* _server;
 			std::string _password;
-			std::map<std::string, fncts> _functions;
+			std::map<std::string, fncts> _commands;
 			std::vector<Client> _clients;
 	};
 }

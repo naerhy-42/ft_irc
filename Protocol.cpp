@@ -13,11 +13,12 @@ namespace ft
 
 	size_t const Protocol::_message_max_parameters = 15;
 
-	Protocol::Protocol(Server const *server) : _server(server), _functions(), _clients()
+	Protocol::Protocol(Server const *server) : _server(server), _commands(), _clients()
 	{
-		_functions.insert(std::pair<std::string, fncts>("PASS", &Protocol::pass_function));
-		_functions.insert(std::pair<std::string, fncts>("NICK", &Protocol::nick_function));
-		_functions.insert(std::pair<std::string, fncts>("USER", &Protocol::user_function));
+		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
+		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
+		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
+		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 	}
 
 	Protocol::~Protocol(void) {}
@@ -71,12 +72,12 @@ namespace ft
 
 	void Protocol::handle_message(Message msg)
 	{
-		if (_functions.count(msg.get_command()))
-			(this->*_functions[msg.get_command()])(msg);
+		if (_commands.count(msg.get_command()))
+			(this->*_commands[msg.get_command()])(msg);
 		// else do something if command is unknown??
 	}
 
-	void Protocol::pass_function(Message msg)
+	void Protocol::cmd_pass(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string error;
@@ -104,7 +105,7 @@ namespace ft
 		client.set_password_status(true);
 	}
 
-	void Protocol::nick_function(Message msg)
+	void Protocol::cmd_nick(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string nickname;
@@ -145,7 +146,7 @@ namespace ft
 		// return replies to other members if needed [?]
 	}
 
-	void Protocol::user_function(Message msg)
+	void Protocol::cmd_user(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string error;
@@ -246,13 +247,7 @@ namespace ft
 		}
 
 		// Extract the message text from the parameters
-		std::string message;
-		for (size_t i = 1; i < parameters.size(); i++)
-		{
-			message += " " + parameters[i];
-		}
-		// Remove the space character
-		message = message.substr(1);
+		std::string message = msg.get_remainder();
 
 		// Send the message to the target/channel
 		if (is_channel)
