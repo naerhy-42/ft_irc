@@ -169,21 +169,7 @@ namespace ft
 					            continue;
 					        }
 					        else if (bytes_received == 0)
-					        {
-					            // The client has closed the connection
-					            // Remove the client file descriptor from the set of file descriptors
-					            for (std::vector<int>::iterator it = _fds.begin(); it != _fds.end(); ++it)
-					            {
-					                if (*it == client_fd)
-					                {
-										_protocol.delete_client(*it);
-					                    _fds.erase(it);
-					                    break;
-					                }
-					            }
-					            // Close the client socket
-					            close(client_fd);
-					        }
+								close_socket_connection(client_fd);
 					        else
 					        {
 					            // Data was received from the client
@@ -196,6 +182,20 @@ namespace ft
 	            }
 	        }
 		}
+	}
+
+	void Server::close_socket_connection(int socket)
+	{
+		for (std::vector<int>::iterator it = _fds.begin(); it != _fds.end(); ++it)
+		{
+			if (*it == socket)
+			{
+				_protocol.delete_client(*it);
+				_fds.erase(it);
+				break;
+			}
+		}
+		close(socket);
 	}
 
 	std::string const& Server::get_hostname(void) const { return _hostname; }

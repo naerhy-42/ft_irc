@@ -44,6 +44,7 @@ namespace ft
 			bool validate_args(std::string port, std::string password);
 			int init_socket(void);
 			void wait_connections(void);
+			void close_socket_connection(int socket);
 
 			std::string const& get_hostname(void) const;
 			std::string const& get_version(void) const;
