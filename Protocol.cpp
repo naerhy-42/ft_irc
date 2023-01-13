@@ -196,6 +196,24 @@ namespace ft
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
+	void Protocol::cmd_quit(Message msg)
+	{
+		Client& client = _get_client_from_socket(msg.get_socket());
+
+		// IRC clients should normally not send those commands if unregistered...
+		if (!client.get_password_status())
+			return;
+		delete_client(client.get_socket());
+		// call server function to delete client socket from _fds
+		// _server is const => unable to call this function, remove const??
+		// _server.remove_socket(client.get_socket());
+		// if client is on a channel, send QUIT command to clients in this channel
+	}
+
+	void Protocol::cmd_quit(Message msg)
+	{
+	}
+
 	Client &Protocol::_get_client_from_socket(int socket)
 	{
 		size_t pos;
