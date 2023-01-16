@@ -23,7 +23,7 @@ namespace ft
 		typedef void (Protocol::*fncts)(Message);
 
 	public:
-		Protocol(Server const *server);
+		Protocol(Server *server);
 		~Protocol(void);
 
 		void set_password(std::string const &password);
@@ -46,6 +46,8 @@ namespace ft
 		void cmd_user(Message msg);
 		void cmd_privmsg(Message msg);
 		void cmd_join(Message msg);
+		void cmd_ping(Message msg);
+		void cmd_quit(Message msg);
 
 	private:
 		Client &_get_client_from_socket(int socket);
@@ -59,7 +61,7 @@ namespace ft
 		Protocol(Protocol const &x);
 		Protocol &operator=(Protocol const &x);
 
-		Server const *_server;
+		Server *_server;
 		std::string _password;
 		std::map<std::string, fncts> _commands;
 		std::vector<Client> _clients;
