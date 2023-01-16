@@ -47,6 +47,7 @@ namespace ft
 		std::string line;
 		size_t pos;
 		std::vector<std::string> lines;
+		int cmd_err;
 
 		// if message is > 512 chars, we truncate it and add CRLF at the end
 		if (client_msg.size() > _message_max_characters)
@@ -69,18 +70,22 @@ namespace ft
 			Message msg(lines[i], client_socket);
 			// we do not care about messages with more than 15 parameters
 			if (msg.get_parameters().size() <= _message_max_parameters)
-				handle_message(msg);
+			{
+				cmd_err = handle_message(msg);
+				if (!cmd_err)
+					return;
+			}
 		}
 	}
 
-	void Protocol::handle_message(Message msg)
+	int Protocol::handle_message(Message msg)
 	{
 		if (_commands.count(msg.get_command()))
-			(this->*_commands[msg.get_command()])(msg);
-		// else do something if command is unknown??
+			return (this->*_commands[msg.get_command()])(msg);
+		return -1;
 	}
 
-	void Protocol::cmd_pass(Message msg)
+	int Protocol::cmd_pass(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string error;
@@ -90,25 +95,26 @@ namespace ft
 		{
 			error = err_alreadyregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		parameters = msg.get_parameters();
 		if (parameters.empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "PASS");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		if (parameters[0] != _password)
 		{
 			error = err_passwdmismatch(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		client.set_password_status(true);
+		return 1;
 	}
 
-	void Protocol::cmd_nick(Message msg)
+	int Protocol::cmd_nick(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string nickname;
@@ -119,14 +125,14 @@ namespace ft
 		{
 			error = err_notregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		parameters = msg.get_parameters();
 		if (parameters.empty() || parameters[0].empty())
 		{
 			error = err_nonicknamegiven(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		else
 			nickname = parameters[0];
@@ -134,7 +140,7 @@ namespace ft
 		{
 			error = err_erroneusnickname(client.get_nickname(), nickname);
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
 		{
@@ -142,14 +148,15 @@ namespace ft
 			{
 				error = err_nicknameinuse(client.get_nickname(), nickname);
 				send(msg.get_socket(), error.c_str(), error.size(), 0);
-				return;
+				return 0;
 			}
 		}
 		client.set_nickname(nickname);
 		// return replies to other members if needed [?]
+		return 1;
 	}
 
-	void Protocol::cmd_user(Message msg)
+	int Protocol::cmd_user(Message msg)
 	{
 		std::vector<std::string> parameters;
 		std::string error;
@@ -160,13 +167,13 @@ namespace ft
 		{
 			error = err_notregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		if (client.get_nickname() == "*")
 		{
 			error = err_nonicknamegiven(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		parameters = msg.get_parameters();
 
@@ -174,13 +181,13 @@ namespace ft
 		{
 			error = err_needmoreparams(client.get_nickname(), "USER");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		if (client.get_registration_status())
 		{
 			error = err_alreadyregistered(client.get_nickname());
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 		client.set_username(parameters[0]);
 		client.set_hostname(parameters[1]);
@@ -197,29 +204,32 @@ namespace ft
 		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
 						   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
+		return 1;
 	}
 
-	void Protocol::cmd_quit(Message msg)
+	int Protocol::cmd_quit(Message msg)
 	{
 		Client& client = _get_client_from_socket(msg.get_socket());
 
 		// IRC clients should normally not send those commands if unregistered...
 		if (!client.get_password_status())
-			return;
+			return 0;
 		_server->close_socket_connection(client.get_socket());
 		// if client is on a channel, send QUIT command to clients in this channel
+		return 1;
 	}
 
-	void Protocol::cmd_ping(Message msg)
+	int Protocol::cmd_ping(Message msg)
 	{
 		Client &client = _get_client_from_socket(msg.get_socket());
 		std::string pong;
 
 		// IRC clients should normally not send those commands if unregistered...
 		if (!client.get_password_status())
-			return;
+			return 0;
 		pong = "PONG\r\n";
 		send(client.get_socket(), pong.c_str(), pong.size(), 0);
+		return 1;
 	}
 
 	Client &Protocol::_get_client_from_socket(int socket)
@@ -248,7 +258,7 @@ namespace ft
 		return _clients[pos];
 	}
 
-	void Protocol::cmd_privmsg(Message msg)
+	int Protocol::cmd_privmsg(Message msg)
 	{
 		// Get the client sending the message
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -262,7 +272,7 @@ namespace ft
 			// If there is no target parameter, send an error message
 			std::string error = err_needmoreparams(current_client.get_nickname(), "PRIVMSG");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 
 		// Determine if the target is a user or a channel
@@ -300,14 +310,14 @@ namespace ft
 					if (client_socket != current_client.get_socket())
 						send(client_socket, send_msg.c_str(), send_msg.size(), 0);
 				}
-				return;
+				return 1;
 			}
 			else
 			{
 				// If there is no target channel, send an error message
 				std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
 				send(msg.get_socket(), error.c_str(), error.size(), 0);
-				return;
+				return 0;
 			}
 		}
 		else
@@ -329,16 +339,17 @@ namespace ft
 				Client &target_client = _get_client_from_nickname(target_nickname);
 				std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_nickname + " :" + message + "\r\n";
 				send(target_client.get_socket(), send_msg.c_str(), send_msg.size(), 0);
-				return;
+				return 1;
 			}
 			else
 			{
 				// If there is no target nickname, send an error message
 				std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
 				send(msg.get_socket(), error.c_str(), error.size(), 0);
-				return;
+				return 0;
 			}
 		}
+		return 1;
 	}
 
 	void Protocol::add_channel(std::string channel_name)
@@ -384,7 +395,7 @@ namespace ft
 		return _channels[pos];
 	}
 
-	void Protocol::cmd_join(Message msg)
+	int Protocol::cmd_join(Message msg)
 	{
 		// Get the client joining the channel
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -398,10 +409,17 @@ namespace ft
 			// If there is no channel parameter, send an error message
 			std::string error = err_needmoreparams(current_client.get_nickname(), "JOIN");
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
-			return;
+			return 0;
 		}
 
 		// Extract the channel name from the parameters
+		// else do something if command is unknown??
+		// else do something if command is unknown??
+		// else do something if command is unknown??
+		// else do something if command is unknown??
+		// else do something if command is unknown??
+		// else do something if command is unknown??
+		// else do something if command is unknown??
 		std::string channel_name = parameters[0];
 
 		// Check if the channel already exists
@@ -440,6 +458,7 @@ namespace ft
 		// Send a JOIN message to the client
 		std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
 		send(current_client.get_socket(), join_msg.c_str(), join_msg.size(), 0);
+		return 1;
 	}
 
 }
