@@ -19,6 +19,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
+		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 	}
 
 	Protocol::~Protocol(void) {}
@@ -196,23 +197,23 @@ namespace ft
 		send(msg.get_socket(), reply.c_str(), reply.size(), 0);
 	}
 
-	void Protocol::cmd_quit(Message msg)
-	{
-		Client& client = _get_client_from_socket(msg.get_socket());
+	// void Protocol::cmd_quit(Message msg)
+	// {
+	// 	Client& client = _get_client_from_socket(msg.get_socket());
 
-		// IRC clients should normally not send those commands if unregistered...
-		if (!client.get_password_status())
-			return;
-		delete_client(client.get_socket());
-		// call server function to delete client socket from _fds
-		// _server is const => unable to call this function, remove const??
-		// _server.remove_socket(client.get_socket());
-		// if client is on a channel, send QUIT command to clients in this channel
-	}
+	// 	// IRC clients should normally not send those commands if unregistered...
+	// 	if (!client.get_password_status())
+	// 		return;
+	// 	delete_client(client.get_socket());
+	// 	// call server function to delete client socket from _fds
+	// 	// _server is const => unable to call this function, remove const??
+	// 	// _server.remove_socket(client.get_socket());
+	// 	// if client is on a channel, send QUIT command to clients in this channel
+	// }
 
-	void Protocol::cmd_quit(Message msg)
-	{
-	}
+	// void Protocol::cmd_quit(Message msg)
+	// {
+	// }
 
 	Client &Protocol::_get_client_from_socket(int socket)
 	{
@@ -270,7 +271,37 @@ namespace ft
 		// Send the message to the target/channel
 		if (is_channel)
 		{
-			// TODO: CHANNEL
+			// Check if the channel exists
+			std::string const target_channel_name = parameters[0];
+			bool channel_exists = false;
+			for (size_t i = 0; i < _channels.size(); i++)
+			{
+				if (_channels[i].get_name() == target_channel_name)
+				{
+					channel_exists = true;
+					break;
+				}
+			}
+			if (channel_exists)
+			{
+				// Send the message to all clients in the channel
+				Channel &target_channel = _get_channel_from_name(target_channel_name);
+				std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_channel.get_name() + " :" + message + "\r\n";
+				for (size_t i = 0; i < target_channel.get_clients().size(); i++)
+				{
+					int client_socket = target_channel.get_clients()[i].get_socket();
+					if (client_socket != current_client.get_socket())
+						send(client_socket, send_msg.c_str(), send_msg.size(), 0);
+				}
+				return;
+			}
+			else
+			{
+				// If there is no target channel, send an error message
+				std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
+				send(msg.get_socket(), error.c_str(), error.size(), 0);
+				return;
+			}
 		}
 		else
 		{
@@ -302,4 +333,106 @@ namespace ft
 			}
 		}
 	}
+
+	void Protocol::add_channel(std::string channel_name)
+	{
+		_channels.push_back(Channel(channel_name));
+	}
+
+	void Protocol::delete_channel(std::string channel_name)
+	{
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i].get_name() == channel_name)
+				_channels.erase(_channels.begin() + i);
+		}
+	}
+
+	bool Protocol::is_valid_channel_name(std::string channel_name)
+	{
+		// check if the channel name starts with '#'
+		if (channel_name[0] != '#')
+			return false;
+
+		// check if the channel name contains only valid characters
+		for (unsigned int i = 0; i < channel_name.size(); i++)
+		{
+			char c = channel_name[i];
+			if (!isalnum(c) && c != '#' && c != '-' && c != '_')
+				return false;
+		}
+
+		return true;
+	}
+
+	Channel &Protocol::_get_channel_from_name(const std::string &channel_name)
+	{
+		size_t pos;
+
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i].get_name() == channel_name)
+				pos = i;
+		}
+		return _channels[pos];
+	}
+
+	void Protocol::cmd_join(Message msg)
+	{
+		// Get the client joining the channel
+		Client &current_client = _get_client_from_socket(msg.get_socket());
+
+		// Extract the parameters from the message
+		std::vector<std::string> parameters = msg.get_parameters();
+
+		// Ensure that the message has at least one parameter (the channel name)
+		if (parameters.size() < 1)
+		{
+			// If there is no channel parameter, send an error message
+			std::string error = err_needmoreparams(current_client.get_nickname(), "JOIN");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return;
+		}
+
+		// Extract the channel name from the parameters
+		std::string channel_name = parameters[0];
+
+		// Check if the channel already exists
+		bool channel_exists = false;
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i].get_name() == channel_name)
+			{
+				channel_exists = true;
+				break;
+			}
+		}
+
+		if (channel_exists)
+		{
+			// Add the client to the channel if it exists
+			Channel &channel = _get_channel_from_name(channel_name);
+			channel.add_client(current_client);
+		}
+		else
+		{
+			bool is_channel_name_corect = is_valid_channel_name(channel_name);
+			if (is_channel_name_corect == true)
+			{
+				// Create a new channel and add the client to it if it doesn't exist
+				Channel new_channel(channel_name);
+				new_channel.add_client(current_client);
+				_channels.push_back(new_channel);
+			}
+			else
+			{
+				// this error does not exist in protocol
+			}
+		}
+
+		// Send a JOIN message to the client
+		std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
+		send(current_client.get_socket(), join_msg.c_str(), join_msg.size(), 0);
+	}
+
 }
