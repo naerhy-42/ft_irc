@@ -6,11 +6,7 @@
 #include <vector>
 #include <string>
 
-
 #include <sstream>
-
-
-
 
 namespace ft
 {
@@ -73,8 +69,7 @@ namespace ft
     std::string rpl_endofwhois(const std::string &client, const std::string &nick);
 
     // RPL_WHOISCHANNELS (319)
-    std::string rpl_whoischannels(const std::string &client, const std::string &nick,
-                                  const std::vector<std::pair<char, std::string> > &channels);
+    std::string rpl_whoischannels(const std::string &client, const std::string &nick, const std::string &channels);
 
     // RPL_LISTSTART (321)
     std::string rpl_liststart(const std::string &client);
@@ -142,7 +137,7 @@ namespace ft
     // ERR_UNKNOWNCOMMAND (421)
     std::string err_unknowncommand(const std::string &client, const std::string &command);
 
-	// ERR_NONICKNAMEGIVEN (431)
+    // ERR_NONICKNAMEGIVEN (431)
     std::string err_nonicknamegiven(const std::string &client);
 
     // ERR_ERRONEUSNICKNAME (432)
@@ -190,6 +185,14 @@ namespace ft
 
     // ERR_BADCHANNELKEY (475)
     std::string err_badchannelkey(const std::string &client, const std::string &channel);
+
+    // RPL_NAMREPLY (353)
+    std::string rpl_namreply(const std::string &server_name, const std::string &client, const std::string &channel_name,
+                             const std::vector<std::string> &user_list);
+
+    // RPL_ENDOFNAMES (366) 
+    std::string rpl_endofnames(const std::string &client, const std::string &channel);
+
 }
 
 #endif

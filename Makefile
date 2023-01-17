@@ -16,7 +16,7 @@ OBJ = ./obj
 
 CXX = c++
 
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -pedantic
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -pedantic -g
 
 RM = rm -f
 
