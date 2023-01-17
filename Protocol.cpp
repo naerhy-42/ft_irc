@@ -20,8 +20,10 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
-		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_join));
-		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_join));
+		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
+		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
+		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
+		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 	}
 
 	Protocol::~Protocol(void) {}
@@ -209,7 +211,7 @@ namespace ft
 
 	int Protocol::cmd_quit(Message msg)
 	{
-		Client& client = _get_client_from_socket(msg.get_socket());
+		Client &client = _get_client_from_socket(msg.get_socket());
 
 		// IRC clients should normally not send those commands if unregistered...
 		if (!client.get_password_status())
@@ -293,7 +295,8 @@ namespace ft
 			bool channel_exists = false;
 			for (size_t i = 0; i < _channels.size(); i++)
 			{
-				if (_channels[i].get_name() == target_channel_name)
+				std::cout << _channels[i]->get_name() << std::endl;
+				if (_channels[i]->get_name() == target_channel_name)
 				{
 					channel_exists = true;
 					break;
@@ -352,16 +355,16 @@ namespace ft
 		return 1;
 	}
 
-	void Protocol::add_channel(std::string channel_name)
-	{
-		_channels.push_back(Channel(channel_name));
-	}
+	// void Protocol::add_channel(std::string channel_name)
+	// {
+	// 	_channels.push_back(Channel(channel_name));
+	// }
 
 	void Protocol::delete_channel(std::string channel_name)
 	{
 		for (size_t i = 0; i < _channels.size(); i++)
 		{
-			if (_channels[i].get_name() == channel_name)
+			if (_channels[i]->get_name() == channel_name)
 				_channels.erase(_channels.begin() + i);
 		}
 	}
@@ -369,6 +372,8 @@ namespace ft
 	bool Protocol::is_valid_channel_name(std::string channel_name)
 	{
 		// check if the channel name starts with '#'
+		if (channel_name.size() < 1)
+			return false;
 		if (channel_name[0] != '#')
 			return false;
 
@@ -385,14 +390,12 @@ namespace ft
 
 	Channel &Protocol::_get_channel_from_name(const std::string &channel_name)
 	{
-		size_t pos;
-
 		for (size_t i = 0; i < _channels.size(); i++)
 		{
-			if (_channels[i].get_name() == channel_name)
-				pos = i;
+			if (_channels[i]->get_name() == channel_name)
+				return *_channels[i];
 		}
-		return _channels[pos];
+		throw std::out_of_range("channel not found");
 	}
 
 	int Protocol::cmd_join(Message msg)
@@ -426,7 +429,7 @@ namespace ft
 		bool channel_exists = false;
 		for (size_t i = 0; i < _channels.size(); i++)
 		{
-			if (_channels[i].get_name() == channel_name)
+			if (_channels[i]->get_name() == channel_name)
 			{
 				channel_exists = true;
 				break;
@@ -445,12 +448,13 @@ namespace ft
 			if (is_channel_name_corect == true)
 			{
 				// Create a new channel and add the client to it if it doesn't exist
-				Channel new_channel(channel_name);
-				new_channel.add_client(current_client);
+				Channel *new_channel = new Channel(channel_name, current_client.get_real_name());
+				new_channel->add_client(current_client);
 				_channels.push_back(new_channel);
 			}
 			else
 			{
+				return 0;
 				// this error does not exist in protocol
 			}
 		}
@@ -458,7 +462,122 @@ namespace ft
 		// Send a JOIN message to the client
 		std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
 		send(current_client.get_socket(), join_msg.c_str(), join_msg.size(), 0);
+		std::cout << "bye bye " << std::endl;
 		return 1;
+	}
+
+	int Protocol::cmd_names(Message msg)
+	{
+		// Get the client sending the message
+		Client &current_client = _get_client_from_socket(msg.get_socket());
+
+		// Extract the parameters from the message
+		std::vector<std::string> parameters = msg.get_parameters();
+
+		// Check if the channel exists
+		std::string const target_channel_name = parameters[0];
+		bool channel_exists = false;
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i]->get_name() == target_channel_name)
+			{
+				channel_exists = true;
+				break;
+			}
+		}
+		std::cout << "channel exists :" << channel_exists << std::endl;
+		if (channel_exists)
+		{
+			// Send the names of all clients in the channel
+			Channel &target_channel = _get_channel_from_name(target_channel_name);
+			std::vector<std::string> list_of_users;
+			std::vector<Client> clients = target_channel.get_clients();
+			for (size_t i = 0; i < clients.size(); i++)
+			{
+				list_of_users.push_back(clients[i].get_nickname());
+				std::cout << clients[i].get_nickname() << std::endl;
+			}
+			std::string names_msg = rpl_namreply("irc.forty-two.com", current_client.get_nickname(), target_channel.get_name(), list_of_users);
+			send(msg.get_socket(), names_msg.c_str(), names_msg.size(), 0);
+			names_msg = rpl_endofnames(current_client.get_nickname(), target_channel.get_name());
+			send(msg.get_socket(), names_msg.c_str(), names_msg.size(), 0);
+			return 1;
+		}
+		else
+		{
+			// If there is no target channel, send an error message
+			std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return 0;
+		}
+	}
+
+	int Protocol::cmd_whois(Message msg)
+	{
+		// Get the client sending the command
+		Client &current_client = _get_client_from_socket(msg.get_socket());
+
+		// Extract the parameters from the message
+		std::vector<std::string> parameters = msg.get_parameters();
+
+		// Ensure that the message has one parameter (the target nickname)
+		if (parameters.size() != 1)
+		{
+			// If there is no target nickname, send an error message
+			std::string error = err_needmoreparams(current_client.get_nickname(), "WHOIS");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return 0;
+		}
+
+		// Extract the target nickname from the parameters
+		std::string target_nickname = parameters[0];
+
+		// Check if the target nickname exists
+		bool nickname_exists = false;
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_nickname() == target_nickname)
+			{
+				nickname_exists = true;
+				break;
+			}
+		}
+
+		if (nickname_exists)
+		{
+			// Send the WHOIS information if the target exists
+			Client &target_client = _get_client_from_nickname(target_nickname);
+			std::string whois_info = rpl_whoisuser(current_client.get_nickname(), target_client.get_nickname(), target_client.get_username(), target_client.get_hostname(), target_client.get_real_name());
+			send(msg.get_socket(), whois_info.c_str(), whois_info.size(), 0);
+
+			// Build the channel string
+			std::string channels = "";
+			for (size_t i = 0; i < _channels.size(); i++)
+			{
+				if (_channels[i]->has_client(target_client))
+				{
+					channels += _channels[i]->get_name() + " ";
+				}
+			}
+
+			if (channels.size() > 0)
+			{
+				std::string whois_channels = rpl_whoischannels(current_client.get_nickname(), target_client.get_nickname(), channels);
+				send(msg.get_socket(), whois_channels.c_str(), whois_channels.size(), 0);
+			}
+
+			// Send the end of WHOIS message
+			std::string end_of_whois = rpl_endofwhois(current_client.get_nickname(), target_client.get_nickname());
+			send(msg.get_socket(), end_of_whois.c_str(), end_of_whois.size(), 0);
+			return 1;
+		}
+		else
+		{
+			// If the target nickname does not exist, send an error message
+			std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return 0;
+		}
 	}
 
 }

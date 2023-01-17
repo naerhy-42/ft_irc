@@ -2,8 +2,13 @@
 
 namespace ft
 {
-    Channel::Channel(std::string const &name) : _name(name) {}
-    Channel::~Channel() {}
+    Channel::Channel(std::string const &name, std::string const &creator) : _name(name)
+    {
+        _operators.push_back(creator);
+        std::cout << "CHANNEL CREATED" << std::endl;
+    }
+
+    Channel::~Channel() { std::cout << "CHANNEL DELETED" << std::endl; }
 
     std::string const &Channel::get_name(void) const
     {

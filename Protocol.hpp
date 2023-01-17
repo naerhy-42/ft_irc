@@ -48,6 +48,10 @@ namespace ft
 		int cmd_join(Message msg);
 		int cmd_ping(Message msg);
 		int cmd_quit(Message msg);
+		int cmd_names(Message msg); // does not work
+		int cmd_whois(Message msg);
+
+
 
 	private:
 		Client &_get_client_from_socket(int socket);
@@ -65,7 +69,7 @@ namespace ft
 		std::string _password;
 		std::map<std::string, fncts> _commands;
 		std::vector<Client> _clients;
-		std::vector<Channel> _channels;
+		std::vector<Channel*> _channels;
 	};
 }
 

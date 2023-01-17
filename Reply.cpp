@@ -80,6 +80,29 @@ namespace ft
                " " + realname + "\r\n";
     }
 
+    // RPL_NAMREPLY (353)
+    std::string rpl_namreply(const std::string &server_name, const std::string &client, const std::string &channel_name,
+                             const std::vector<std::string> &user_list)
+    {
+        std::string names_msg = ":" + server_name + " 353 " + client + " = " + channel_name + " :";
+        for (size_t i = 0; i < user_list.size(); i++)
+        {
+            names_msg += user_list[i];
+            if (i != user_list.size() - 1)
+            {
+                names_msg += " ";
+            }
+        }
+        names_msg += "\r\n";
+        return names_msg;
+    }
+
+    // RPL_ENDOFNAMES (366)
+    std::string rpl_endofnames(const std::string &client, const std::string &channel)
+    {
+        return ":irc.forty-two.com 366 " + client + " " + channel + " : End of /NAMES list\r\n";
+    }
+
     // RPL_ENDOFWHO (315)
     std::string rpl_endofwho(const std::string &client, const std::string &mask)
     {
@@ -115,15 +138,9 @@ namespace ft
     }
 
     // RPL_WHOISCHANNELS (319)
-    std::string rpl_whoischannels(const std::string &client, const std::string &nick,
-                                  const std::vector<std::pair<char, std::string> > &channels)
+    std::string rpl_whoischannels(const std::string &client, const std::string &nick, const std::string &channels)
     {
-        std::string message = ":irc.forty-two.com 319 " + client + " " + nick + " :";
-        for (unsigned int i = 0; i < channels.size(); ++i)
-        {
-            message += channels[i].first + channels[i].second + " ";
-        }
-        return message + "\r\n";
+        return ":irc.forty-two.com 319 " + client + " " + nick + " :" + channels + "\r\n";
     }
 
     // RPL_LISTSTART (321)
