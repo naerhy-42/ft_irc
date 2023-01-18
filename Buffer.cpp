@@ -28,10 +28,11 @@ namespace ft
 			if (_queue[i].to_send)
 			{
 				x = send(_queue[i].client.get_socket(), _queue[i].message.c_str(), _queue[i].message.size(), 0);
-				if (x == -1 || !_queue[i].index)
+				if (x == -1 || _queue[i].index <= 0)
 				{
 					_set_messages_as_invalid(_queue[i].client.get_socket());
-					_server->close_socket_connection(_queue[i].client.get_socket());
+					if (_queue[i].index == -1)
+						_server->close_socket_connection(_queue[i].client.get_socket());
 				}
 			}
 		}

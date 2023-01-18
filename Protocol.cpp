@@ -137,17 +137,29 @@ namespace ft
 			_buffer.add_to_queue(client, error, 0);
 			return ;
 		}
-		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
+		if (client.get_registration_status() && _is_nickname_taken(nickname))
 		{
-			if (cit->get_nickname() == nickname)
-			{
-				error = err_nicknameinuse(client.get_nickname(), nickname);
-				_buffer.add_to_queue(client, error, 0);
-				return ;
-			}
+			error = err_nicknameinuse(client.get_nickname(), nickname);
+			_buffer.add_to_queue(client, error, 0);
+			return ;
+		}
+		else
+		{
+			while (_is_nickname_taken(nickname))
+				nickname.append("_");
 		}
 		client.set_nickname(nickname);
 		// return replies to other members if needed [?]
+	}
+
+	bool Protocol::_is_nickname_taken(std::string const& nickname) const
+	{
+		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
+		{
+			if (cit->get_nickname() == nickname)
+				return true;
+		}
+		return false;
 	}
 
 	void Protocol::cmd_user(Message msg)
@@ -163,6 +175,12 @@ namespace ft
 			_buffer.add_to_queue(client, error, 0);
 			return ;
 		}
+		if (client.get_registration_status())
+		{
+			error = err_alreadyregistered(client.get_nickname());
+			_buffer.add_to_queue(client, error, 0);
+			return ;
+		}
 		if (client.get_nickname() == "*")
 		{
 			error = err_nonicknamegiven(client.get_nickname());
@@ -174,12 +192,6 @@ namespace ft
 		if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty() || parameters[2].empty() || msg.get_remainder().empty())
 		{
 			error = err_needmoreparams(client.get_nickname(), "USER");
-			_buffer.add_to_queue(client, error, 0);
-			return ;
-		}
-		if (client.get_registration_status())
-		{
-			error = err_alreadyregistered(client.get_nickname());
 			_buffer.add_to_queue(client, error, 0);
 			return ;
 		}

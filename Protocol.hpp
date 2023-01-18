@@ -50,6 +50,8 @@ namespace ft
 	private:
 		Client &_get_client_from_socket(int socket);
 		Client &_get_client_from_nickname(const std::string &nickname);
+
+		bool _is_nickname_taken(std::string const& nickname) const;
 		
 		// Channel &_get_channel_from_name(const std::string &channel_name);
 

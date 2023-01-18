@@ -164,11 +164,6 @@ namespace ft
 					        memset(buffer, 0, _buffer_size); // Clear the buffer
 					        ssize_t bytes_received = recv(client_fd, buffer, _buffer_size - 1, 0);
 					        if (bytes_received == -1)
-					        {
-					            perror("Error reading from client socket");
-					            continue;
-					        }
-					        else if (bytes_received == 0)
 								close_socket_connection(client_fd);
 					        else
 					        {
