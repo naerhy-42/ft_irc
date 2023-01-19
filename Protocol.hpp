@@ -50,8 +50,7 @@ namespace ft
 		int cmd_quit(Message msg);
 		int cmd_names(Message msg); // does not work
 		int cmd_whois(Message msg);
-
-
+		int cmd_part(Message msg);
 
 	private:
 		Client &_get_client_from_socket(int socket);

@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	Client::Client(int socket) : _socket(socket), _nickname("*"), _registration_status(false), _password_status(false) {}
+	Client::Client(int socket) : _socket(socket), _nickname("*"), _registration_status(false), _password_status(false), _is_global_operator(false) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
