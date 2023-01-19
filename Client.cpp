@@ -2,7 +2,8 @@
 
 namespace ft
 {
-	Client::Client(int socket) : _socket(socket), _nickname("*"), _registration_status(false), _password_status(false) {}
+	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
+			_registration_status(false), _password_status(false) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
@@ -15,6 +16,8 @@ namespace ft
 	std::string const &Client::get_servername(void) const { return _servername; }
 
 	std::string const &Client::get_real_name(void) const { return _real_name; }
+
+	bool Client::get_nickname_status(void) const { return _nickname_status; }
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
 
@@ -30,6 +33,8 @@ namespace ft
 
 	void Client::set_real_name(std::string const &real_name) { _real_name = real_name; }
 
+	void Client::set_nickname_status(bool status) { _nickname_status = status; }
+
 	void Client::set_registration_status(bool status) { _registration_status = status; }
 
 	void Client::set_password_status(bool status) { _password_status = status; }
@@ -44,6 +49,7 @@ namespace ft
 			_hostname = other._hostname;
 			_servername = other._servername;
 			_real_name = other._real_name;
+			_nickname_status = other._nickname_status;
 			_registration_status = other._registration_status;
 			_password_status = other._password_status;
 		}
@@ -58,6 +64,7 @@ namespace ft
         	&& lhs.get_hostname() == rhs.get_hostname()
         	&& lhs.get_servername() == rhs.get_servername()
         	&& lhs.get_real_name() == rhs.get_real_name()
+        	&& lhs.get_nickname_status() == rhs.get_nickname_status()
         	&& lhs.get_registration_status() == rhs.get_registration_status()
         	&& lhs.get_password_status() == rhs.get_password_status();
 	}
