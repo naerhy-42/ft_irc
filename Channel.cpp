@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    Channel::Channel(std::string const &name, std::string const &creator) : _name(name)
+    Channel::Channel(std::string const &name, std::string const &creator) : _name(name),  _size(0)
     {
         _operators.push_back(creator);
         std::cout << "CHANNEL CREATED" << std::endl;
@@ -20,11 +20,15 @@ namespace ft
         return _clients;
     }
 
+
+    int Channel::get_size() const { return _size; }
+
     void Channel::add_client(Client const &client)
     {
         if (!has_client(client))
         {
             _clients.push_back(client);
+            ++_size; 
         }
     }
 
@@ -36,6 +40,7 @@ namespace ft
             if (*it == client)
             {
                 _clients.erase(it);
+                --_size;
                 break;
             }
         }
@@ -48,6 +53,7 @@ namespace ft
         {
             if (*it == client)
             {
+                std::cout << "current channel size : " << _size << std::endl; 
                 return true;
             }
         }

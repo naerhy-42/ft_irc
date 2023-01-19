@@ -41,6 +41,7 @@ namespace ft
 		std::string _real_name;
 		bool _registration_status;
 		bool _password_status;
+		bool _is_global_operator;
 	};
 
 	bool operator==(Client const &lhs, Client const &rhs);

@@ -24,6 +24,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
+		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 	}
 
 	Protocol::~Protocol(void) {}
@@ -283,6 +284,7 @@ namespace ft
 		{
 			is_channel = true;
 		}
+		std::cout << "is it a channel PRIVMSG ?  :" << is_channel << std::endl;
 
 		// Extract the message text from the parameters
 		std::string message = msg.get_remainder();
@@ -295,13 +297,16 @@ namespace ft
 			bool channel_exists = false;
 			for (size_t i = 0; i < _channels.size(); i++)
 			{
+				std::cout << "channel name  :" << _channels[i]->get_name() << std::endl;
 				std::cout << _channels[i]->get_name() << std::endl;
 				if (_channels[i]->get_name() == target_channel_name)
 				{
+					std::cout << "channel name for PRIVMSG  :" << _channels[i]->get_name() << std::endl;
 					channel_exists = true;
 					break;
 				}
 			}
+			std::cout << "does channel exists  ?  :" << channel_exists << std::endl;
 			if (channel_exists)
 			{
 				// Send the message to all clients in the channel
@@ -318,6 +323,7 @@ namespace ft
 			else
 			{
 				// If there is no target channel, send an error message
+				std::cout << "leaving here " << std::endl;
 				std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
 				send(msg.get_socket(), error.c_str(), error.size(), 0);
 				return 0;
@@ -416,13 +422,6 @@ namespace ft
 		}
 
 		// Extract the channel name from the parameters
-		// else do something if command is unknown??
-		// else do something if command is unknown??
-		// else do something if command is unknown??
-		// else do something if command is unknown??
-		// else do something if command is unknown??
-		// else do something if command is unknown??
-		// else do something if command is unknown??
 		std::string channel_name = parameters[0];
 
 		// Check if the channel already exists
@@ -435,7 +434,7 @@ namespace ft
 				break;
 			}
 		}
-
+		std::cout << "does channel exists in JOIN : " << channel_exists << std::endl;
 		if (channel_exists)
 		{
 			// Add the client to the channel if it exists
@@ -462,7 +461,7 @@ namespace ft
 		// Send a JOIN message to the client
 		std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
 		send(current_client.get_socket(), join_msg.c_str(), join_msg.size(), 0);
-		std::cout << "bye bye " << std::endl;
+		std::cout << "leaving JOIN cmd " << std::endl;
 		return 1;
 	}
 
@@ -575,6 +574,76 @@ namespace ft
 		{
 			// If the target nickname does not exist, send an error message
 			std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return 0;
+		}
+	}
+
+	int Protocol::cmd_part(Message msg)
+	{
+		// Get the client sending the command
+		Client &current_client = _get_client_from_socket(msg.get_socket());
+		// Extract the parameters from the message
+		std::vector<std::string> parameters = msg.get_parameters();
+
+		// Ensure that the message has one parameter (the target channel)
+		if (parameters.size() != 1)
+		{
+			// If there is no target channel, send an error message
+			std::string error = err_needmoreparams(current_client.get_nickname(), "PART");
+			send(msg.get_socket(), error.c_str(), error.size(), 0);
+			return 0;
+		}
+
+		// Extract the target channel from the parameters
+		std::string target_channel = parameters[0];
+
+		// Check if the target channel exists
+		bool channel_exists = false;
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i]->get_name() == target_channel)
+			{
+				channel_exists = true;
+				break;
+			}
+		}
+
+		if (channel_exists)
+		{
+			std::cout << "channel exists ? " << channel_exists << std::endl; 
+			// Remove the client from the channel
+			Channel &channel = _get_channel_from_name(target_channel);
+			channel.remove_client(current_client);
+			std::cout << "client :" << current_client.get_nickname() << " removed" << std::endl;
+
+			// Send a message to all clients in the channel that the client has left
+			std::string message = ":" + current_client.get_nickname() + " PART " + channel.get_name() + "\r\n";
+			for (size_t i = 0; i < channel.get_clients().size(); i++)
+			{
+				int client_socket = channel.get_clients()[i].get_socket();
+				send(client_socket, message.c_str(), message.size(), 0);
+			}
+
+			for (std::vector<ft::Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+			{
+				if (*it == &channel)
+				{
+					if (channel.get_size() == 0)
+					{
+						delete *it;
+						_channels.erase(it);
+						break;
+					}
+				}
+			}
+
+			return 1;
+		}
+		else
+		{
+			// If the channel does not exist, send an error message
+			std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel);
 			send(msg.get_socket(), error.c_str(), error.size(), 0);
 			return 0;
 		}
