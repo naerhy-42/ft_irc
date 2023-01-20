@@ -1,13 +1,22 @@
 NAME = irc_server
 
-SRCS = Client.cpp \
+SRCS =	source/Client.cpp \
+		source/Message.cpp \
+		source/Protocol.cpp \
+		source/Reply.cpp \
+		source/Server.cpp \
+		source/Channel.cpp \
+		source/Buffer.cpp \
+		source/command/PART.cpp \
+		source/command/JOIN.cpp \
+		source/command/NAMES.cpp \
+		source/command/PRIVMSG.cpp \
+		source/command/WHOIS.cpp \
+		source/command/QUIT.cpp \
+		source/command/USER.cpp \
+		
+
 		ft_irc.cpp \
-		Message.cpp \
-		Protocol.cpp \
-		Reply.cpp \
-		Server.cpp \
-		Channel.cpp \
-		Buffer.cpp
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)
 
@@ -17,7 +26,7 @@ OBJ = ./obj
 
 CXX = c++
 
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -pedantic -g
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -pedantic -g -Iinclude
 
 RM = rm -f
 
