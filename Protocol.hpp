@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#include "Buffer.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Reply.hpp"
@@ -20,7 +21,7 @@ namespace ft
 	class Protocol
 	{
 	private:
-		typedef int (Protocol::*fncts)(Message);
+		typedef void (Protocol::*fncts)(Message);
 
 	public:
 		Protocol(Server *server);
@@ -39,20 +40,22 @@ namespace ft
 
 
 		void parse_client_input(std::string &client_msg, int client_socket);
-		int handle_message(Message msg);
+		void handle_message(Message msg);
 
-		int cmd_pass(Message msg);
-		int cmd_nick(Message msg);
-		int cmd_user(Message msg);
-		int cmd_privmsg(Message msg);
-		int cmd_join(Message msg);
-		int cmd_ping(Message msg);
-		int cmd_quit(Message msg);
-		int cmd_names(Message msg); // does not work
-		int cmd_whois(Message msg);
-		int cmd_part(Message msg);
+		void cmd_pass(Message msg);
+		void cmd_nick(Message msg);
+		void cmd_user(Message msg);
+		void cmd_privmsg(Message msg);
+		void cmd_join(Message msg);
+		void cmd_ping(Message msg);
+		void cmd_quit(Message msg);
+		void cmd_names(Message msg); // does not work
+		void cmd_whois(Message msg);
+		void cmd_part(Message msg);
 
 	private:
+		bool _is_nickname_taken(std::string const& nickname) const;
+		bool _is_client_connected(Client client) const;
 		Client &_get_client_from_socket(int socket);
 		Client &_get_client_from_nickname(const std::string &nickname);
 		
@@ -69,6 +72,7 @@ namespace ft
 		std::map<std::string, fncts> _commands;
 		std::vector<Client> _clients;
 		std::vector<Channel*> _channels;
+		Buffer _buffer;
 	};
 }
 

@@ -6,7 +6,8 @@ SRCS = Client.cpp \
 		Protocol.cpp \
 		Reply.cpp \
 		Server.cpp \
-		Channel.cpp
+		Channel.cpp \
+		Buffer.cpp
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)
 
