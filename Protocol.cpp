@@ -433,7 +433,7 @@ namespace ft
 		throw std::out_of_range("channel not found");
 	}
 
-	int Protocol::cmd_join(Message msg)
+	void Protocol::cmd_join(Message msg)
 	{
 		// Get the client joining the channel
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -494,7 +494,7 @@ namespace ft
 		return ;
 	}
 
-	int Protocol::cmd_names(Message msg)
+	void Protocol::cmd_names(Message msg)
 	{
 		// Get the client sending the message
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -541,7 +541,7 @@ namespace ft
 		}
 	}
 
-	int Protocol::cmd_whois(Message msg)
+	void Protocol::cmd_whois(Message msg)
 	{
 		// Get the client sending the command
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -610,7 +610,7 @@ namespace ft
 		}
 	}
 
-	int Protocol::cmd_part(Message msg)
+	void Protocol::cmd_part(Message msg)
 	{
 		// Get the client sending the command
 		Client &current_client = _get_client_from_socket(msg.get_socket());
@@ -622,7 +622,7 @@ namespace ft
 		{
 			// If there is no target channel, send an error message
 			std::string error = err_needmoreparams(current_client.get_nickname(), "PART");
-			_buffer.add_to_queue(_get_client_from_socket(msg.get_socket(), error, 0);
+			_buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			return ;
 		}
 
@@ -669,7 +669,7 @@ namespace ft
 				}
 			}
 
-			return 1;
+			return ;
 		}
 		else
 		{
