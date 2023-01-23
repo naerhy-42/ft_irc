@@ -1,8 +1,10 @@
 #ifndef __PROTOCOL_HPP__
 #define __PROTOCOL_HPP__
 
+#include <fstream>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <sys/types.h>
@@ -61,6 +63,8 @@ namespace ft
 		
 		Channel &_get_channel_from_name(const std::string &channel_name);
 
+		void _get_server_operators(void);
+
 		static size_t const _message_max_characters;
 		static size_t const _message_max_parameters;
 
@@ -73,6 +77,7 @@ namespace ft
 		std::vector<Client> _clients;
 		std::vector<Channel*> _channels;
 		Buffer _buffer;
+		std::map<std::string, std::string> _server_ops;
 	};
 }
 

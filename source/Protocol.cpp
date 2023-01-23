@@ -15,6 +15,7 @@ namespace ft
 
 	Protocol::Protocol(Server *server) : _server(server), _commands(), _clients(), _buffer(server)
 	{
+		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
@@ -168,5 +169,28 @@ namespace ft
 				return *_channels[i];
 		}
 		throw std::out_of_range("channel not found");
+	}
+
+	// no data validation or parsing -> might be an issue
+	void Protocol::_get_server_operators(void)
+	{
+		std::ifstream env_file;
+		std::vector<std::string> words;
+		std::string line;
+		std::string word;
+
+		env_file.open(".env", std::ios::in);
+		// if (!env_file)
+			// error
+		while (std::getline(env_file, line))
+		{
+			std::stringstream ss(line);
+
+			while (std::getline(ss, word, '='))
+				words.push_back(word);
+		}
+		env_file.close();
+		for (size_t i = 0; i < words.size(); i += 2)
+			_server_ops.insert(std::make_pair(words[i], words[i + 1]));
 	}
 }
