@@ -205,6 +205,12 @@ namespace ft
         return client + " " + nick + " :End of WHOWAS\r\n";
     }
 
+	// RPL_YOUREOPER (381)
+	std::string rpl_youreoper(const std::string &client)
+	{
+		return ":irc.forty-two.com 381 " + client + " :You are now an IRC operator\r\n";
+	}
+
     // RPL_TIME (391)
     std::string rpl_time(const std::string &client, const std::string &server,
                          const std::string &timestamp, int ts_offset,
@@ -387,5 +393,11 @@ namespace ft
     {
         return ":irc.forty-two.com 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n";
     }
+
+	// ERR_NOOPERHOST (491)
+	std::string err_nooperhost(const std::string &client)
+	{
+		return ":irc.forty-two.com 491 " + client + " :No O-lines for your host\r\n";
+	}
 
 }

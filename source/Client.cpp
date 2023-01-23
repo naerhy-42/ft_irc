@@ -3,7 +3,7 @@
 namespace ft
 {
 	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
-			_registration_status(false), _password_status(false), _is_global_operator(false) {}
+			_registration_status(false), _password_status(false), _global_operator_status(false) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
@@ -23,6 +23,8 @@ namespace ft
 
 	bool Client::get_password_status(void) const { return _password_status; }
 
+	bool Client::get_global_operator_status(void) const { return _global_operator_status; }
+
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 
 	void Client::set_username(std::string const &username) { _username = username; }
@@ -38,6 +40,8 @@ namespace ft
 	void Client::set_registration_status(bool status) { _registration_status = status; }
 
 	void Client::set_password_status(bool status) { _password_status = status; }
+
+	void Client::set_global_operator_status(bool status) { _global_operator_status = status; }
 
 	Client &Client::operator=(Client const &other)
 	{

@@ -17,6 +17,7 @@ SRCS =	source/Client.cpp \
 		source/command/NICK.cpp \
 		source/command/PING.cpp \
 		source/command/PASS.cpp \
+		source/command/OPER.cpp \
 		ft_irc.cpp \
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)

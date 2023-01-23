@@ -101,6 +101,9 @@ namespace ft
     // RPL_ENDOFWHOWAS (369)
     std::string rpl_endofwhowas(const std::string &client, const std::string &nick);
 
+	// RPL_YOUREOPER (381)
+	std::string rpl_youreoper(const std::string &client);
+
     // RPL_TIME (391)
     std::string rpl_time(const std::string &client, const std::string &server,
                          const std::string &timestamp, int ts_offset,
@@ -193,6 +196,8 @@ namespace ft
     // RPL_ENDOFNAMES (366) 
     std::string rpl_endofnames(const std::string &client, const std::string &channel);
 
+	// ERR_NOOPERHOST (491)
+	std::string err_nooperhost(const std::string &client);
 }
 
 #endif

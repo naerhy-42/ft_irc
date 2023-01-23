@@ -54,6 +54,7 @@ namespace ft
 		void cmd_names(Message msg); // does not work
 		void cmd_whois(Message msg);
 		void cmd_part(Message msg);
+		void cmd_oper(Message msg);
 
 	private:
 		bool _is_nickname_taken(std::string const& nickname) const;
