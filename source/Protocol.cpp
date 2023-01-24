@@ -27,6 +27,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
+		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 	}
 
 	Protocol::~Protocol(void) {}
@@ -193,5 +194,12 @@ namespace ft
 		env_file.close();
 		for (size_t i = 0; i < words.size(); i += 2)
 			_server_ops.insert(std::make_pair(words[i], words[i + 1]));
+	}
+
+	bool Protocol::_is_valid_mode(std::string const& mode) const
+	{
+		if (mode.size() != 2 || mode.find_first_of("+-") != 0 || mode.find_first_of("oi") != 1)
+			return false;
+		return true;
 	}
 }

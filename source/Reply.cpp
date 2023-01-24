@@ -400,4 +400,16 @@ namespace ft
 		return ":irc.forty-two.com 491 " + client + " :No O-lines for your host\r\n";
 	}
 
+	// ERR_UMODEUNKNOWNFLAG (501)
+	std::string err_umodeunknownflag(const std::string &client)
+	{
+		return ":irc.forty-two.com 501 " + client + ":Unknown MODE flag\r\n";
+	}
+
+	// ERR_USERSDONTMATCH (502)
+	std::string err_usersdontmatch(const std::string &client)
+	{
+		return ":irc.forty-two.com 502 " + client + ":Cannot change mode for other users\r\n";
+	}
+
 }

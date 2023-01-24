@@ -55,6 +55,7 @@ namespace ft
 		void cmd_whois(Message msg);
 		void cmd_part(Message msg);
 		void cmd_oper(Message msg);
+		void cmd_mode(Message msg);
 
 	private:
 		bool _is_nickname_taken(std::string const& nickname) const;
@@ -65,6 +66,8 @@ namespace ft
 		Channel &_get_channel_from_name(const std::string &channel_name);
 
 		void _get_server_operators(void);
+
+		bool _is_valid_mode(std::string const& mode) const;
 
 		static size_t const _message_max_characters;
 		static size_t const _message_max_parameters;

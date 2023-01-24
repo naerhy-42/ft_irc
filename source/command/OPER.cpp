@@ -30,6 +30,6 @@ namespace ft
 		}
 		reply = rpl_youreoper(client.get_nickname());
 		_buffer.add_to_queue(client, reply, 1);
-		client.set_global_operator_status(true);
+		client.set_mode('+', 'o');
 	}
 }

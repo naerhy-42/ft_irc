@@ -2,6 +2,7 @@
 #define __CLIENT_HPP__
 
 #include <string>
+#include <vector>
 
 namespace ft
 {
@@ -22,7 +23,7 @@ namespace ft
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;
 		bool get_password_status(void) const;
-		bool get_global_operator_status(void) const;
+		std::vector<char> const& get_modes(void) const;
 
 		void set_nickname(std::string const &nickname);
 		void set_username(std::string const &username);
@@ -32,7 +33,7 @@ namespace ft
 		void set_nickname_status(bool status);
 		void set_registration_status(bool status);
 		void set_password_status(bool status);
-		void set_global_operator_status(bool status);
+		void set_mode(char sign, char mode);
 
 		Client &operator=(Client const &other);
 
@@ -46,7 +47,7 @@ namespace ft
 		bool _nickname_status;
 		bool _registration_status;
 		bool _password_status;
-		bool _global_operator_status;
+		std::vector<char> _modes;
 	};
 
 	bool operator==(Client const &lhs, Client const &rhs);

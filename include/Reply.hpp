@@ -198,6 +198,12 @@ namespace ft
 
 	// ERR_NOOPERHOST (491)
 	std::string err_nooperhost(const std::string &client);
+
+	// ERR_UMODEUNKNOWNFLAG (501)
+	std::string err_umodeunknownflag(const std::string &client);
+
+	// ERR_USERSDONTMATCH (502)
+	std::string err_usersdontmatch(const std::string &client);
 }
 
 #endif
