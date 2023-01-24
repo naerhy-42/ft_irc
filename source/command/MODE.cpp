@@ -9,7 +9,7 @@ namespace ft
 		std::vector<std::string> parameters = msg.get_parameters();
 		std::string error;
 
-		if (parameters.size() < 2)
+		if (parameters.size() < 1)
 		{
 			error = err_needmoreparams(client.get_nickname(), "MODE");
 			_buffer.add_to_queue(client, error, 0);
@@ -19,6 +19,13 @@ namespace ft
 		{
 			error = err_usersdontmatch(client.get_nickname());
 			_buffer.add_to_queue(client, error, 0);
+			return ;
+		}
+		if (parameters.size() == 1)
+		{
+			// we use error but it is not an error (logic hehe)
+			error = rpl_umodeis(client.get_nickname(), client.get_modes_str());
+			_buffer.add_to_queue(client, error, 1);
 			return ;
 		}
 		if (!_is_valid_mode(parameters[1]))

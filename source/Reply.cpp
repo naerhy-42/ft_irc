@@ -409,7 +409,7 @@ namespace ft
 	// ERR_USERSDONTMATCH (502)
 	std::string err_usersdontmatch(const std::string &client)
 	{
-		return ":irc.forty-two.com 502 " + client + ":Cannot change mode for other users\r\n";
+		return ":irc.forty-two.com 502 " + client + " :Cannot change mode for other users\r\n";
 	}
 
 }

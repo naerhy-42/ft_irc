@@ -25,6 +25,15 @@ namespace ft
 
 	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
+	std::string Client::get_modes_str(void) const
+	{
+		std::string ret;
+
+		for (size_t i = 0; i < _modes.size(); i++)
+			ret.append(1, _modes[i]);
+		return ret;
+	}
+
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 
 	void Client::set_username(std::string const &username) { _username = username; }
