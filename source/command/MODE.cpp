@@ -30,5 +30,7 @@ namespace ft
 		// if client tries to use +o mod or +/-a mode, we do nothing
 		// if client tries to use +o mod or +/-a mode, we do nothing
 		client.set_mode(parameters[1][0], parameters[1][1]);
+		_buffer.add_to_queue(client, ":" + client.get_nickname() + " MODE "
+				+ client.get_nickname() + " :" + parameters[1] + "\r\n", 1);
 	}
 }
