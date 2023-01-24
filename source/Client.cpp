@@ -23,6 +23,8 @@ namespace ft
 
 	bool Client::get_password_status(void) const { return _password_status; }
 
+	bool Client::get_is_global_operator(void) const { return _is_global_operator; }
+
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 
 	void Client::set_username(std::string const &username) { _username = username; }

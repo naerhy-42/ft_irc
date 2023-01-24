@@ -82,13 +82,13 @@ namespace ft
     std::string rpl_listend(const std::string &client);
 
     // RPL_INVITELIST (336)
-    std::string rpl_invitelist(const std::string &client, const std::string &channel);
+    std::string rpl_invitelist(const std::string &channel);
 
     // RPL_ENDOFINVITELIST (337)
     std::string rpl_endofinvitelist(const std::string &client);
 
     // RPL_INVITING (341)
-    std::string rpl_inviting(const std::string &client, const std::string &nick, const std::string &channel);
+    std::string rpl_inviting(const std::string &nick, const std::string &channel);
 
     // RPL_BANLIST (367)
     std::string rpl_banlist(const std::string &client, const std::string &channel,
@@ -192,6 +192,9 @@ namespace ft
 
     // RPL_ENDOFNAMES (366) 
     std::string rpl_endofnames(const std::string &client, const std::string &channel);
+
+    std::string err_chanoprivsneeded(const std::string &client, const std::string &channel);
+    std::string rpl_topic(const std::string &channel, const std::string &topic);
 
 }
 

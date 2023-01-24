@@ -17,6 +17,9 @@ SRCS =	source/Client.cpp \
 		source/command/NICK.cpp \
 		source/command/PING.cpp \
 		source/command/PASS.cpp \
+		source/command/KICK.cpp \
+		source/command/INVITE.cpp \
+		source/command/TOPIC.cpp \
 		ft_irc.cpp \
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)

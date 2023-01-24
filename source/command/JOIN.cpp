@@ -45,7 +45,7 @@ namespace ft
             if (is_channel_name_corect == true)
             {
                 // Create a new channel and add the client to it if it doesn't exist
-                Channel *new_channel = new Channel(channel_name, current_client.get_real_name());
+                Channel *new_channel = new Channel(channel_name, current_client);
                 new_channel->add_client(current_client);
                 _channels.push_back(new_channel);
             }
