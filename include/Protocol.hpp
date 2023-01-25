@@ -67,7 +67,7 @@ namespace ft
 
 		void _get_server_operators(void);
 
-		bool _is_valid_mode(std::string const& mode) const;
+		bool _is_valid_mode(std::string const& str, std::string const& modes) const;
 
 		static size_t const _message_max_characters;
 		static size_t const _message_max_parameters;

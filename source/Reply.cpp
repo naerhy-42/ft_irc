@@ -162,6 +162,12 @@ namespace ft
         return ":irc.forty-two.com 323 " + client + " :End of /LIST\r\n";
     }
 
+	// RPL_CHANNELMODEIS (324)
+	std::string rpl_channelmodeis(std::string const& client, std::string const& channel, std::string const& modes)
+	{
+		return ":irc.forty-two.com 324 " + client + " " + channel + " " + modes + "\r\n";
+	}
+
     // RPL_INVITELIST (336)
     std::string rpl_invitelist(const std::string &client, const std::string &channel)
     {
@@ -393,6 +399,12 @@ namespace ft
     {
         return ":irc.forty-two.com 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n";
     }
+
+	// ERR_CHANOPRIVSNEEDED (482)
+	std::string err_chanoprivsneeded(std::string const& client, std::string const& channel)
+	{
+		return ":irc.forty-two.com 482 " + client + " " + channel + " :You're not channel operator\r\n";
+	}
 
 	// ERR_NOOPERHOST (491)
 	std::string err_nooperhost(const std::string &client)

@@ -196,9 +196,9 @@ namespace ft
 			_server_ops.insert(std::make_pair(words[i], words[i + 1]));
 	}
 
-	bool Protocol::_is_valid_mode(std::string const& mode) const
+	bool Protocol::_is_valid_mode(std::string const& str, std::string const& modes) const
 	{
-		if (mode.size() != 2 || mode.find_first_of("+-") != 0 || mode.find_first_of("oi") != 1)
+		if (str.size() != 2 || str.find_first_of("+-") != 0 || str.find_first_of(modes) != 1)
 			return false;
 		return true;
 	}

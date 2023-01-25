@@ -81,6 +81,9 @@ namespace ft
     // RPL_LISTEND (323)
     std::string rpl_listend(const std::string &client);
 
+	// RPL_CHANNELMODEIS (324)
+	std::string rpl_channelmodeis(std::string const& client, std::string const& channel, std::string const& modes);
+
     // RPL_INVITELIST (336)
     std::string rpl_invitelist(const std::string &client, const std::string &channel);
 
@@ -195,6 +198,9 @@ namespace ft
 
     // RPL_ENDOFNAMES (366) 
     std::string rpl_endofnames(const std::string &client, const std::string &channel);
+
+	// ERR_CHANOPRIVSNEEDED (482)
+	std::string err_chanoprivsneeded(std::string const& client, std::string const& channel);
 
 	// ERR_NOOPERHOST (491)
 	std::string err_nooperhost(const std::string &client);
