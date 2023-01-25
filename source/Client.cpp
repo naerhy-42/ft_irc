@@ -25,6 +25,16 @@ namespace ft
 
 	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
+	bool Client::has_mode(char mode) const
+	{
+		for (size_t i = 0; i < _modes.size(); i++)
+		{
+			if (mode == _modes[i])
+				return true;
+		}
+		return false;
+	}
+
 	std::string Client::get_modes_str(void) const
 	{
 		std::string ret;
