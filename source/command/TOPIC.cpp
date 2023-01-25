@@ -60,8 +60,16 @@ namespace ft
                 if (topic.empty())
                 {
                     // If the client wants to get the topic, send the topic message
-                    std::string message = ":irc-forty-two.com 332 " + target_channel.get_author() + channel_name + " : " + topic;
-                    _buffer.add_to_queue(current_client, message, 0);
+                    if (target_channel.get_topic().empty())
+                    {
+                        std::string message = ":irc.example.com 331 " + current_client.get_nickname() + " " + target_channel.get_name() + " :No topic is set.\r\n";
+                        _buffer.add_to_queue(current_client, message, 1);
+                    }
+                    else
+                    {
+                        std::string message = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + target_channel.get_topic() + "\r\n";
+                        _buffer.add_to_queue(current_client, message, 1);
+                    }
                 }
                 else
                 {
@@ -71,7 +79,7 @@ namespace ft
                     if (!is_channel_operator)
                     {
                         // If the client is not a channel operator, send an error message
-                        std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel.get_name());
+                        std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel.get_name()) + "\r\n";
                         _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                         return;
                     }
@@ -79,14 +87,15 @@ namespace ft
                     {
                         // If the client is a channel operator, set the topic and send the topic message
                         target_channel.set_topic(topic);
-                        std::string message = ":" + current_client.get_nickname() + " TOPIC " + channel_name + topic + "\r\n";
+                        target_channel.set_author(current_client.get_nickname());
+                        std::string message = ":" + current_client.get_nickname() + " TOPIC " + channel_name + " :" + topic + "\r\n";
                         for (size_t i = 0; i < target_channel.get_clients().size(); i++)
                         {
                             int client_socket = target_channel.get_clients()[i].get_socket();
                             if (current_client.get_socket() != client_socket)
-                                _buffer.add_to_queue(client_socket, message, 1);
+                                _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
                         }
-                        _buffer.add_to_queue(current_client.get_socket(), message, 1);
+                        _buffer.add_to_queue(current_client, message, 1);
                     }
                 }
             }

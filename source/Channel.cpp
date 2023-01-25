@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    Channel::Channel(std::string const &name, ft::Client creator) : _name(name), _topic("undefined"), _author("undefined"), _size(0)
+    Channel::Channel(std::string const &name, ft::Client creator) : _name(name), _topic(""), _author(""), _size(0)
     {
         _operators.push_back(creator);
         std::cout << "CHANNEL CREATED" << std::endl;

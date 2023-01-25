@@ -59,10 +59,13 @@ namespace ft
         // Send a JOIN message to the client
         std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
         _buffer.add_to_queue(current_client, join_msg, 0);
-        std::cout << "leaving JOIN cmd " << std::endl;
+        
+
+
 
         Channel &channel = _get_channel_from_name(channel_name);
         std::string message = ":" + current_client.get_nickname() + " JOIN " + channel.get_name() + "\r\n";
+        
         for (size_t i = 0; i < channel.get_clients().size(); i++)
         {
             int client_socket = channel.get_clients()[i].get_socket();
