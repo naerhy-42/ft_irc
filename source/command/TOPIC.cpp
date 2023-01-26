@@ -59,6 +59,7 @@ namespace ft
                 std::string topic = msg.get_remainder();
                 if (topic.empty())
                 {
+                    std::cout << " TOPIC in the CHANNEL : " << topic << std::endl;
                     // If the client wants to get the topic, send the topic message
                     if (target_channel.get_topic().empty())
                     {

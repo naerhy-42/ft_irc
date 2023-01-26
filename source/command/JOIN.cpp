@@ -59,17 +59,34 @@ namespace ft
         // Send a JOIN message to the client
         std::string join_msg = ":" + current_client.get_nickname() + " JOIN " + channel_name + "\r\n";
         _buffer.add_to_queue(current_client, join_msg, 0);
-        
-
-
 
         Channel &channel = _get_channel_from_name(channel_name);
         std::string message = ":" + current_client.get_nickname() + " JOIN " + channel.get_name() + "\r\n";
-        
+
         for (size_t i = 0; i < channel.get_clients().size(); i++)
         {
             int client_socket = channel.get_clients()[i].get_socket();
-            _buffer.add_to_queue(client_socket, message, 1);
+            _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
+        }
+
+        // Send the topic of the channel to the client
+        std::string topic = channel.get_topic();
+        // if (!topic.empty())
+        // {
+        //     std::cout << topic << std::endl;
+        //     std::string topic_msg = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + topic + "\r\n";
+        //     _buffer.add_to_queue(current_client, topic_msg, 1);
+        // }
+        if (!topic.empty())
+        {
+            // message = ":" + channel.get_author() + " TOPIC " + channel_name + " :" + topic + "\r\n";
+            message = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + channel.get_topic() + "\r\n";
+            for (size_t i = 0; i < channel.get_clients().size(); i++)
+            {
+                int client_socket = channel.get_clients()[i].get_socket();
+                if (current_client.get_socket() == client_socket)
+                    send(client_socket, message.c_str(), message.length(),0);
+            }
         }
         return;
     }
