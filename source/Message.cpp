@@ -17,7 +17,9 @@ namespace ft
 			_remainder = remainder;
 		}
 		ss.str(base_message);
-		while (getline(ss, word, ' '))
+
+		while (ss >> word)
+		// while (getline(ss, word, ' '))
 		{
 			if (word[0] == ':')
 				_origin = word;
