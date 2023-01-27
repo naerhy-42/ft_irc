@@ -163,6 +163,16 @@ namespace ft
 		return true;
 	}
 
+	bool Protocol::_channel_exists(std::string const& channel) const
+	{
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i]->get_name() == channel)
+				return true;
+		}
+		return false;
+	}
+
 	Channel &Protocol::_get_channel_from_name(const std::string &channel_name)
 	{
 		for (size_t i = 0; i < _channels.size(); i++)

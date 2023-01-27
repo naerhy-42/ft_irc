@@ -5,29 +5,26 @@ namespace ft
 {
     void Protocol::cmd_pass(Message msg)
     {
-        std::vector<std::string> parameters;
-        std::string error;
+        std::vector<std::string> parameters = msg.get_parameters();
+        std::string reply;
         Client &client = _get_client_from_socket(msg.get_socket());
 
         if (client.get_password_status())
         {
-            error = err_alreadyregistered(client.get_nickname());
-            _buffer.add_to_queue(client, error, 0);
-            return;
+            reply = err_alreadyregistered(client.get_nickname());
+            _buffer.add_to_queue(client, reply, 0);
         }
-        parameters = msg.get_parameters();
-        if (parameters.empty())
+		else if (parameters.empty())
         {
-            error = err_needmoreparams(client.get_nickname(), "PASS");
-            _buffer.add_to_queue(client, error, 0);
-            return;
+            reply = err_needmoreparams(client.get_nickname(), "PASS");
+            _buffer.add_to_queue(client, reply, 0);
         }
-        if (parameters[0] != _password)
+		else if (parameters[0] != _password)
         {
-            error = err_passwdmismatch(client.get_nickname());
-            _buffer.add_to_queue(client, error, 0);
-            return;
+            reply = err_passwdmismatch(client.get_nickname());
+            _buffer.add_to_queue(client, reply, 0);
         }
-        client.set_password_status(true);
+		else
+			client.set_password_status(true);
     }
 }

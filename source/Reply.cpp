@@ -415,7 +415,7 @@ namespace ft
 	// ERR_UMODEUNKNOWNFLAG (501)
 	std::string err_umodeunknownflag(const std::string &client)
 	{
-		return ":irc.forty-two.com 501 " + client + ":Unknown MODE flag\r\n";
+		return ":irc.forty-two.com 501 " + client + " :Unknown MODE flag\r\n";
 	}
 
 	// ERR_USERSDONTMATCH (502)

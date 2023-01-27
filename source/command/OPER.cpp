@@ -7,29 +7,31 @@ namespace ft
 	{
         Client &client = _get_client_from_socket(msg.get_socket());
 		std::vector<std::string> parameters = msg.get_parameters();
-		std::string error;
 		std::string reply;
 
 		if (parameters.size() < 2)
 		{
-			error = err_needmoreparams(client.get_nickname(), "OPER");
-			_buffer.add_to_queue(client, error, 0);
-			return ;
+			reply = err_needmoreparams(client.get_nickname(), "OPER");
+			_buffer.add_to_queue(client, reply, 0);
 		}
-		if (!_server_ops.count(parameters[0]))
+		else if (!_server_ops.count(parameters[0]))
 		{
-			error = err_nooperhost(client.get_nickname());
-			_buffer.add_to_queue(client, error, 0);
-			return ;
+			reply = err_nooperhost(client.get_nickname());
+			_buffer.add_to_queue(client, reply, 0);
 		}
-		if (_server_ops[parameters[0]] != parameters[1])
+		else if (_server_ops[parameters[0]] != parameters[1])
 		{
-			error = err_passwdmismatch(client.get_nickname());
-			_buffer.add_to_queue(client, error, 0);
-			return ;
+			reply = err_passwdmismatch(client.get_nickname());
+			_buffer.add_to_queue(client, reply, 0);
 		}
-		reply = rpl_youreoper(client.get_nickname());
-		_buffer.add_to_queue(client, reply, 1);
-		client.set_mode('+', 'o');
+		else
+		{
+			if (!client.has_mode('o'))
+			{
+				reply = rpl_youreoper(client.get_nickname());
+				_buffer.add_to_queue(client, reply, 1);
+				client.set_mode('+', 'o');
+			}
+		}
 	}
 }
