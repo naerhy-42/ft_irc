@@ -22,6 +22,7 @@ namespace ft
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;
 		bool get_password_status(void) const;
+		bool get_is_global_operator(void) const;
 
 		void set_nickname(std::string const &nickname);
 		void set_username(std::string const &username);

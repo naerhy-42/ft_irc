@@ -25,6 +25,10 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
+		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
+		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite));
+		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
+		
 	}
 
 	Protocol::~Protocol(void) {}

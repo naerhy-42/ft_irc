@@ -175,9 +175,9 @@ namespace ft
     }
 
     // RPL_INVITING (341)
-    std::string rpl_inviting(const std::string &client, const std::string &nick, const std::string &channel)
+    std::string rpl_inviting(const std::string &nick, const std::string &channel)
     {
-        return ":irc.forty-two.com 341 " + client + " " + nick + " " + channel + "\r\n";
+        return ":irc.forty-two.com 341 " + nick + " " + channel + "\r\n";
     }
 
     // RPL_BANLIST (367)
@@ -388,4 +388,14 @@ namespace ft
         return ":irc.forty-two.com 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n";
     }
 
+    // ERR_CHANOPRIVSNEEDED (482)
+    std::string err_chanoprivsneeded(const std::string &client, const std::string &channel)
+    {
+        return ":irc.forty-two.com 482 " + client + " " + channel + " :You're not channel operator\r\n";
+    }
+
+    std::string rpl_topic(const std::string &channel, const std::string &topic)
+    {
+        return ":irc.forty-two.com 332 " + channel + " :" + topic + "\r\n";
+    }
 }
