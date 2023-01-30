@@ -47,12 +47,12 @@ namespace ft
         {
             // Check if the client is channel operator
             bool is_channel_operator = false;
-            Channel &target_channel = _get_channel_from_name(channel_name);
-            is_channel_operator = target_channel.is_operator(&current_client);
+            Channel* target_channel = _get_channel_from_name(channel_name);
+            is_channel_operator = target_channel->is_operator(&current_client);
             if (!is_channel_operator)
             {
                 // If the client is not a channel operator, send an error message
-                std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel.get_name());
+                std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel->get_name());
                 _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                 return;
             }
@@ -85,7 +85,7 @@ namespace ft
                     _buffer.add_to_queue(target_client, message, 1);
 
                     // Send a confirmation message to the inviting client
-                    message = rpl_inviting(current_client.get_nickname(), target_channel.get_name());
+                    message = rpl_inviting(current_client.get_nickname(), target_channel->get_name());
                     _buffer.add_to_queue(current_client, message, 1);
                 }
             }

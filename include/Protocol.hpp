@@ -68,7 +68,7 @@ namespace ft
 		Client &_get_client_from_nickname(const std::string &nickname);
 		
 		bool _channel_exists(std::string const& channel) const;
-		Channel &_get_channel_from_name(const std::string &channel_name);
+		Channel* _get_channel_from_name(const std::string &channel_name);
 
 		void _get_server_operators(void);
 		bool _is_valid_mode(std::string const& str, std::string const& modes) const;

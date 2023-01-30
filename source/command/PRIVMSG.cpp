@@ -51,11 +51,11 @@ namespace ft
             if (channel_exists)
             {
                 // Send the message to all clients in the channel
-                Channel &target_channel = _get_channel_from_name(target_channel_name);
-                std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_channel.get_name() + " :" + message + "\r\n";
-                for (size_t i = 0; i < target_channel.get_clients().size(); i++)
+                Channel* target_channel = _get_channel_from_name(target_channel_name);
+                std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_channel->get_name() + " :" + message + "\r\n";
+                for (size_t i = 0; i < target_channel->get_clients().size(); i++)
                 {
-                    int client_socket = target_channel.get_clients()[i]->get_socket();
+                    int client_socket = target_channel->get_clients()[i]->get_socket();
                     if (client_socket != current_client.get_socket())
                         _buffer.add_to_queue(_get_client_from_socket(client_socket), send_msg, 1);
                 }
