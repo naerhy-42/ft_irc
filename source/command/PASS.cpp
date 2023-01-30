@@ -12,17 +12,17 @@ namespace ft
         if (client.get_password_status())
         {
             reply = err_alreadyregistered(client.get_nickname());
-            _buffer.add_to_queue(client, reply, 0);
+            _buffer.add_to_queue(client, reply, -1);
         }
 		else if (parameters.empty())
         {
             reply = err_needmoreparams(client.get_nickname(), "PASS");
-            _buffer.add_to_queue(client, reply, 0);
+            _buffer.add_to_queue(client, reply, -1);
         }
 		else if (parameters[0] != _password)
         {
             reply = err_passwdmismatch(client.get_nickname());
-            _buffer.add_to_queue(client, reply, 0);
+            _buffer.add_to_queue(client, reply, -1);
         }
 		else
 			client.set_password_status(true);

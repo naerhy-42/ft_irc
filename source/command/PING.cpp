@@ -9,9 +9,10 @@ namespace ft
         std::string pong;
 
         // IRC clients should normally not send those commands if unregistered...
-        if (!client.get_password_status())
-            return;
-        pong = "PONG\r\n";
-        _buffer.add_to_queue(client, pong, 1);
+        if (client.get_password_status())
+		{
+			pong = "PONG\r\n";
+			_buffer.add_to_queue(client, pong, 1);
+		}
     }
 }

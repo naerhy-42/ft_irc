@@ -70,6 +70,8 @@ namespace ft
 
 		bool _is_valid_mode(std::string const& str, std::string const& modes) const;
 
+		void _send_welcome_messages(Client const& client);
+
 		static size_t const _message_max_characters;
 		static size_t const _message_max_parameters;
 

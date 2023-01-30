@@ -212,4 +212,20 @@ namespace ft
 			return false;
 		return true;
 	}
+
+	void Protocol::_send_welcome_messages(Client const& client)
+	{
+		std::string reply;
+
+		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
+				client.get_username(), client.get_hostname());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
+			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
+		_buffer.add_to_queue(client, reply, 1);
+	}
 }
