@@ -44,7 +44,7 @@ namespace ft
             std::string channels = "";
             for (size_t i = 0; i < _channels.size(); i++)
             {
-                if (_channels[i]->has_client(target_client))
+                if (_channels[i]->has_client(&target_client))
                 {
                     channels += _channels[i]->get_name() + " ";
                 }

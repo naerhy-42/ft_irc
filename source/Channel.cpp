@@ -2,7 +2,7 @@
 
 namespace ft
 {
-    Channel::Channel(std::string const &name, ft::Client creator) : _name(name), _topic(""), _author(""), _size(0)
+    Channel::Channel(std::string const &name, Client* creator) : _name(name), _topic(""), _author(""), _size(0)
     {
         _operators.push_back(creator);
         std::cout << "CHANNEL CREATED" << std::endl;
@@ -22,7 +22,7 @@ namespace ft
 
     int Channel::get_size() const { return _size; }
 
-    void Channel::add_client(Client const &client)
+    void Channel::add_client(Client* client)
     {
         if (!has_client(client))
         {
@@ -31,9 +31,9 @@ namespace ft
         }
     }
 
-    void Channel::remove_client(Client const &client)
+    void Channel::remove_client(Client* client)
     {
-        std::vector<Client>::iterator it;
+        std::vector<Client*>::iterator it;
         for (it = _clients.begin(); it != _clients.end(); ++it)
         {
             if (*it == client)
@@ -45,9 +45,9 @@ namespace ft
         }
     }
 
-    bool Channel::has_client(Client const &client) const
+    bool Channel::has_client(Client* client) const
     {
-        std::vector<Client>::const_iterator it;
+        std::vector<Client*>::const_iterator it;
         for (it = _clients.begin(); it != _clients.end(); ++it)
         {
             if (*it == client)
@@ -87,9 +87,9 @@ namespace ft
 		}
 	}
 
-    bool Channel::is_operator(Client const &client)
+    bool Channel::is_operator(Client* client)
     {
-        std::vector<Client>::const_iterator it;
+        std::vector<Client*>::const_iterator it;
         for (it = _operators.begin(); it != _operators.end(); ++it)
         {
             if (*it == client)

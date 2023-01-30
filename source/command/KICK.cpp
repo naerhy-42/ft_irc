@@ -50,7 +50,7 @@ namespace ft
             bool is_global_operator = false;
             Channel &target_channel = _get_channel_from_name(channel_name);
             is_global_operator = current_client.get_is_global_operator();
-            is_channel_operator = target_channel.is_operator(current_client);
+            is_channel_operator = target_channel.is_operator(&current_client);
             if (is_global_operator == false  && is_channel_operator == false)
             {
                 	std::string error = err_chanoprivsneeded(current_client.get_nickname(), channel_name);
@@ -62,7 +62,7 @@ namespace ft
                 //Check if target user is in channel
                 bool is_in_channel = false;
                 Client &target_client = _get_client_from_nickname(target_nickname);
-                is_in_channel = target_channel.has_client(target_client);
+                is_in_channel = target_channel.has_client(&target_client);
                 if (is_in_channel == false)
                 {
 			        std::string error = err_usernotinchannel(current_client.get_nickname(), target_nickname, channel_name);
@@ -75,12 +75,12 @@ namespace ft
                     std::string message = ":" + current_client.get_nickname() + " KICK " + target_channel.get_name() + " " + target_nickname + " :" + reason + "\r\n";
 			        for (size_t i = 0; i < target_channel.get_clients().size(); i++)
 			        {
-			        	int client_socket = target_channel.get_clients()[i].get_socket();
+			        	int client_socket = target_channel.get_clients()[i]->get_socket();
                         if (current_client.get_socket() != client_socket)
 			        	    _buffer.add_to_queue(client_socket, message, 1);
 			        }
 			        _buffer.add_to_queue(current_client, message, 1);
-                    target_channel.remove_client(target_client);
+                    target_channel.remove_client(&target_client);
                 }
             }
         }

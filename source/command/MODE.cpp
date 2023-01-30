@@ -24,7 +24,7 @@ namespace ft
 					reply = rpl_channelmodeis(client.get_nickname(), channel.get_name(), channel.get_modes_str());
 					_buffer.add_to_queue(client, reply, 0);
 				}
-				else if (!channel.is_operator(client))
+				else if (!channel.is_operator(&client))
 				{
 					reply = err_chanoprivsneeded(client.get_nickname(), channel.get_name());
 					_buffer.add_to_queue(client, reply, 0);

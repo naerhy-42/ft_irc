@@ -27,11 +27,11 @@ namespace ft
 			// Send the names of all clients in the channel
 			Channel &target_channel = _get_channel_from_name(target_channel_name);
 			std::vector<std::string> list_of_users;
-			std::vector<Client> clients = target_channel.get_clients();
+			std::vector<Client*> clients = target_channel.get_clients();
 			for (size_t i = 0; i < clients.size(); i++)
 			{
-				list_of_users.push_back(clients[i].get_nickname());
-				std::cout << clients[i].get_nickname() << std::endl;
+				list_of_users.push_back(clients[i]->get_nickname());
+				std::cout << clients[i]->get_nickname() << std::endl;
 			}
 			std::string names_msg = rpl_namreply("irc.forty-two.com", current_client.get_nickname(), target_channel.get_name(), list_of_users);
 			send(msg.get_socket(), names_msg.c_str(), names_msg.size(), 0);

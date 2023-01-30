@@ -37,7 +37,7 @@ namespace ft
         {
             // Add the client to the channel if it exists
             Channel &channel = _get_channel_from_name(channel_name);
-            channel.add_client(current_client);
+            channel.add_client(&current_client);
         }
         else
         {
@@ -45,8 +45,8 @@ namespace ft
             if (is_channel_name_corect == true)
             {
                 // Create a new channel and add the client to it if it doesn't exist
-                Channel *new_channel = new Channel(channel_name, current_client);
-                new_channel->add_client(current_client);
+                Channel *new_channel = new Channel(channel_name, &current_client);
+                new_channel->add_client(&current_client);
                 _channels.push_back(new_channel);
             }
             else
@@ -65,7 +65,7 @@ namespace ft
 
         for (size_t i = 0; i < channel.get_clients().size(); i++)
         {
-            int client_socket = channel.get_clients()[i].get_socket();
+            int client_socket = channel.get_clients()[i]->get_socket();
             _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
         }
 
@@ -83,7 +83,7 @@ namespace ft
             message = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + channel.get_topic() + "\r\n";
             for (size_t i = 0; i < channel.get_clients().size(); i++)
             {
-                int client_socket = channel.get_clients()[i].get_socket();
+                int client_socket = channel.get_clients()[i]->get_socket();
                 if (current_client.get_socket() == client_socket)
                     send(client_socket, message.c_str(), message.length(),0);
             }

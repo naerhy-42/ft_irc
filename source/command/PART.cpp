@@ -37,14 +37,14 @@ namespace ft
 			std::cout << "channel exists ? " << channel_exists << std::endl; 
 			// Remove the client from the channel
 			Channel &channel = _get_channel_from_name(target_channel);
-			channel.remove_client(current_client);
+			channel.remove_client(&current_client);
 			std::cout << "client :" << current_client.get_nickname() << " removed" << std::endl;
 
 			// Send a message to all clients in the channel that the client has left
 			std::string message = ":" + current_client.get_nickname() + " PART " + channel.get_name() + "\r\n";
 			for (size_t i = 0; i < channel.get_clients().size(); i++)
 			{
-				int client_socket = channel.get_clients()[i].get_socket();
+				int client_socket = channel.get_clients()[i]->get_socket();
 				_buffer.add_to_queue(client_socket, message, 1);
 			}
 			_buffer.add_to_queue(current_client, message, 1);

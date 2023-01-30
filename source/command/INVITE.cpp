@@ -48,7 +48,7 @@ namespace ft
             // Check if the client is channel operator
             bool is_channel_operator = false;
             Channel &target_channel = _get_channel_from_name(channel_name);
-            is_channel_operator = target_channel.is_operator(current_client);
+            is_channel_operator = target_channel.is_operator(&current_client);
             if (!is_channel_operator)
             {
                 // If the client is not a channel operator, send an error message
