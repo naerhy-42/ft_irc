@@ -55,7 +55,7 @@ namespace ft
                 std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_channel.get_name() + " :" + message + "\r\n";
                 for (size_t i = 0; i < target_channel.get_clients().size(); i++)
                 {
-                    int client_socket = target_channel.get_clients()[i].get_socket();
+                    int client_socket = target_channel.get_clients()[i]->get_socket();
                     if (client_socket != current_client.get_socket())
                         _buffer.add_to_queue(_get_client_from_socket(client_socket), send_msg, 1);
                 }

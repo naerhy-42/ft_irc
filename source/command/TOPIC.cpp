@@ -45,7 +45,7 @@ namespace ft
             // Check if the client is in the channel
             bool is_in_channel = false;
             Channel &target_channel = _get_channel_from_name(channel_name);
-            is_in_channel = target_channel.has_client(current_client);
+            is_in_channel = target_channel.has_client(&current_client);
             if (!is_in_channel)
             {
                 // If the client is not in the channel, send an error message
@@ -76,7 +76,7 @@ namespace ft
                 {
                     // Check if the client is a channel operator
                     bool is_channel_operator = false;
-                    is_channel_operator = target_channel.is_operator(current_client);
+                    is_channel_operator = target_channel.is_operator(&current_client);
                     if (!is_channel_operator)
                     {
                         // If the client is not a channel operator, send an error message
@@ -92,7 +92,7 @@ namespace ft
                         std::string message = ":" + current_client.get_nickname() + " TOPIC " + channel_name + " :" + topic + "\r\n";
                         for (size_t i = 0; i < target_channel.get_clients().size(); i++)
                         {
-                            int client_socket = target_channel.get_clients()[i].get_socket();
+                            int client_socket = target_channel.get_clients()[i]->get_socket();
                             if (current_client.get_socket() != client_socket)
                                 _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
                         }
