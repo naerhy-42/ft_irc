@@ -37,7 +37,9 @@ namespace ft
 				}
 				else
 				{
+					std::string old_nickname = client.get_nickname();
 					client.set_nickname(nickname);
+					_buffer.add_to_queue(client, ":" + old_nickname + " NICK " + nickname + "\r\n", 1);
 					// return replies to inform other members
 				}
 			}
