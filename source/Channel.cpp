@@ -15,7 +15,7 @@ namespace ft
         return _name;
     }
 
-    std::vector<Client> const &Channel::get_clients(void) const
+    std::vector<Client*> const &Channel::get_clients(void) const
     {
         return _clients;
     }

@@ -27,7 +27,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
-		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite));
+		// _commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
 		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
