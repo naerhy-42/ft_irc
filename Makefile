@@ -53,7 +53,7 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	rm -r $(OBJ)
+	rm -fr $(OBJ)
 
 re: fclean $(NAME)
 
