@@ -18,15 +18,15 @@ namespace ft
 		{
 			if (_channel_exists(parameters[0]))
 			{
-				Channel channel = _get_channel_from_name(parameters[0]);
+				Channel* channel = _get_channel_from_name(parameters[0]);
 				if (parameters.size() == 1)
 				{
-					reply = rpl_channelmodeis(client.get_nickname(), channel.get_name(), channel.get_modes_str());
+					reply = rpl_channelmodeis(client.get_nickname(), channel->get_name(), channel->get_modes_str());
 					_buffer.add_to_queue(client, reply, 0);
 				}
-				else if (!channel.is_operator(&client))
+				else if (!channel->is_operator(&client))
 				{
-					reply = err_chanoprivsneeded(client.get_nickname(), channel.get_name());
+					reply = err_chanoprivsneeded(client.get_nickname(), channel->get_name());
 					_buffer.add_to_queue(client, reply, 0);
 				}
 				else if (!_is_valid_mode(parameters[1], "mt"))
@@ -36,7 +36,7 @@ namespace ft
 				}
 				else
 				{
-					channel.set_mode(parameters[1][0], parameters[1][1]);
+					channel->set_mode(parameters[1][0], parameters[1][1]);
 					_buffer.add_to_queue(client, ":" + client.get_nickname() + " MODE "
 							+ client.get_nickname() + " :" + parameters[1] + "\r\n", 1);
 					// send message to all users in channel

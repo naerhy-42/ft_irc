@@ -177,12 +177,12 @@ namespace ft
 		return false;
 	}
 
-	Channel &Protocol::_get_channel_from_name(const std::string &channel_name)
+	Channel* Protocol::_get_channel_from_name(const std::string &channel_name)
 	{
 		for (size_t i = 0; i < _channels.size(); i++)
 		{
 			if (_channels[i]->get_name() == channel_name)
-				return *_channels[i];
+				return _channels[i];
 		}
 		throw std::out_of_range("channel not found");
 	}
