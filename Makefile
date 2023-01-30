@@ -20,6 +20,8 @@ SRCS =	source/Client.cpp \
 		source/command/KICK.cpp \
 		source/command/INVITE.cpp \
 		source/command/TOPIC.cpp \
+		source/command/OPER.cpp \
+		source/command/MODE.cpp \
 		ft_irc.cpp \
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)

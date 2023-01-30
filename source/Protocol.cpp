@@ -15,6 +15,7 @@ namespace ft
 
 	Protocol::Protocol(Server *server) : _server(server), _commands(), _clients(), _buffer(server)
 	{
+		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
@@ -28,6 +29,8 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite));
 		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
+		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
+		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		
 	}
 
@@ -164,6 +167,16 @@ namespace ft
 		return true;
 	}
 
+	bool Protocol::_channel_exists(std::string const& channel) const
+	{
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i]->get_name() == channel)
+				return true;
+		}
+		return false;
+	}
+
 	Channel &Protocol::_get_channel_from_name(const std::string &channel_name)
 	{
 		for (size_t i = 0; i < _channels.size(); i++)
@@ -172,5 +185,51 @@ namespace ft
 				return *_channels[i];
 		}
 		throw std::out_of_range("channel not found");
+	}
+
+	// no data validation or parsing -> might be an issue
+	void Protocol::_get_server_operators(void)
+	{
+		std::ifstream env_file;
+		std::vector<std::string> words;
+		std::string line;
+		std::string word;
+
+		env_file.open(".env", std::ios::in);
+		// if (!env_file)
+			// error
+		while (std::getline(env_file, line))
+		{
+			std::stringstream ss(line);
+
+			while (std::getline(ss, word, '='))
+				words.push_back(word);
+		}
+		env_file.close();
+		for (size_t i = 0; i < words.size(); i += 2)
+			_server_ops.insert(std::make_pair(words[i], words[i + 1]));
+	}
+
+	bool Protocol::_is_valid_mode(std::string const& str, std::string const& modes) const
+	{
+		if (str.size() != 2 || str.find_first_of("+-") != 0 || str.find_first_of(modes) != 1)
+			return false;
+		return true;
+	}
+
+	void Protocol::_send_welcome_messages(Client const& client)
+	{
+		std::string reply;
+
+		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
+				client.get_username(), client.get_hostname());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
+		_buffer.add_to_queue(client, reply, 1);
+		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
+			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
+		_buffer.add_to_queue(client, reply, 1);
 	}
 }

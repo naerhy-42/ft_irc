@@ -162,6 +162,12 @@ namespace ft
         return ":irc.forty-two.com 323 " + client + " :End of /LIST\r\n";
     }
 
+	// RPL_CHANNELMODEIS (324)
+	std::string rpl_channelmodeis(std::string const& client, std::string const& channel, std::string const& modes)
+	{
+		return ":irc.forty-two.com 324 " + client + " " + channel + " " + modes + "\r\n";
+	}
+
     // RPL_INVITELIST (336)
     std::string rpl_invitelist(const std::string &client, const std::string &channel)
     {
@@ -204,6 +210,12 @@ namespace ft
     {
         return client + " " + nick + " :End of WHOWAS\r\n";
     }
+
+	// RPL_YOUREOPER (381)
+	std::string rpl_youreoper(const std::string &client)
+	{
+		return ":irc.forty-two.com 381 " + client + " :You are now an IRC operator\r\n";
+	}
 
     // RPL_TIME (391)
     std::string rpl_time(const std::string &client, const std::string &server,
@@ -388,11 +400,29 @@ namespace ft
         return ":irc.forty-two.com 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n";
     }
 
-    // ERR_CHANOPRIVSNEEDED (482)
-    std::string err_chanoprivsneeded(const std::string &client, const std::string &channel)
-    {
-        return ":irc.forty-two.com 482 " + client + " " + channel + " :You're not channel operator\r\n";
-    }
+	// ERR_CHANOPRIVSNEEDED (482)
+	std::string err_chanoprivsneeded(std::string const& client, std::string const& channel)
+	{
+		return ":irc.forty-two.com 482 " + client + " " + channel + " :You're not channel operator\r\n";
+	}
+
+	// ERR_NOOPERHOST (491)
+	std::string err_nooperhost(const std::string &client)
+	{
+		return ":irc.forty-two.com 491 " + client + " :No O-lines for your host\r\n";
+	}
+
+	// ERR_UMODEUNKNOWNFLAG (501)
+	std::string err_umodeunknownflag(const std::string &client)
+	{
+		return ":irc.forty-two.com 501 " + client + " :Unknown MODE flag\r\n";
+	}
+
+	// ERR_USERSDONTMATCH (502)
+	std::string err_usersdontmatch(const std::string &client)
+	{
+		return ":irc.forty-two.com 502 " + client + " :Cannot change mode for other users\r\n";
+	}
 
     std::string rpl_topic(const std::string &channel, const std::string &topic)
     {

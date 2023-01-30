@@ -81,6 +81,9 @@ namespace ft
     // RPL_LISTEND (323)
     std::string rpl_listend(const std::string &client);
 
+	// RPL_CHANNELMODEIS (324)
+	std::string rpl_channelmodeis(std::string const& client, std::string const& channel, std::string const& modes);
+
     // RPL_INVITELIST (336)
     std::string rpl_invitelist(const std::string &channel);
 
@@ -100,6 +103,9 @@ namespace ft
 
     // RPL_ENDOFWHOWAS (369)
     std::string rpl_endofwhowas(const std::string &client, const std::string &nick);
+
+	// RPL_YOUREOPER (381)
+	std::string rpl_youreoper(const std::string& client);
 
     // RPL_TIME (391)
     std::string rpl_time(const std::string &client, const std::string &server,
@@ -184,7 +190,19 @@ namespace ft
     std::string err_bannedfromchan(const std::string &client, const std::string &channel);
 
     // ERR_BADCHANNELKEY (475)
-    std::string err_badchannelkey(const std::string &client, const std::string &channel);
+std::string err_badchannelkey(const std::string &client, const std::string &channel);
+
+	// ERR_CHANOPRIVSNEEDED (482)
+	std::string err_chanoprivsneeded(std::string const& client, std::string const& channel);
+
+	// ERR_NOOPERHOST (491)
+	std::string err_nooperhost(const std::string &client);
+
+	// ERR_UMODEUNKNOWNFLAG (501)
+	std::string err_umodeunknownflag(const std::string &client);
+
+	// ERR_USERSDONTMATCH (502)
+	std::string err_usersdontmatch(const std::string &client);    std::string err_badchannelkey(const std::string &client, const std::string &channel);
 
     // RPL_NAMREPLY (353)
     std::string rpl_namreply(const std::string &server_name, const std::string &client, const std::string &channel_name,

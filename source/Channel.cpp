@@ -59,6 +59,34 @@ namespace ft
         return false;
     }
 
+	std::vector<char> const& Channel::get_modes(void) const { return _modes; }
+
+	std::string Channel::get_modes_str(void) const
+	{
+		std::string ret;
+
+		for (size_t i = 0; i < _modes.size(); i++)
+			ret.append(1, _modes[i]);
+		return ret;
+	}
+
+	void Channel::set_mode(char sign, char mode)
+	{
+		if (sign == '+')
+			_modes.push_back(mode);
+		else
+		{
+			for (std::vector<char>::iterator it = _modes.begin(); it != _modes.end(); it++)
+			{
+				if (*it == mode)
+				{
+					_modes.erase(it);
+					break;
+				}
+			}
+		}
+	}
+
     bool Channel::is_operator(Client const &client)
     {
         std::vector<Client>::const_iterator it;

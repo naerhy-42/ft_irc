@@ -1,8 +1,10 @@
 #ifndef __PROTOCOL_HPP__
 #define __PROTOCOL_HPP__
 
+#include <fstream>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <sys/types.h>
@@ -55,6 +57,8 @@ namespace ft
 		void cmd_kick(Message msg);
     	void cmd_invite(Message msg);
 		void cmd_topic(Message msg);
+		void cmd_oper(Message msg);
+		void cmd_mode(Message msg);
 
 
 	private:
@@ -63,7 +67,12 @@ namespace ft
 		Client &_get_client_from_socket(int socket);
 		Client &_get_client_from_nickname(const std::string &nickname);
 		
+		bool _channel_exists(std::string const& channel) const;
 		Channel &_get_channel_from_name(const std::string &channel_name);
+
+		void _get_server_operators(void);
+		bool _is_valid_mode(std::string const& str, std::string const& modes) const;
+		void _send_welcome_messages(Client const& client);
 
 		static size_t const _message_max_characters;
 		static size_t const _message_max_parameters;
@@ -77,6 +86,7 @@ namespace ft
 		std::vector<Client> _clients;
 		std::vector<Channel*> _channels;
 		Buffer _buffer;
+		std::map<std::string, std::string> _server_ops;
 	};
 }
 

@@ -1,3 +1,5 @@
 .vscode
 irc_server
 obj
+.env
+*.o

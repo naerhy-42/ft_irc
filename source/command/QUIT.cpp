@@ -8,9 +8,10 @@ namespace ft
         Client &client = _get_client_from_socket(msg.get_socket());
 
         // IRC clients should normally not send those commands if unregistered...
-        if (!client.get_password_status())
-            return;
-        _server->close_socket_connection(client.get_socket());
-        // if client is on a channel, send QUIT command to clients in this channel
+        if (client.get_password_status())
+		{
+			_server->close_socket_connection(client.get_socket());
+			// if client is on a channel, send QUIT command to clients in this channel
+		}
     }
 }

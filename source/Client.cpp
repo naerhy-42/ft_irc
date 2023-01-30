@@ -3,7 +3,7 @@
 namespace ft
 {
 	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
-			_registration_status(false), _password_status(false), _is_global_operator(false) {}
+			_registration_status(false), _password_status(false) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
@@ -25,6 +25,27 @@ namespace ft
 
 	bool Client::get_is_global_operator(void) const { return _is_global_operator; }
 
+	std::vector<char> const& Client::get_modes(void) const { return _modes; }
+
+	bool Client::has_mode(char mode) const
+	{
+		for (size_t i = 0; i < _modes.size(); i++)
+		{
+			if (mode == _modes[i])
+				return true;
+		}
+		return false;
+	}
+
+	std::string Client::get_modes_str(void) const
+	{
+		std::string ret;
+
+		for (size_t i = 0; i < _modes.size(); i++)
+			ret.append(1, _modes[i]);
+		return ret;
+	}
+
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 
 	void Client::set_username(std::string const &username) { _username = username; }
@@ -40,6 +61,23 @@ namespace ft
 	void Client::set_registration_status(bool status) { _registration_status = status; }
 
 	void Client::set_password_status(bool status) { _password_status = status; }
+
+	void Client::set_mode(char sign, char mode)
+	{
+		if (sign == '+')
+			_modes.push_back(mode);
+		else
+		{
+			for (std::vector<char>::iterator it = _modes.begin(); it != _modes.end(); it++)
+			{
+				if (*it == mode)
+				{
+					_modes.erase(it);
+					break;
+				}
+			}
+		}
+	}
 
 	Client &Client::operator=(Client const &other)
 	{
