@@ -41,7 +41,7 @@ namespace ft
 			std::cout << "client :" << current_client.get_nickname() << " removed" << std::endl;
 
 			// Send a message to all clients in the channel that the client has left
-			std::string message = ":" + current_client.get_nickname() + " PART " + channel->get_name() + "\r\n";
+			std::string message = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " PART " + channel->get_name() + "\r\n";
 			for (size_t i = 0; i < channel->get_clients().size(); i++)
 			{
 				int client_socket = channel->get_clients()[i]->get_socket();

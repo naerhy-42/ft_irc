@@ -89,7 +89,7 @@ namespace ft
                         // If the client is a channel operator, set the topic and send the topic message
                         target_channel->set_topic(topic);
                         target_channel->set_author(current_client.get_nickname());
-                        std::string message = ":" + current_client.get_nickname() + " TOPIC " + channel_name + " :" + topic + "\r\n";
+                        std::string message = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " TOPIC " + channel_name + " :" + topic + "\r\n";
                         for (size_t i = 0; i < target_channel->get_clients().size(); i++)
                         {
                             int client_socket = target_channel->get_clients()[i]->get_socket();
