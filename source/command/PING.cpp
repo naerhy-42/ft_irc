@@ -12,7 +12,7 @@ namespace ft
         if (client.get_password_status())
 		{
 			pong = "PONG\r\n";
-			_buffer.add_to_queue(client, pong, 1);
+			add_to_queue(client, pong, 1);
 		}
     }
 }

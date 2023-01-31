@@ -16,7 +16,7 @@ namespace ft
         {
             // If there is no nickname or channel parameter, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "INVITE");
-            _buffer.add_to_queue(current_client, error, 0);
+            add_to_queue(current_client, error, 0);
             return;
         }
 
@@ -40,7 +40,7 @@ namespace ft
         {
             // If the channel does not exist, send an error message
             std::string error = err_nosuchchannel(current_client.get_nickname(), channel_name);
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
             return;
         }
         else
@@ -53,7 +53,7 @@ namespace ft
             {
                 // If the client is not a channel operator, send an error message
                 std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel->get_name());
-                _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                 return;
             }
             else
@@ -73,7 +73,7 @@ namespace ft
                 {
                     // If the target client does not exist, send an error message
                     std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
-                    _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                    add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                     return;
                 }
                 else
@@ -82,11 +82,11 @@ namespace ft
                     Client &target_client = _get_client_from_nickname(target_nickname);
                     // Send an invitation message to the target client
                     std::string message = ":" + current_client.get_nickname() + " INVITE " + target_nickname + " " + channel_name + "\r\n";
-                    _buffer.add_to_queue(target_client, message, 1);
+                    add_to_queue(target_client, message, 1);
 
                     // Send a confirmation message to the inviting client
                     message = rpl_inviting(current_client.get_nickname(), target_channel->get_name());
-                    _buffer.add_to_queue(current_client, message, 1);
+                    add_to_queue(current_client, message, 1);
                 }
             }
         }

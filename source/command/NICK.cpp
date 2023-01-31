@@ -13,12 +13,12 @@ namespace ft
 		if (!client.get_password_status())
 		{
 			reply = err_notregistered(client.get_nickname());
-			_buffer.add_to_queue(client, reply, 0);
+			add_to_queue(client, reply, 0);
 		}
 		else if (parameters.empty() || parameters[0].empty())
 		{
 			reply = err_nonicknamegiven(client.get_nickname());
-			_buffer.add_to_queue(client, reply, 0);
+			add_to_queue(client, reply, 0);
 		}
 		else
 		{
@@ -26,20 +26,20 @@ namespace ft
 			if (nickname.length() > 18 || nickname.find_first_of(" ,*?!@.#&()[]") != std::string::npos)
 			{
 				reply = err_erroneusnickname(client.get_nickname(), nickname);
-				_buffer.add_to_queue(client, reply, 0);
+				add_to_queue(client, reply, 0);
 			}
 			else if (_is_client_connected(client))
 			{
 				if (_is_nickname_taken(nickname))
 				{
 					reply = err_nicknameinuse(client.get_nickname(), nickname);
-					_buffer.add_to_queue(client, reply, 0);
+					add_to_queue(client, reply, 0);
 				}
 				else
 				{
 					std::string old_nickname = client.get_nickname();
 					client.set_nickname(nickname);
-					_buffer.add_to_queue(client, ":" + old_nickname + " NICK " + nickname + "\r\n", 1);
+					add_to_queue(client, ":" + old_nickname + " NICK " + nickname + "\r\n", 1);
 					for (std::vector<ft::Channel *>::const_iterator channel_it = _channels.begin(); channel_it != _channels.end(); ++channel_it)
 					{
 						ft::Channel *channel = *channel_it;
@@ -49,7 +49,7 @@ namespace ft
 							if (target_client != &client)
 							{
 								std::string reply = ":" + old_nickname + " NICK " + nickname + "\r\n";
-								_buffer.add_to_queue(*target_client, reply, 1);
+								add_to_queue(*target_client, reply, 1);
 							}
 						}
 					}
@@ -60,7 +60,7 @@ namespace ft
 				if (_is_nickname_taken(nickname))
 				{
 					reply = err_nicknameinuse(client.get_nickname(), nickname);
-					_buffer.add_to_queue(client, reply, 1);
+					add_to_queue(client, reply, 1);
 				}
 				else
 				{
