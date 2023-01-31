@@ -6,7 +6,6 @@ SRCS =	source/Client.cpp \
 		source/Reply.cpp \
 		source/Server.cpp \
 		source/Channel.cpp \
-		source/Buffer.cpp \
 		source/command/PART.cpp \
 		source/command/JOIN.cpp \
 		source/command/NAMES.cpp \

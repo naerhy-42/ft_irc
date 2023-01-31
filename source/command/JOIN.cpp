@@ -15,7 +15,7 @@ namespace ft
         {
             // If there is no channel parameter, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "JOIN");
-            _buffer.add_to_queue(current_client, error, 0);
+            add_to_queue(current_client, error, 0);
             return;
         }
 
@@ -58,7 +58,7 @@ namespace ft
 
         // Send a JOIN message to the client
         std::string join_msg = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
-        _buffer.add_to_queue(current_client, join_msg, 0);
+        add_to_queue(current_client, join_msg, 0);
 
         Channel* channel = _get_channel_from_name(channel_name);
         std::string message = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
@@ -67,7 +67,7 @@ namespace ft
         for (size_t i = 0; i < channel->get_clients().size(); i++)
         {
             int client_socket = channel->get_clients()[i]->get_socket();
-            _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
+            add_to_queue(_get_client_from_socket(client_socket), message, 1);
         }
 
         // Send the topic of the channel to the client
@@ -76,7 +76,7 @@ namespace ft
         // {
         //     std::cout << topic << std::endl;
         //     std::string topic_msg = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + topic + "\r\n";
-        //     _buffer.add_to_queue(current_client, topic_msg, 1);
+        //     add_to_queue(current_client, topic_msg, 1);
         // }
         if (!topic.empty())
         {

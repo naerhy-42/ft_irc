@@ -15,7 +15,7 @@ namespace ft
         {
             // If there is no channel parameter, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "KICK");
-            _buffer.add_to_queue(current_client, error, 0);
+            add_to_queue(current_client, error, 0);
             return;
         }
         
@@ -40,7 +40,7 @@ namespace ft
 		{
 			// If the channel does not exist, send an error message
 			std::string error = err_nosuchchannel(current_client.get_nickname(), channel_name);
-			_buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+			add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			return ;
 		}
         else
@@ -54,7 +54,7 @@ namespace ft
             if (is_global_operator == false  && is_channel_operator == false)
             {
                 	std::string error = err_chanoprivsneeded(current_client.get_nickname(), channel_name);
-			        _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+			        add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			        return ;
             }
             else
@@ -66,7 +66,7 @@ namespace ft
                 if (is_in_channel == false)
                 {
 			        std::string error = err_usernotinchannel(current_client.get_nickname(), target_nickname, channel_name);
-			        _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+			        add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			        return ;
                 }
                 else
@@ -77,9 +77,9 @@ namespace ft
 			        {
 			        	int client_socket = target_channel->get_clients()[i]->get_socket();
                         if (current_client.get_socket() != client_socket)
-			        	    _buffer.add_to_queue(client_socket, message, 1);
+			        	    add_to_queue(client_socket, message, 1);
 			        }
-			        _buffer.add_to_queue(current_client, message, 1);
+			        add_to_queue(current_client, message, 1);
                     target_channel->remove_client(&target_client);
                 }
             }

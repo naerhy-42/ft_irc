@@ -13,7 +13,7 @@ namespace ft
 
 	size_t const Protocol::_message_max_parameters = 15;
 
-	Protocol::Protocol(Server *server) : _server(server), _commands(), _clients(), _buffer(server)
+	Protocol::Protocol(Server *server) : _server(server), _commands(), _clients()
 	{
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
@@ -35,6 +35,9 @@ namespace ft
 	}
 
 	Protocol::~Protocol(void) {}
+
+	Protocol::Reply::Reply(Client const& client, std::string const& message)
+		: client(client), message(message) {}
 
 	void Protocol::set_password(std::string const &password) { _password = password; }
 
@@ -81,14 +84,54 @@ namespace ft
 			if (msg.get_parameters().size() <= _message_max_parameters)
 				handle_message(msg);
 		}
-		_buffer.send_messages();
-		_buffer.clear();
+		send_replies();
+		_queue.clear();
+		_ignored_sockets.clear();
 	}
 
 	void Protocol::handle_message(Message msg)
 	{
-		if (_commands.count(msg.get_command()))
+		if (_commands.count(msg.get_command()) && !is_socket_ignored(msg.get_socket()))
 			(this->*_commands[msg.get_command()])(msg);
+	}
+
+	void Protocol::ignore_socket(int socket)
+	{
+		if (!is_socket_ignored(socket))
+			_ignored_sockets.push_back(socket);
+	}
+
+	bool Protocol::is_socket_ignored(int socket) const
+	{
+		std::vector<int>::const_iterator cit;
+
+		for (cit = _ignored_sockets.begin(); cit != _ignored_sockets.end(); cit++)
+		{
+			if (*cit == socket)
+				return true;
+		}
+		return false;
+	}
+
+	void Protocol::add_to_queue(Client const& client, std::string const& message, int index)
+	{
+		Reply r(client, message);
+		_queue.push_back(r);
+		if (!index)
+			ignore_socket(client.get_socket());
+	}
+
+	void Protocol::send_replies(void)
+	{
+		std::vector<Reply>::const_iterator cit;
+		ssize_t x;
+
+		for (cit = _queue.begin(); cit != _queue.end(); cit++)
+		{
+			x = send(cit->client.get_socket(), cit->message.c_str(), cit->message.size(), 0);
+			if (x == -1)
+				_server->close_socket_connection(cit->client.get_socket());
+		}
 	}
 
 	bool Protocol::_is_client_connected(Client client) const
@@ -223,13 +266,13 @@ namespace ft
 
 		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
 				client.get_username(), client.get_hostname());
-		_buffer.add_to_queue(client, reply, 1);
+		add_to_queue(client, reply, 1);
 		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
-		_buffer.add_to_queue(client, reply, 1);
+		add_to_queue(client, reply, 1);
 		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
-		_buffer.add_to_queue(client, reply, 1);
+		add_to_queue(client, reply, 1);
 		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
 			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
-		_buffer.add_to_queue(client, reply, 1);
+		add_to_queue(client, reply, 1);
 	}
 }

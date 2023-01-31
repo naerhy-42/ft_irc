@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include "Buffer.hpp"
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Reply.hpp"
@@ -24,6 +23,15 @@ namespace ft
 	{
 	private:
 		typedef void (Protocol::*fncts)(Message);
+
+		class Reply
+		{
+			public:
+				Reply(Client const& client, std::string const& message);
+				
+				Client const& client;
+				std::string const message;
+		};
 
 	public:
 		Protocol(Server *server);
@@ -60,6 +68,11 @@ namespace ft
 		void cmd_oper(Message msg);
 		void cmd_mode(Message msg);
 
+		void add_to_queue(Client const& client, std::string const& message, int index);
+		void send_replies(void);
+		void ignore_socket(int socket);
+		bool is_socket_ignored(int socket) const;
+
 
 	private:
 		bool _is_nickname_taken(std::string const& nickname) const;
@@ -85,8 +98,10 @@ namespace ft
 		std::map<std::string, fncts> _commands;
 		std::vector<Client> _clients;
 		std::vector<Channel*> _channels;
-		Buffer _buffer;
 		std::map<std::string, std::string> _server_ops;
+	
+		std::vector<Reply> _queue;
+		std::vector<int> _ignored_sockets;
 	};
 }
 

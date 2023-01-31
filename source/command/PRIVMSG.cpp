@@ -15,7 +15,7 @@ namespace ft
         {
             // If there is no target parameter, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "PRIVMSG");
-            _buffer.add_to_queue(current_client, error, 0);
+            add_to_queue(current_client, error, 0);
             return;
         }
 
@@ -57,7 +57,7 @@ namespace ft
                 {
                     int client_socket = target_channel->get_clients()[i]->get_socket();
                     if (client_socket != current_client.get_socket())
-                        _buffer.add_to_queue(_get_client_from_socket(client_socket), send_msg, 1);
+                        add_to_queue(_get_client_from_socket(client_socket), send_msg, 1);
                 }
                 return;
             }
@@ -66,7 +66,7 @@ namespace ft
                 // If there is no target channel, send an error message
                 std::cout << "leaving here " << std::endl;
                 std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
-                _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
             }
         }
         else
@@ -87,14 +87,14 @@ namespace ft
                 // Send the message if the target exists
                 Client &target_client = _get_client_from_nickname(target_nickname);
                 std::string send_msg = ":" + current_client.get_nickname() + " PRIVMSG " + target_nickname + " :" + message + "\r\n";
-                _buffer.add_to_queue(target_client, send_msg, 1);
+                add_to_queue(target_client, send_msg, 1);
                 return;
             }
             else
             {
                 // If there is no target nickname, send an error message
                 std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
-                _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                 return;
             }
         }

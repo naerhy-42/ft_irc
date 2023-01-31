@@ -14,7 +14,7 @@ namespace ft
 		{
 			// If there is no target channel, send an error message
 			std::string error = err_needmoreparams(current_client.get_nickname(), "PART");
-			_buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+			add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			return ;
 		}
 
@@ -45,9 +45,9 @@ namespace ft
 			for (size_t i = 0; i < channel->get_clients().size(); i++)
 			{
 				int client_socket = channel->get_clients()[i]->get_socket();
-				_buffer.add_to_queue(client_socket, message, 1);
+				add_to_queue(client_socket, message, 1);
 			}
-			_buffer.add_to_queue(current_client, message, 1);
+			add_to_queue(current_client, message, 1);
 			for (std::vector<ft::Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 			{
 				if (*it == channel)
@@ -67,7 +67,7 @@ namespace ft
 		{
 			// If the channel does not exist, send an error message
 			std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel);
-			_buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+			add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
 			return ;
 		}
 	}

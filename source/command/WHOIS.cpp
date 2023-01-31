@@ -15,7 +15,7 @@ namespace ft
         {
             // If there is no target nickname, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "WHOIS");
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
             return;
         }
 
@@ -38,7 +38,7 @@ namespace ft
             // Send the WHOIS information if the target exists
             Client &target_client = _get_client_from_nickname(target_nickname);
             std::string whois_info = rpl_whoisuser(current_client.get_nickname(), target_client.get_nickname(), target_client.get_username(), target_client.get_hostname(), target_client.get_real_name());
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), whois_info, 1);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), whois_info, 1);
 
             // Build the channel string
             std::string channels = "";
@@ -53,12 +53,12 @@ namespace ft
             if (channels.size() > 0)
             {
                 std::string whois_channels = rpl_whoischannels(current_client.get_nickname(), target_client.get_nickname(), channels);
-                _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), whois_channels, 1);
+                add_to_queue(_get_client_from_socket(msg.get_socket()), whois_channels, 1);
             }
 
             // Send the end of WHOIS message
             std::string end_of_whois = rpl_endofwhois(current_client.get_nickname(), target_client.get_nickname());
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), end_of_whois, 1);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), end_of_whois, 1);
             return;
         }
         else
@@ -66,7 +66,7 @@ namespace ft
             // If the target nickname does not exist, send an error message
             std::string error = err_nosuchnick(current_client.get_nickname(), target_nickname);
             send(msg.get_socket(), error.c_str(), error.size(), 0);
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 1);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), error, 1);
             return;
         }
     }

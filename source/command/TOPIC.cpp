@@ -15,7 +15,7 @@ namespace ft
         {
             // If there is no channel parameter, send an error message
             std::string error = err_needmoreparams(current_client.get_nickname(), "TOPIC");
-            _buffer.add_to_queue(current_client, error, 0);
+            add_to_queue(current_client, error, 0);
             return;
         }
 
@@ -37,7 +37,7 @@ namespace ft
         {
             // If the channel does not exist, send an error message
             std::string error = err_nosuchchannel(current_client.get_nickname(), channel_name);
-            _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+            add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
             return;
         }
         else
@@ -50,7 +50,7 @@ namespace ft
             {
                 // If the client is not in the channel, send an error message
                 std::string error = err_notonchannel(current_client.get_nickname(), channel_name);
-                _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                 return;
             }
             else
@@ -64,12 +64,12 @@ namespace ft
                     if (target_channel->get_topic().empty())
                     {
                         std::string message = ":irc.example.com 331 " + current_client.get_nickname() + " " + target_channel->get_name() + " :No topic is set.\r\n";
-                        _buffer.add_to_queue(current_client, message, 1);
+                        add_to_queue(current_client, message, 1);
                     }
                     else
                     {
                         std::string message = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + target_channel->get_topic() + "\r\n";
-                        _buffer.add_to_queue(current_client, message, 1);
+                        add_to_queue(current_client, message, 1);
                     }
                 }
                 else
@@ -81,7 +81,7 @@ namespace ft
                     {
                         // If the client is not a channel operator, send an error message
                         std::string error = err_chanoprivsneeded(current_client.get_nickname(), target_channel->get_name()) + "\r\n";
-                        _buffer.add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
+                        add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
                         return;
                     }
                     else
@@ -94,9 +94,9 @@ namespace ft
                         {
                             int client_socket = target_channel->get_clients()[i]->get_socket();
                             if (current_client.get_socket() != client_socket)
-                                _buffer.add_to_queue(_get_client_from_socket(client_socket), message, 1);
+                                add_to_queue(_get_client_from_socket(client_socket), message, 1);
                         }
-                        _buffer.add_to_queue(current_client, message, 1);
+                        add_to_queue(current_client, message, 1);
                     }
                 }
             }
