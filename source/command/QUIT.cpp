@@ -28,6 +28,26 @@ namespace ft
 				}
 			}
 		}
+
+		std::vector<Channel*> channels_to_delete;
+        for (std::vector<ft::Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+		{
+            Channel* channel = *it;
+			if (channel->has_client(&client))
+			{
+                channel->remove_client(&client);
+				if (channel->get_size() == 0)
+				{
+                    channels_to_delete.push_back(channel);
+				}
+			}
+		}
+        for (std::vector<Channel*>::iterator channel_it = channels_to_delete.begin(); channel_it != channels_to_delete.end(); ++channel_it)
+        {
+            Channel *channel = *channel_it;
+            delete channel;
+        }
+
 		_server->close_socket_connection(client.get_socket());
     }
 }
