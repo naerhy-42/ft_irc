@@ -1,9 +1,14 @@
 #include "../include/Client.hpp"
 
+
 namespace ft
 {
 	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
-			_registration_status(false), _password_status(false) {}
+			_registration_status(false), _password_status(false), _is_global_operator(false){
+				std::cout << "created CLIENT " << std::endl;
+			}
+
+	Client::~Client(void) {}
 
 	int Client::get_socket(void) const { return _socket; }
 

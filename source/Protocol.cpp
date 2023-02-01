@@ -128,9 +128,11 @@ namespace ft
 
 		for (cit = _queue.begin(); cit != _queue.end(); cit++)
 		{
-			x = send((*cit).client.get_socket(), (*cit).message.c_str(), (*cit).message.size(), 0);
+			int socket = cit->client.get_socket();
+			std::string message = cit->message;
+			x = send(socket, message.c_str(), message.size(), 0);
 			if (x == -1)
-				_server->close_socket_connection((*cit).client.get_socket());
+				_server->close_socket_connection(socket);
 		}
 	}
 
@@ -154,12 +156,15 @@ namespace ft
 
 	Client &Protocol::_get_client_from_socket(int socket)
 	{
-		size_t pos;
+		size_t pos = 0;
 
 		for (size_t i = 0; i < _clients.size(); i++)
 		{
 			if (_clients[i].get_socket() == socket)
+			{
 				pos = i;
+				break;
+			}
 		}
 		return _clients[pos];
 	}

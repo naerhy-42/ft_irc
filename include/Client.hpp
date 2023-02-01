@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace ft
 {
@@ -12,7 +13,7 @@ namespace ft
 		Client(int socket);
 		// Client(Client const& x);
 		// Client& operator=(Client const& x);
-		// ~Client(void);
+		~Client(void);
 
 		int get_socket(void) const;
 		std::string const &get_nickname(void) const;
