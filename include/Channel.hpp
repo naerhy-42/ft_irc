@@ -1,10 +1,11 @@
 #ifndef __CHANNEL_HPP__
 #define __CHANNEL_HPP__
 
-#include "Client.hpp"
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
+
+#include "Client.hpp"
 
 namespace ft
 {

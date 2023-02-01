@@ -1,9 +1,9 @@
 #ifndef __CLIENT_HPP__
 #define __CLIENT_HPP__
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace ft
 {

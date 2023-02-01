@@ -1,7 +1,7 @@
 NAME = irc_server
 
 SRCS =	source/Client.cpp \
-		source/Message.cpp \
+		source/ClientMessage.cpp \
 		source/Protocol.cpp \
 		source/Reply.cpp \
 		source/Server.cpp \

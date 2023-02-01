@@ -1,22 +1,18 @@
-#ifndef __MESSAGE_HPP__
-#define __MESSAGE_HPP__
+#ifndef __CLIENT_MESSAGE_HPP__
+#define __CLIENT_MESSAGE_HPP__
 
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include <iostream>
-
 namespace ft
 {
-	// might delete origin -> useless if messages are only sent by clients
-	class Message
+	class ClientMessage
 	{
 		public:
-			Message(std::string& base_message, int socket);
-			// message(message const& x);
-			// message& operator=(message const& x);
-			// ~message(void);
+			ClientMessage(std::string& base_message, int socket);
+			~ClientMessage(void);
 
 			int get_socket(void) const;
 			std::string const& get_origin(void) const;
@@ -25,8 +21,10 @@ namespace ft
 			std::string const& get_remainder(void) const;
 
 		private:
+			// message(message const& x);
+			// message& operator=(message const& x);
+
 			int _socket;
-			std::string _origin;
 			std::string _command;
 			std::vector<std::string> _parameters;
 			std::string _remainder;

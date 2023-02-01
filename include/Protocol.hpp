@@ -11,7 +11,7 @@
 #include <sys/socket.h>
 
 #include "Client.hpp"
-#include "Message.hpp"
+#include "ClientMessage.hpp"
 #include "Reply.hpp"
 #include "Channel.hpp"
 
