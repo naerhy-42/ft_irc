@@ -62,7 +62,10 @@ namespace ft
                 {
                     int client_socket = target_channel->get_clients()[i]->get_socket();
                     if (client_socket != current_client.get_socket())
-                        add_to_queue(_get_client_from_socket(client_socket), send_msg, 1);
+                    {
+                        Client &target_client = _get_client_from_socket(client_socket);
+                        add_to_queue(target_client, send_msg, 1);
+                    }
                 }
                 return;
             }

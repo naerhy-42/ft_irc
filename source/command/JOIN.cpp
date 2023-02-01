@@ -65,14 +65,16 @@ namespace ft
         std::string join_msg = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
         add_to_queue(current_client, join_msg, 0);
 
+        // Send a JOIN message to the channel
         Channel* channel = _get_channel_from_name(channel_name);
         std::string message = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
 
 
         for (size_t i = 0; i < channel->get_clients().size(); i++)
         {
-            int client_socket = channel->get_clients()[i]->get_socket();
-            add_to_queue(_get_client_from_socket(client_socket), message, 1);
+            Client *target_client = channel->get_clients()[i];
+            // int client_socket = channel->get_clients()[i]->get_socket();
+            add_to_queue(*target_client, message, 1);
         }
 
         // Send the topic of the channel to the client
