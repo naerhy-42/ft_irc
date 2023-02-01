@@ -3,8 +3,8 @@
 
 namespace ft
 {
-	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
-			_registration_status(false), _password_status(false) {}
+	Client::Client(int socket) : _socket(socket), _nickname("*"), _password_status(false),
+			_nickname_status(false), _registration_status(false) {}
 
 	Client::~Client(void) {}
 
@@ -20,11 +20,11 @@ namespace ft
 
 	std::string const& Client::get_real_name(void) const { return _real_name; }
 
+	bool Client::get_password_status(void) const { return _password_status; }
+
 	bool Client::get_nickname_status(void) const { return _nickname_status; }
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
-
-	bool Client::get_password_status(void) const { return _password_status; }
 
 	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
@@ -60,11 +60,11 @@ namespace ft
 
 	void Client::set_real_name(std::string const &real_name) { _real_name = real_name; }
 
+	void Client::set_password_status(bool status) { _password_status = status; }
+
 	void Client::set_nickname_status(bool status) { _nickname_status = status; }
 
 	void Client::set_registration_status(bool status) { _registration_status = status; }
-
-	void Client::set_password_status(bool status) { _password_status = status; }
 
 	void Client::set_mode(char sign, char mode)
 	{
