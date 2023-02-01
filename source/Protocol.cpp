@@ -128,9 +128,9 @@ namespace ft
 
 		for (cit = _queue.begin(); cit != _queue.end(); cit++)
 		{
-			x = send(cit->client.get_socket(), cit->message.c_str(), cit->message.size(), 0);
+			x = send((*cit).client.get_socket(), (*cit).message.c_str(), (*cit).message.size(), 0);
 			if (x == -1)
-				_server->close_socket_connection(cit->client.get_socket());
+				_server->close_socket_connection((*cit).client.get_socket());
 		}
 	}
 
