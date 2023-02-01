@@ -129,6 +129,7 @@ namespace ft
 		for (cit = _queue.begin(); cit != _queue.end(); cit++)
 		{
 			int socket = cit->client.get_socket();
+			std::cout << "socket : " << socket << std::endl;
 			std::string message = cit->message;
 			x = send(socket, message.c_str(), message.size(), 0);
 			if (x == -1)
