@@ -9,7 +9,12 @@ namespace ft
 		std::vector<std::string> parameters = msg.get_parameters();
 		std::string reply;
 
-		if (parameters.size() < 2)
+		if (!_is_client_connected(client))
+		{
+			reply = err_notregistered(client.get_nickname());
+			add_to_queue(client, reply, 0);
+		}
+		else if (parameters.size() < 2)
 		{
 			reply = err_needmoreparams(client.get_nickname(), "OPER");
 			add_to_queue(client, reply, 0);

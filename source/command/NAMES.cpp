@@ -10,6 +10,11 @@ namespace ft
 		// Extract the parameters from the message
 		std::vector<std::string> parameters = msg.get_parameters();
 
+		if (!_is_client_connected(current_client))
+		{
+			std::string reply = err_notregistered(current_client.get_nickname());
+			add_to_queue(current_client, reply, 0);
+		}
 		// Check if the channel exists
 		std::string const target_channel_name = parameters[0];
 		bool channel_exists = false;

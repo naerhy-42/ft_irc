@@ -11,6 +11,11 @@ namespace ft
         // Extract the parameters from the message
         std::vector<std::string> parameters = msg.get_parameters();
 
+		if (!_is_client_connected(current_client))
+		{
+			std::string reply = err_notregistered(current_client.get_nickname());
+			add_to_queue(current_client, reply, 0);
+		}
         // Ensure that the message has at least two parameters (the nickname, the channel name)
         if (parameters.size() < 2)
         {

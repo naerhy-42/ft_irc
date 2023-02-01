@@ -8,7 +8,11 @@ namespace ft
         Client &client = _get_client_from_socket(msg.get_socket());
         std::string pong;
 
-        // IRC clients should normally not send those commands if unregistered...
+		if (!_is_client_connected(client))
+		{
+			std::string reply = err_notregistered(client.get_nickname());
+			add_to_queue(client, reply, 0);
+		}
         if (client.get_password_status())
 		{
 			pong = "PONG\r\n";
