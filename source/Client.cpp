@@ -4,23 +4,21 @@
 namespace ft
 {
 	Client::Client(int socket) : _socket(socket), _nickname("*"), _nickname_status(false),
-			_registration_status(false), _password_status(false), _is_global_operator(false){
-				std::cout << "created CLIENT " << std::endl;
-			}
+			_registration_status(false), _password_status(false) {}
 
 	Client::~Client(void) {}
 
 	int Client::get_socket(void) const { return _socket; }
 
-	std::string const &Client::get_nickname(void) const { return _nickname; }
+	std::string const& Client::get_nickname(void) const { return _nickname; }
 
-	std::string const &Client::get_username(void) const { return _username; }
+	std::string const& Client::get_username(void) const { return _username; }
 
-	std::string const &Client::get_hostname(void) const { return _hostname; }
+	std::string const& Client::get_hostname(void) const { return _hostname; }
 
-	std::string const &Client::get_servername(void) const { return _servername; }
+	std::string const& Client::get_servername(void) const { return _servername; }
 
-	std::string const &Client::get_real_name(void) const { return _real_name; }
+	std::string const& Client::get_real_name(void) const { return _real_name; }
 
 	bool Client::get_nickname_status(void) const { return _nickname_status; }
 
@@ -28,15 +26,15 @@ namespace ft
 
 	bool Client::get_password_status(void) const { return _password_status; }
 
-	bool Client::get_is_global_operator(void) const { return _is_global_operator; }
-
 	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
 	bool Client::has_mode(char mode) const
 	{
-		for (size_t i = 0; i < _modes.size(); i++)
+		std::vector<char>::const_iterator cit;
+
+		for (cit = _modes.begin(); cit != _modes.end(); cit++)
 		{
-			if (mode == _modes[i])
+			if (*cit == mode)
 				return true;
 		}
 		return false;
@@ -44,11 +42,12 @@ namespace ft
 
 	std::string Client::get_modes_str(void) const
 	{
-		std::string ret;
+		std::string modes_str;
+		std::vector<char>::const_iterator cit;
 
-		for (size_t i = 0; i < _modes.size(); i++)
-			ret.append(1, _modes[i]);
-		return ret;
+		for (cit = _modes.begin(); cit != _modes.end(); cit++)
+			ret.append(1, *cit);
+		return modes_str;
 	}
 
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
@@ -73,44 +72,16 @@ namespace ft
 			_modes.push_back(mode);
 		else
 		{
-			for (std::vector<char>::iterator it = _modes.begin(); it != _modes.end(); it++)
+			std::vector<char>::const_iterator cit;
+
+			for (cit = _modes.begin(); cit != _modes.end(); cit++)
 			{
-				if (*it == mode)
+				if (*cit == mode)
 				{
 					_modes.erase(it);
 					break;
 				}
 			}
 		}
-	}
-
-	Client &Client::operator=(Client const &other)
-	{
-		if (this != &other)
-		{
-			_socket = other._socket;
-			_nickname = other._nickname;
-			_username = other._username;
-			_hostname = other._hostname;
-			_servername = other._servername;
-			_real_name = other._real_name;
-			_nickname_status = other._nickname_status;
-			_registration_status = other._registration_status;
-			_password_status = other._password_status;
-		}
-		return *this;
-	}
-
-	bool operator==(Client const &lhs, Client const &rhs)
-	{
-    	return lhs.get_socket() == rhs.get_socket()
-        	&& lhs.get_nickname() == rhs.get_nickname()
-        	&& lhs.get_username() == rhs.get_username()
-        	&& lhs.get_hostname() == rhs.get_hostname()
-        	&& lhs.get_servername() == rhs.get_servername()
-        	&& lhs.get_real_name() == rhs.get_real_name()
-			&& lhs.get_nickname_status() == rhs.get_nickname_status()
-        	&& lhs.get_registration_status() == rhs.get_registration_status()
-        	&& lhs.get_password_status() == rhs.get_password_status();
 	}
 }
