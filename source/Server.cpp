@@ -174,7 +174,7 @@ namespace ft
 					            // Data was received from the client
 					            // Process the data
 								std::string str_buffer(buffer, bytes_received);
-								_protocol.parse_client_input(str_buffer, client_fd);
+								_protocol.parse_client_input(client_fd, str_buffer);
 					        }
 					    }
 					}

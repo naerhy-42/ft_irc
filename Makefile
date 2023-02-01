@@ -1,12 +1,13 @@
 NAME = irc_server
 
-SRCS =	source/Client.cpp \
+SRCS =	ft_irc.cpp \
+		source/Channel.cpp \
+		source/Client.cpp \
 		source/ClientMessage.cpp \
 		source/Protocol.cpp \
 		source/Reply.cpp \
 		source/Server.cpp \
-		source/Channel.cpp \
-		source/command/PART.cpp \
+		# source/command/PART.cpp \
 		source/command/JOIN.cpp \
 		source/command/NAMES.cpp \
 		source/command/PRIVMSG.cpp \
@@ -21,7 +22,6 @@ SRCS =	source/Client.cpp \
 		source/command/TOPIC.cpp \
 		source/command/OPER.cpp \
 		source/command/MODE.cpp \
-		ft_irc.cpp \
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)
 

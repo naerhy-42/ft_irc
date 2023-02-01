@@ -11,11 +11,10 @@ namespace ft
 	class ClientMessage
 	{
 		public:
-			ClientMessage(std::string& base_message, int socket);
+			ClientMessage(int socket, std::string& message);
 			~ClientMessage(void);
 
 			int get_socket(void) const;
-			std::string const& get_origin(void) const;
 			std::string const& get_command(void) const;
 			std::vector<std::string> const& get_parameters(void) const;
 			std::string const& get_remainder(void) const;

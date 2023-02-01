@@ -46,7 +46,7 @@ namespace ft
 		std::vector<char>::const_iterator cit;
 
 		for (cit = _modes.begin(); cit != _modes.end(); cit++)
-			ret.append(1, *cit);
+			modes_str.append(1, *cit);
 		return modes_str;
 	}
 
@@ -72,11 +72,11 @@ namespace ft
 			_modes.push_back(mode);
 		else
 		{
-			std::vector<char>::const_iterator cit;
+			std::vector<char>::iterator it;
 
-			for (cit = _modes.begin(); cit != _modes.end(); cit++)
+			for (it = _modes.begin(); it != _modes.end(); it++)
 			{
-				if (*cit == mode)
+				if (*it == mode)
 				{
 					_modes.erase(it);
 					break;

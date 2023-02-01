@@ -2,20 +2,20 @@
 
 namespace ft
 {
-	ClientMessage::ClientMessage(std::string& base_message, int socket) : _socket(socket)
+	ClientMessage::ClientMessage(int socket, std::string& message) : _socket(socket)
 	{
 		std::string remainder;
-		size_t remainder_pos = base_message.find(" :");
+		size_t remainder_pos = message.find(" :");
 		std::stringstream ss;
 		std::string word;
 
 		if (remainder_pos != std::string::npos)
 		{
-			remainder.append(base_message, remainder_pos + 2, std::string::npos);
-			base_message.erase(remainder_pos, std::string::npos);
+			remainder.append(message, remainder_pos + 2, std::string::npos);
+			message.erase(remainder_pos, std::string::npos);
 			_remainder = remainder;
 		}
-		ss.str(base_message);
+		ss.str(message);
 		while (ss >> word)
 		{
 			if (_command.empty())
@@ -28,8 +28,6 @@ namespace ft
 	ClientMessage::~ClientMessage(void) {}
 
 	int ClientMessage::get_socket(void) const { return _socket; }
-
-	std::string const& ClientMessage::get_origin(void) const { return _origin; }
 
 	std::string const& ClientMessage::get_command(void) const { return _command; }
 

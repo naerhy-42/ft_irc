@@ -1,97 +1,96 @@
 #include "../include/Protocol.hpp"
 #include "../include/Server.hpp"
 
-// remove after test
-// remove after test
-// remove after test
-// remove after test
-#include <iostream>
-
 namespace ft
 {
-	size_t const Protocol::_message_max_characters = 512;
+	size_t const Protocol::_MESSAGE_MAX_CHARACTERS = 512;
 
-	size_t const Protocol::_message_max_parameters = 15;
+	size_t const Protocol::_MESSAGE_MAX_PARAMETERS = 15;
 
-	Protocol::Protocol(Server& server) : _server(server), _commands(), _clients()
+	std::string const Protocol::_IRC_ENDL = "\r\n";
+
+	Protocol::Protocol(Server& server) : _server(server)
 	{
+		/*
 		_get_server_operators();
-		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
-		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
-		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
-		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
+		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
-		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
-		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
-		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
-		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
-		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
-		// _commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
-		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
-		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
-		
+		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
+		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
+		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
+		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
+		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
+		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
+		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
+		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
+		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
+		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
+		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
+		*/
 	}
 
 	Protocol::~Protocol(void) {}
 
-	Protocol::Reply::Reply(Client const& client, std::string const& message)
-		: client(client), message(message) {}
+	void Protocol::set_password(std::string const& password) { _password = password; }
 
-	void Protocol::set_password(std::string const &password) { _password = password; }
-
-	void Protocol::add_client(int socket)
-	{
-		_clients.push_back(Client(socket));
-	}
+	void Protocol::add_client(int socket) { _clients.push_back(Client(socket)); }
 
 	void Protocol::delete_client(int socket)
 	{
-		for (size_t i = 0; i < _clients.size(); i++)
+		std::vector<Client>::iterator it;
+
+		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if (_clients[i].get_socket() == socket)
-				_clients.erase(_clients.begin() + i);
+			if ((*it).get_socket() == socket)
+			{
+				_clients.erase(it);
+				break;
+			}
 		}
 	}
 
-	void Protocol::parse_client_input(std::string &client_msg, int client_socket)
+	void Protocol::parse_client_input(int socket, std::string& message)
 	{
 		std::string line;
 		size_t pos;
 		std::vector<std::string> lines;
+		std::vector<std::string>::iterator it;
 
-		// if message is > 512 chars, we truncate it and add CRLF at the end
-		if (client_msg.size() > _message_max_characters)
+		if (message.size() > _MESSAGE_MAX_CHARACTERS)
 		{
-			client_msg.resize(_message_max_characters - 2);
-			client_msg.append("\r\n");
+			message.resize(_MESSAGE_MAX_CHARACTERS - 2);
+			message.append(_IRC_ENDL);
 		}
 		do
 		{
-			pos = client_msg.find("\r\n");
-			line = client_msg.substr(0, pos);
-			// we do not care about empty messages
-			std::cout << "line = " << line << std::endl; // TEST TEST TEST TEST TEST
+			pos = message.find(_IRC_ENDL);
+			line = message.substr(0, pos);
+			// std::cout << "line = " << line << std::endl;
 			if (!line.empty())
 				lines.push_back(line);
-			client_msg.erase(0, pos + 2);
+			message.erase(0, pos + 2);
 		} while (pos != std::string::npos);
-		for (size_t i = 0; i < lines.size(); i++)
+		for (it = lines.begin(); it != lines.end(); it++)
 		{
-			Message msg(lines[i], client_socket);
-			// we do not care about messages with more than 15 parameters
-			if (msg.get_parameters().size() <= _message_max_parameters)
-				handle_message(msg);
+			ClientMessage client_message(socket, *it);
+
+			if (client_message.get_parameters().size() <= _MESSAGE_MAX_PARAMETERS)
+				std::cout << "OK" << std::endl;
+				// handle_message(client_message);
 		}
+		/*
 		send_replies();
 		_queue.clear();
 		_ignored_sockets.clear();
+		*/
 	}
 
-	void Protocol::handle_message(Message msg)
+	/*
+	void Protocol::handle_message(ClientMessage message)
 	{
-		if (_commands.count(msg.get_command()) && !is_socket_ignored(msg.get_socket()))
+		if (_commands.count(message.get_command()) && !is_socket_ignored(msg.get_socket()))
 			(this->*_commands[msg.get_command()])(msg);
 	}
 
@@ -293,4 +292,5 @@ namespace ft
 				add_to_queue(*(*cit), message, 1);
 		}
 	}
+	*/
 }
