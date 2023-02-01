@@ -13,7 +13,7 @@ namespace ft
 
 	size_t const Protocol::_message_max_parameters = 15;
 
-	Protocol::Protocol(Server *server) : _server(server), _commands(), _clients()
+	Protocol::Protocol(Server& server) : _server(server), _commands(), _clients()
 	{
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
@@ -130,7 +130,7 @@ namespace ft
 		{
 			x = send((*cit).client.get_socket(), (*cit).message.c_str(), (*cit).message.size(), 0);
 			if (x == -1)
-				_server->close_socket_connection((*cit).client.get_socket());
+				_server.close_socket_connection((*cit).client.get_socket());
 		}
 	}
 
@@ -267,11 +267,11 @@ namespace ft
 		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
 				client.get_username(), client.get_hostname());
 		add_to_queue(client, reply, 1);
-		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server->get_version());
+		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server.get_version());
 		add_to_queue(client, reply, 1);
-		reply = rpl_created(client.get_nickname(), _server->get_creation_time());
+		reply = rpl_created(client.get_nickname(), _server.get_creation_time());
 		add_to_queue(client, reply, 1);
-		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server->get_version(),
+		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server.get_version(),
 			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		add_to_queue(client, reply, 1);
 	}
