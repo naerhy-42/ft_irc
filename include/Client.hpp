@@ -25,8 +25,8 @@ namespace ft
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;
 
-		std::vector<char> const& get_modes(void) const;
 		bool has_mode(char mode) const;
+		std::vector<char> const& get_modes(void) const;
 		std::string get_modes_str(void) const;
 
 		void set_nickname(std::string const &nickname);

@@ -26,8 +26,6 @@ namespace ft
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
 
-	std::vector<char> const& Client::get_modes(void) const { return _modes; }
-
 	bool Client::has_mode(char mode) const
 	{
 		std::vector<char>::const_iterator cit;
@@ -39,6 +37,8 @@ namespace ft
 		}
 		return false;
 	}
+
+	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
 	std::string Client::get_modes_str(void) const
 	{
