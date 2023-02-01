@@ -1,6 +1,6 @@
-NAME = irc_server
+NAME = ft_irc
 
-SRCS =	ft_irc.cpp \
+SRCS =	source/ft_irc.cpp \
 		source/Channel.cpp \
 		source/Client.cpp \
 		source/ClientMessage.cpp \

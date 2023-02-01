@@ -1,5 +1,5 @@
-#include "../include/Protocol.hpp"
-#include "../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
@@ -74,11 +74,10 @@ namespace ft
 		} while (pos != std::string::npos);
 		for (it = lines.begin(); it != lines.end(); it++)
 		{
-			ClientMessage client_message(socket, *it);
+			ClientMessage cmessage(socket, *it);
 
-			if (client_message.get_parameters().size() <= _MESSAGE_MAX_PARAMETERS)
-				std::cout << "OK" << std::endl;
-				// handle_message(client_message);
+			if (cmessage.get_parameters().size() <= _MESSAGE_MAX_PARAMETERS)
+				handle_message(cmessage);
 		}
 		/*
 		send_replies();
@@ -87,13 +86,15 @@ namespace ft
 		*/
 	}
 
-	/*
-	void Protocol::handle_message(ClientMessage message)
+	void Protocol::handle_message(ClientMessage const& cmessage)
 	{
-		if (_commands.count(message.get_command()) && !is_socket_ignored(msg.get_socket()))
-			(this->*_commands[msg.get_command()])(msg);
+		std::string const& command = cmessage.get_command();
+
+		if (_commands.count(command) /*&& !is_socket_ignored(msg.get_socket())*/)
+			(this->*_commands[command])(cmessage);
 	}
 
+	/*
 	void Protocol::ignore_socket(int socket)
 	{
 		if (!is_socket_ignored(socket))

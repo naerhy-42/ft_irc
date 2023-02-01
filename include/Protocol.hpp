@@ -36,7 +36,7 @@ namespace ft
 			void delete_client(int socket);
 
 			void parse_client_input(int socket, std::string& message);
-			// void handle_message(ClientMessage msg);
+			void handle_message(ClientMessage const& cmessage);
 
 
 

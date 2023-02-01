@@ -1,4 +1,4 @@
-#include "../include/Server.hpp"
+#include "Server.hpp"
 
 namespace ft
 {

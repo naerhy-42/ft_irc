@@ -3,7 +3,7 @@
 
 namespace ft
 {
-    void Protocol::cmd_pass(Message msg)
+    void Protocol::cmd_pass(ClientMessage cmessage)
     {
         std::vector<std::string> parameters = msg.get_parameters();
         std::string reply;
