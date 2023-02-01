@@ -34,7 +34,7 @@ namespace ft
 		};
 
 	public:
-		Protocol(Server *server);
+		Protocol(Server& server);
 		~Protocol(void);
 
 		void set_password(std::string const &password);
@@ -95,7 +95,7 @@ namespace ft
 		Protocol(Protocol const &x);
 		Protocol &operator=(Protocol const &x);
 
-		Server *_server;
+		Server& _server;
 		std::string _password;
 		std::map<std::string, fncts> _commands;
 		std::vector<Client> _clients;

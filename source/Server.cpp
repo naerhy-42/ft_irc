@@ -4,7 +4,7 @@ namespace ft
 {
 	int const Server::_buffer_size = 512;
 
-	Server::Server(void) : _fds(), _hostname("localhost"), _version("0.42"), _protocol(this)
+	Server::Server(void) : _fds(), _hostname("localhost"), _version("0.42"), _protocol(*this)
 	{
 		time_t now = std::time(0);
 

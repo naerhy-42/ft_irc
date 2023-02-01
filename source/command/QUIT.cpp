@@ -48,6 +48,6 @@ namespace ft
             delete channel;
         }
 
-		_server->close_socket_connection(client.get_socket());
+		_server.close_socket_connection(client.get_socket());
     }
 }
