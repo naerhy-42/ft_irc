@@ -275,4 +275,17 @@ namespace ft
 			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		add_to_queue(client, reply, 1);
 	}
+
+	void Protocol::send_msg_to_channel_clients(Channel const& channel, Client const* client,
+			std::string const& message)
+	{
+		std::vector<Client*>::const_iterator cit;
+
+		for (cit = channel.get_clients().begin(); cit != channel.get_clients().end(); cit++)
+		{
+			// no need to check if client == NULL as *cit will never == NULL
+			if (client != *cit)
+				add_to_queue(*(*cit), message, 1);
+		}
+	}
 }

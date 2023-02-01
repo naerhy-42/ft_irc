@@ -73,6 +73,8 @@ namespace ft
 		void ignore_socket(int socket);
 		bool is_socket_ignored(int socket) const;
 
+		void send_msg_to_channel_clients(Channel const& channel, Client const* client,
+				std::string const& message);
 
 	private:
 		bool _is_nickname_taken(std::string const& nickname) const;
