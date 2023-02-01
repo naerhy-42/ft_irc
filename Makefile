@@ -59,4 +59,7 @@ re: fclean $(NAME)
 valgrind: $(NAME)
 	valgrind --leak-check=full ./$(NAME)  8080 pw
 
-.PHONY: all clean fclean re  valgrind
+run: $(NAME)
+	./$(NAME) 8080 pw
+
+.PHONY: all clean fclean re  valgrind run
