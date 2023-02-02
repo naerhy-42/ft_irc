@@ -13,11 +13,8 @@ namespace ft
 			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
 			ignore_socket(client.get_socket());
 		}
-		else if (!parameters.size())
-		{
+		else if (parameters.empty())
 			send_message_to_client(client, _replies.err_noorigin(client.get_nickname()));
-			ignore_socket(client.get_socket());
-		}
 		else
 		{
 			std::string pong_reply = "PONG " + parameters[0] + _IRC_ENDL;

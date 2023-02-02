@@ -9,10 +9,7 @@ namespace ft
         std::vector<std::string> const& parameters = cmessage.get_parameters();
 
         if (client.get_password_status())
-		{
 			send_message_to_client(client, _replies.err_alreadyregistered(client.get_nickname()));
-			ignore_socket(client.get_socket());
-		}
 		else if (parameters.empty())
 		{
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "PASS"));

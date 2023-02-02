@@ -13,10 +13,7 @@ namespace ft
 			ignore_socket(client.get_socket());
 		}
 		else if (parameters.size() < 1)
-        {
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "JOIN"));
-			ignore_socket(client.get_socket());
-        }
 		else
 		{
 			std::string channel_name = parameters[0];

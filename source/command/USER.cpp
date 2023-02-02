@@ -14,16 +14,10 @@ namespace ft
 			ignore_socket(client.get_socket());
         }
 		else if (client.get_registration_status())
-        {
 			send_message_to_client(client, _replies.err_alreadyregistered(client.get_nickname()));
-			ignore_socket(client.get_socket());
-        }
 		else if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty()
 				|| parameters[2].empty() || cmessage.get_remainder().empty())
-        {
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "USER"));
-			ignore_socket(client.get_socket());
-        }
 		else
 		{
 			client.set_username(parameters[0]);

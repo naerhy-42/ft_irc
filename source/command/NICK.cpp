@@ -14,26 +14,17 @@ namespace ft
 			ignore_socket(client.get_socket());
 		}
 		else if (parameters.empty() || parameters[0].empty())
-		{
 			send_message_to_client(client, _replies.err_nonicknamegiven(client.get_nickname()));
-			ignore_socket(client.get_socket());
-		}
 		else
 		{
 			std::string nickname = parameters[0];
 
 			if (nickname.length() > 18 || nickname.find_first_of(" ,*?!@.#&()[]") != std::string::npos)
-			{
 				send_message_to_client(client, _replies.err_erroneusnickname(client.get_nickname(), nickname));
-				ignore_socket(client.get_socket());
-			}
 			else if (is_client_connected(client))
 			{
 				if (is_nickname_already_taken(nickname))
-				{
 					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
-					ignore_socket(client.get_socket());
-				}
 				else
 				{
 					std::string message = ":" + client.get_prefix() + " NICK " + nickname + _IRC_ENDL;
@@ -46,10 +37,7 @@ namespace ft
 			else
 			{
 				if (is_nickname_already_taken(nickname))
-				{
 					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
-					ignore_socket(client.get_socket());
-				}
 				else
 				{
 					client.set_nickname(nickname);
