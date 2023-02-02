@@ -1,13 +1,13 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-    void Protocol::cmd_pass(ClientMessage cmessage)
+    void Protocol::cmd_pass(ClientMessage const& cmessage)
     {
-        std::vector<std::string> parameters = msg.get_parameters();
+        std::vector<std::string> const& parameters = cmessage.get_parameters();
         std::string reply;
-        Client &client = _get_client_from_socket(msg.get_socket());
+        Client& client = _get_client_from_socket(msg.get_socket());
 
         if (client.get_password_status())
         {

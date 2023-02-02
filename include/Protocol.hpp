@@ -22,13 +22,14 @@ namespace ft
 	class Protocol
 	{
 		private:
-			typedef void (Protocol::*fncts)(ClientMessage);
+			typedef void (Protocol::*fncts)(ClientMessage const&);
 
 		public:
 			Protocol(Server& server);
 			~Protocol(void);
 
 			// getters
+			Client& get_client_from_socket(int socket);
 
 			void set_password(std::string const& password);
 
@@ -38,16 +39,7 @@ namespace ft
 			void parse_client_input(int socket, std::string& message);
 			void handle_message(ClientMessage const& cmessage);
 
-
-
-
-
-
-
-
-
-
-
+			void cmd_pass(ClientMessage const& cmessage);
 
 
 
@@ -69,7 +61,6 @@ namespace ft
 			void cmd_nick(ClientMessage msg);
 			void cmd_oper(ClientMessage msg);
 			void cmd_part(ClientMessage msg);
-			void cmd_pass(ClientMessage msg);
 			void cmd_ping(ClientMessage msg);
 			void cmd_privmsg(ClientMessage msg);
 			void cmd_quit(ClientMessage msg);

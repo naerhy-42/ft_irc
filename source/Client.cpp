@@ -20,6 +20,11 @@ namespace ft
 
 	std::string const& Client::get_real_name(void) const { return _real_name; }
 
+	std::string Client::get_client_prefix(void) const
+	{
+		return ":" + _nickname + "!" + _username + "@" + _hostname;
+	}
+
 	bool Client::get_password_status(void) const { return _password_status; }
 
 	bool Client::get_nickname_status(void) const { return _nickname_status; }

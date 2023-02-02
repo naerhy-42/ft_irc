@@ -21,6 +21,8 @@ namespace ft
 		std::string const& get_servername(void) const;
 		std::string const& get_real_name(void) const;
 
+		std::string get_client_prefix(void) const;
+
 		bool get_password_status(void) const;
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;

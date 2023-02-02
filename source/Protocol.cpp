@@ -11,6 +11,7 @@ namespace ft
 
 	Protocol::Protocol(Server& server) : _server(server)
 	{
+		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		/*
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
@@ -21,7 +22,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
-		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
@@ -32,6 +32,21 @@ namespace ft
 	}
 
 	Protocol::~Protocol(void) {}
+
+	Client& Protocol::get_client_from_socket(int socket)
+	{
+		size_t pos = 0;
+
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_socket() == socket)
+			{
+				pos = i;
+				break;
+			}
+		}
+		return _clients[pos];
+	}
 
 	void Protocol::set_password(std::string const& password) { _password = password; }
 
@@ -94,6 +109,10 @@ namespace ft
 			(this->*_commands[command])(cmessage);
 	}
 
+	void Protocol::send_message_to_client(Client& client, std::string const& message) {}
+
+	void Protocol::send_message_to_channel(void) {}
+
 	/*
 	void Protocol::ignore_socket(int socket)
 	{
@@ -154,20 +173,6 @@ namespace ft
 		return false;
 	}
 
-	Client &Protocol::_get_client_from_socket(int socket)
-	{
-		size_t pos = 0;
-
-		for (size_t i = 0; i < _clients.size(); i++)
-		{
-			if (_clients[i].get_socket() == socket)
-			{
-				pos = i;
-				break;
-			}
-		}
-		return _clients[pos];
-	}
 
 	Client &Protocol::_get_client_from_nickname(const std::string &nickname)
 	{
