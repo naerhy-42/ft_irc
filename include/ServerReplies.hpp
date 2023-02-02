@@ -22,16 +22,19 @@ namespace ft
 
 			// RPL_YOURHOST (002)
 			std::string rpl_yourhost(std::string const& client_name, std::string const& hostname,
-					std::string const& version);
+					std::string const& version) const;
 
 			// RPL_CREATED (003)
-			std::string rpl_created(std::string const& client_name, std::string const& date);
+			std::string rpl_created(std::string const& client_name, std::string const& date) const;
 
 			// RPL_MYINFO (004)
 			std::string rpl_myinfo(std::string const& client_name, std::string const& hostname,
 					std::string const& version, std::string const& available_user_modes,
 					std::string const& available_channel_modes,
-					std::string const& channel_modes_with_parameter);
+					std::string const& channel_modes_with_parameter) const;
+
+			// ERR_NOSUCHCHANNEL (403)
+			std::string err_nosuchchannel(std::string const& client_name, std::string const& channel_name) const;
 
 			// ERR_NOORIGIN (409)
 			std::string err_noorigin(std::string const& client_name) const;
@@ -44,6 +47,9 @@ namespace ft
 
 			// ERR_NICKNAMEINUSE (433)
 			std::string err_nicknameinuse(std::string const& client_name, std::string const& nickname) const;
+
+			// ERR_NOTONCHANNEL (442)
+			std::string err_notonchannel(std::string const& client_name, std::string const& channel_name) const;
 
 			// ERR_NOTREGISTERED (451)
 			std::string err_notregistered(std::string const& client_name) const;

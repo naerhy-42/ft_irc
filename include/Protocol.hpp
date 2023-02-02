@@ -66,7 +66,7 @@ namespace ft
 			// void cmd_names(ClientMessage msg);
 			void cmd_nick(ClientMessage const& cmessage);
 			// void cmd_oper(ClientMessage msg);
-			// void cmd_part(ClientMessage msg);
+			void cmd_part(ClientMessage const& cmessage);
 			void cmd_pass(ClientMessage const& cmessage);
 			void cmd_ping(ClientMessage const& cmessage);
 			// void cmd_privmsg(ClientMessage msg);

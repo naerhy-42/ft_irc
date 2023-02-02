@@ -9,12 +9,12 @@ SRCS =	source/ft_irc.cpp \
 		source/ServerReplies.cpp \
 		source/command/JOIN.cpp \
 		source/command/NICK.cpp \
+		source/command/PART.cpp \
 		source/command/PASS.cpp \
 		source/command/PING.cpp \
 		source/command/QUIT.cpp \
 		source/command/USER.cpp \
-		# source/command/PART.cpp \
-		source/command/NAMES.cpp \
+		# source/command/NAMES.cpp \
 		source/command/PRIVMSG.cpp \
 		source/command/WHOIS.cpp \
 		source/command/USER.cpp \

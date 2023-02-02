@@ -26,7 +26,7 @@ namespace ft
 
 	// RPL_YOURHOST (002)
 	std::string ServerReplies::rpl_yourhost(std::string const& client_name, std::string const& hostname,
-			std::string const& version)
+			std::string const& version) const
 	{
 		std::string description = ":Your host is " + hostname + ", running version " + version;
 
@@ -34,7 +34,7 @@ namespace ft
 	}
 
 	// RPL_CREATED (003)
-	std::string ServerReplies::rpl_created(std::string const& client_name, std::string const& date)
+	std::string ServerReplies::rpl_created(std::string const& client_name, std::string const& date) const
 	{
 		std::string description = ":This server was created " + date;
 
@@ -45,10 +45,18 @@ namespace ft
 	std::string ServerReplies::rpl_myinfo(std::string const& client_name, std::string const& hostname,
 			std::string const& version, std::string const& available_user_modes,
 			std::string const& available_channel_modes,
-			std::string const& channel_modes_with_parameter)
+			std::string const& channel_modes_with_parameter) const
 	{
 		return _server_prefix + " 004 " + client_name + " " + hostname + " " + version + " " + available_user_modes +
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
+	}
+
+	// ERR_NOSUCHCHANNEL (403)
+	std::string ServerReplies::err_nosuchchannel(std::string const& client_name, std::string const& channel_name) const
+	{
+		std::string description = ":No such channel";
+
+		return _server_prefix + " 403 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
 	// ERR_NOORIGIN (409)
@@ -81,6 +89,13 @@ namespace ft
 		std::string description = ":Nickname is already in use";
 
 		return _server_prefix + " 433 " + client_name + " " + nickname + " " + description + _endl;
+	}
+
+	// ERR_NOTONCHANNEL (442)
+	std::string ServerReplies::err_notonchannel(std::string const& client_name, std::string const& channel_name) const
+	{
+		std::string description = ":You're not on that channel";
+		return _server_prefix + " 442 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
 	// ERR_NOTREGISTERED (451)
