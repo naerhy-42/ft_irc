@@ -23,7 +23,7 @@ namespace ft
 				send_message_to_client(client, _replies.err_erroneusnickname(client.get_nickname(), nickname));
 			else if (is_client_connected(client))
 			{
-				if (is_nickname_already_taken(nickname))
+				if (is_client_active(nickname))
 					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
 				else
 				{
@@ -36,7 +36,7 @@ namespace ft
 			}
 			else
 			{
-				if (is_nickname_already_taken(nickname))
+				if (is_client_active(nickname))
 					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
 				else
 				{

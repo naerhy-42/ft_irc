@@ -190,13 +190,13 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_nickname_already_taken(std::string const& nickname) const
+	bool Protocol::is_client_active(std::string const& client_name) const
 	{
 		std::vector<Client>::const_iterator cit;
 
 		for (cit = _clients.begin(); cit != _clients.end(); cit++)
 		{
-			if ((*cit).get_nickname() == nickname)
+			if ((*cit).get_nickname() == client_name)
 				return true;
 		}
 		return false;

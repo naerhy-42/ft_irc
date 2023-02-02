@@ -55,8 +55,7 @@ namespace ft
 
 			bool is_client_connected(Client const& client) const;
 
-			bool is_nickname_already_taken(std::string const& nickname) const;
-
+			bool is_client_active(std::string const& client_name) const;
 			bool is_channel_active(std::string const& channel_name) const;
 
 			// void cmd_invite(ClientMessage msg);
