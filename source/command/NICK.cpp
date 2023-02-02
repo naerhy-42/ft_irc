@@ -1,73 +1,61 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-	void Protocol::cmd_nick(Message msg)
+	void Protocol::cmd_nick(ClientMessage const& cmessage)
 	{
-		std::vector<std::string> parameters = msg.get_parameters();
-		std::string nickname;
-		std::string reply;
-		Client &client = _get_client_from_socket(msg.get_socket());
+		Client& client = cmessage.get_client();
+		std::vector<std::string> parameters = cmessage.get_parameters();
 
 		if (!client.get_password_status())
 		{
-			reply = err_notregistered(client.get_nickname());
-			add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
+			ignore_socket(client.get_socket());
 		}
 		else if (parameters.empty() || parameters[0].empty())
 		{
-			reply = err_nonicknamegiven(client.get_nickname());
-			add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_nonicknamegiven(client.get_nickname()));
+			ignore_socket(client.get_socket());
 		}
 		else
 		{
-			nickname = parameters[0];
+			std::string nickname = parameters[0];
+
 			if (nickname.length() > 18 || nickname.find_first_of(" ,*?!@.#&()[]") != std::string::npos)
 			{
-				reply = err_erroneusnickname(client.get_nickname(), nickname);
-				add_to_queue(client, reply, 0);
+				send_message_to_client(client, _replies.err_erroneusnickname(client.get_nickname(), nickname));
+				ignore_socket(client.get_socket());
 			}
-			else if (_is_client_connected(client))
+			else if (is_client_connected(client))
 			{
-				if (_is_nickname_taken(nickname))
+				if (is_nickname_already_taken(nickname))
 				{
-					reply = err_nicknameinuse(client.get_nickname(), nickname);
-					add_to_queue(client, reply, 0);
+					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
+					ignore_socket(client.get_socket());
 				}
 				else
 				{
-					std::string old_nickname = client.get_nickname();
+					std::string message = client.get_prefix() + " NICK " + nickname + _IRC_ENDL;
+
 					client.set_nickname(nickname);
-					add_to_queue(client, ":" + old_nickname + " NICK " + nickname + "\r\n", 1);
-					for (std::vector<ft::Channel *>::const_iterator channel_it = _channels.begin(); channel_it != _channels.end(); ++channel_it)
-					{
-						ft::Channel *channel = *channel_it;
-						for (std::vector<Client *>::const_iterator target_client_it = channel->get_clients().begin(); target_client_it != channel->get_clients().end(); ++target_client_it)
-						{
-							Client *target_client = *target_client_it;
-							if (target_client != &client)
-							{
-								std::string reply = ":" + old_nickname + " NICK " + nickname + "\r\n";
-								add_to_queue(*target_client, reply, 1);
-							}
-						}
-					}
+					send_message_to_client(client, message);
+					send_message_to_client_channels(client, message);
 				}
 			}
 			else
 			{
-				if (_is_nickname_taken(nickname))
+				if (is_nickname_already_taken(nickname))
 				{
-					reply = err_nicknameinuse(client.get_nickname(), nickname);
-					add_to_queue(client, reply, 1);
+					send_message_to_client(client, _replies.err_nicknameinuse(client.get_nickname(), nickname));
+					ignore_socket(client.get_socket());
 				}
 				else
 				{
 					client.set_nickname(nickname);
 					client.set_nickname_status(true);
-					if (_is_client_connected(client))
-						_send_welcome_messages(client);
+					if (is_client_connected(client))
+						send_welcome_messages(client);
 				}
 			}
 		}

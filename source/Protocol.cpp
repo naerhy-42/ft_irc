@@ -11,7 +11,9 @@ namespace ft
 
 	Protocol::Protocol(Server& server) : _server(server), _replies("localhost", _IRC_ENDL)
 	{
+		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
+		// _commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
@@ -19,14 +21,12 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
-		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
-		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		*/
 	}
@@ -143,6 +143,28 @@ namespace ft
 		}
 	}
 
+	void Protocol::send_message_to_client_channels(Client& client, std::string const& message)
+	{
+		std::vector<Channel>::const_iterator cit;
+
+		for (cit = _channels.begin(); cit != _channels.end(); cit++)
+		{
+			if (is_client_in_channel(client, *cit))
+				send_message_to_channel(*cit, message, client);
+		}
+	}
+
+	void Protocol::send_welcome_messages(Client& client)
+	{
+		(void)client;
+		/*
+		send_message_to_client(client, _replies.rpl_welcome());
+		send_message_to_client(client, _replies.rpl_yourhost());
+		send_message_to_client(client, _replies.rpl_created());
+		send_message_to_client(client, _replies.rpl_myinfo());
+		*/
+	}
+
 	bool Protocol::is_socket_ignored(int socket) const
 	{
 		std::vector<int>::const_iterator cit;
@@ -159,6 +181,39 @@ namespace ft
 	{
 		if (!is_socket_ignored(socket))
 			_ignored_sockets.push_back(socket);
+	}
+
+	bool Protocol::is_client_connected(Client const& client) const
+	{
+		if (client.get_password_status() && client.get_nickname_status()
+				&& client.get_registration_status())
+			return true;
+		return false;
+	}
+
+	bool Protocol::is_nickname_already_taken(std::string const& nickname) const
+	{
+		std::vector<Client>::const_iterator cit;
+
+		for (cit = _clients.begin(); cit != _clients.end(); cit++)
+		{
+			if ((*cit).get_nickname() == nickname)
+				return true;
+		}
+		return false;
+	}
+
+	bool Protocol::is_client_in_channel(Client const& client, Channel const& channel) const
+	{
+		std::vector<Client*> const& clients = channel.get_clients();
+		std::vector<Client*>::const_iterator cit;
+
+		for (cit = clients.begin(); cit != clients.end(); cit++)
+		{
+			if ((*cit)->get_nickname() == client.get_nickname())
+				return true;
+		}
+		return false;
 	}
 
 	/*
@@ -314,19 +369,6 @@ namespace ft
 		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server.get_version(),
 			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
 		add_to_queue(client, reply, 1);
-	}
-
-	void Protocol::send_msg_to_channel_clients(Channel const& channel, Client const* client,
-			std::string const& message)
-	{
-		std::vector<Client*>::const_iterator cit;
-
-		for (cit = channel.get_clients().begin(); cit != channel.get_clients().end(); cit++)
-		{
-			// no need to check if client == NULL as *cit will never == NULL
-			if (client != *cit)
-				add_to_queue(*(*cit), message, 1);
-		}
 	}
 	*/
 }

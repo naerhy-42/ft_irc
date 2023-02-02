@@ -1,7 +1,6 @@
 #ifndef __SERVER_REPLIES_HPP__
 #define __SERVER_REPLIES_HPP__
 
-#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -15,16 +14,28 @@ namespace ft
 			~ServerReplies(void);
 
 			template <typename T>
-			std::string to_string(T value);
+			std::string to_string(T value) const;
+
+			// ERR_NONICKNAMEGIVEN (431)
+			std::string err_nonicknamegiven(std::string const& client_name) const;
+
+			// ERR_ERRONEUSNICKNAME (432)
+			std::string err_erroneusnickname(std::string const& client_name, std::string const& nickname) const;
+
+			// ERR_NICKNAMEINUSE (433)
+			std::string err_nicknameinuse(std::string const& client_name, std::string const& nickname) const;
+
+			// ERR_NOTREGISTERED (451)
+			std::string err_notregistered(std::string const& client_name) const;
 
 			// ERR_NEEDMOREPARAMS (461)
-			std::string err_needmoreparams(std::string const& client_name, std::string const& command);
+			std::string err_needmoreparams(std::string const& client_name, std::string const& command) const;
 
 			// ERR_ALREADYREGISTERED (462)
-			std::string err_alreadyregistered(std::string const& client_name);
+			std::string err_alreadyregistered(std::string const& client_name) const;
 
 			// ERR_PASSWDMISMATCH (464)
-			std::string err_passwdmismatch(std::string const& client_name);
+			std::string err_passwdmismatch(std::string const& client_name) const;
 
 			/*
 			// RPL_WELCOME (001)

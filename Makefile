@@ -7,6 +7,7 @@ SRCS =	source/ft_irc.cpp \
 		source/Protocol.cpp \
 		source/Server.cpp \
 		source/ServerReplies.cpp \
+		source/command/NICK.cpp \
 		source/command/PASS.cpp \
 		# source/command/PART.cpp \
 		source/command/JOIN.cpp \
@@ -15,7 +16,6 @@ SRCS =	source/ft_irc.cpp \
 		source/command/WHOIS.cpp \
 		source/command/QUIT.cpp \
 		source/command/USER.cpp \
-		source/command/NICK.cpp \
 		source/command/PING.cpp \
 		source/command/KICK.cpp \
 		source/command/INVITE.cpp \

@@ -8,33 +8,65 @@ namespace ft
 	ServerReplies::~ServerReplies(void) {}
 
 	template <typename T>
-	std::string ServerReplies::to_string(T value)
+	std::string ServerReplies::to_string(T value) const
 	{
 		std::ostringstream os;
 		os << value;
 		return os.str();
 	}
 
-	// ERR_NEEDMOREPARAMS (461)
-	std::string ServerReplies::err_needmoreparams(std::string const& client_name, std::string const& command)
+	// ERR_NONICKNAMEGIVEN (431)
+	std::string ServerReplies::err_nonicknamegiven(std::string const& client_name) const
 	{
-		std::string description(":Not enough parameters");
+		std::string description = ":No nickname given";
+
+		return _server_prefix + " 431 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_ERRONEUSNICKNAME (432)
+	std::string ServerReplies::err_erroneusnickname(std::string const& client_name, std::string const& nickname) const
+	{
+		std::string description = ":Erroneous nickname";
+
+		return _server_prefix + " 432 " + client_name + " " + nickname + " " + description + _endl;
+	}
+
+	// ERR_NICKNAMEINUSE (433)
+	std::string ServerReplies::err_nicknameinuse(std::string const& client_name, std::string const& nickname) const
+	{
+		std::string description = ":Nickname is already in use";
+
+		return _server_prefix + " 433 " + client_name + " " + nickname + " " + description + _endl;
+	}
+
+	// ERR_NOTREGISTERED (451)
+	std::string ServerReplies::err_notregistered(std::string const& client_name) const
+	{
+		std::string description = ":You have not registered";
+
+		return _server_prefix + " 451 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_NEEDMOREPARAMS (461)
+	std::string ServerReplies::err_needmoreparams(std::string const& client_name, std::string const& command) const
+	{
+		std::string description = ":Not enough parameters";
 
 		return _server_prefix + " 461 " + client_name + " " + command + " " + description + _endl;
 	}
 
 	// ERR_ALREADYREGISTERED (462)
-	std::string ServerReplies::err_alreadyregistered(std::string const& client_name)
+	std::string ServerReplies::err_alreadyregistered(std::string const& client_name) const
 	{
-		std::string description(":You may not reregister");
+		std::string description = ":You may not reregister";
 
 		return _server_prefix + " 462 " + client_name + " " + description + _endl;
 	}
 
 	// ERR_PASSWDMISMATCH (464)
-	std::string ServerReplies::err_passwdmismatch(std::string const& client_name)
+	std::string ServerReplies::err_passwdmismatch(std::string const& client_name) const
 	{
-		std::string description(":Password incorrect");
+		std::string description = ":Password incorrect";
 
 		return _server_prefix + " 464 " + client_name + " " + description + _endl;
 	}

@@ -24,7 +24,7 @@ namespace ft
 
 	std::string const& Client::get_real_name(void) const { return _real_name; }
 
-	std::string Client::get_client_prefix(void) const
+	std::string Client::get_prefix(void) const
 	{
 		return ":" + _nickname + "!" + _username + "@" + _hostname;
 	}
