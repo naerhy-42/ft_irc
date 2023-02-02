@@ -3,51 +3,23 @@
 
 namespace ft
 {
-    void Protocol::cmd_quit(Message msg)
+    void Protocol::cmd_quit(ClientMessage const& cmessage)
     {
-        Client &client = _get_client_from_socket(msg.get_socket());
-		std::string reply;
-		std::string message;
+        Client& client = cmessage.get_client();
+		std::string client_reply = "ERROR :Closing link" + _IRC_ENDL;
 
-		reply = "ERROR :Closing link\r\n";
-		add_to_queue(client, reply, 0);
-		if (_is_client_connected(client))
+		send_message_to_client(client, client_reply);
+		ignore_socket(client.get_socket());
+		if (is_client_connected(client))
 		{
-			std::vector<Channel*>::const_iterator cit;
-			message = ":" + client.get_nickname() + "!" + client.get_username() + "@"
-					+ client.get_hostname() + " QUIT :" + msg.get_remainder() + "\r\n";
+			std::string message;
 
-			for (cit = _channels.begin(); cit != _channels.end(); cit++)
-			{
-				std::vector<Client*>::const_iterator citt;
-
-				for (citt = (*cit)->get_clients().begin(); citt != (*cit)->get_clients().end(); citt++)
-				{
-					if (*(*citt) == client)
-						send_msg_to_channel_clients(*(*cit), &client, message);
-				}
-			}
+			if (!cmessage.get_remainder().empty())
+				message = ":" + client.get_prefix() + " QUIT :" + cmessage.get_remainder() + _IRC_ENDL;
+			else
+				message = ":" + client.get_prefix() + " QUIT" + _IRC_ENDL;
+			send_message_to_client_channels(client, message);
 		}
-
-		std::vector<Channel*> channels_to_delete;
-        for (std::vector<ft::Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-		{
-            Channel* channel = *it;
-			if (channel->has_client(&client))
-			{
-                channel->remove_client(&client);
-				if (channel->get_size() == 0)
-				{
-                    channels_to_delete.push_back(channel);
-				}
-			}
-		}
-        for (std::vector<Channel*>::iterator channel_it = channels_to_delete.begin(); channel_it != channels_to_delete.end(); ++channel_it)
-        {
-            Channel *channel = *channel_it;
-            delete channel;
-        }
-
 		_server.close_socket_connection(client.get_socket());
     }
 }
