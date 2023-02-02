@@ -1,5 +1,5 @@
 .vscode
-irc_server
+ft_irc
 obj
 .env
 *.o

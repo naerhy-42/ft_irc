@@ -9,7 +9,7 @@ namespace ft
 
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
-	Protocol::Protocol(Server& server) : _server(server), _replies("localhost", _IRC_ENDL)
+	Protocol::Protocol(Server& server) : _server(server), _replies(":localhost", _IRC_ENDL)
 	{
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
@@ -156,13 +156,14 @@ namespace ft
 
 	void Protocol::send_welcome_messages(Client& client)
 	{
-		(void)client;
-		/*
-		send_message_to_client(client, _replies.rpl_welcome());
-		send_message_to_client(client, _replies.rpl_yourhost());
-		send_message_to_client(client, _replies.rpl_created());
-		send_message_to_client(client, _replies.rpl_myinfo());
-		*/
+		send_message_to_client(client, _replies.rpl_welcome(client.get_nickname(),
+				client.get_prefix()));
+		send_message_to_client(client, _replies.rpl_yourhost(client.get_nickname(),
+				_server.get_hostname(), _server.get_version()));
+		send_message_to_client(client, _replies.rpl_created(client.get_nickname(),
+				_server.get_creation_time()));
+		send_message_to_client(client, _replies.rpl_myinfo(client.get_nickname(),
+				_server.get_hostname(), _server.get_version(), "io", "TEMP", "TEMP"));
 	}
 
 	bool Protocol::is_socket_ignored(int socket) const

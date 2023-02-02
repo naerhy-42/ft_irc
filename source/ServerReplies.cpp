@@ -15,6 +15,42 @@ namespace ft
 		return os.str();
 	}
 
+	// RPL_WELCOME (001)
+	std::string ServerReplies::rpl_welcome(std::string const& client_name,
+			std::string const& client_prefix) const
+	{
+		std::string description = ":Welcome to our IRC server made for ft_irc project, " + client_prefix;
+
+		return _server_prefix + " 001 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_YOURHOST (002)
+	std::string ServerReplies::rpl_yourhost(std::string const& client_name, std::string const& hostname,
+			std::string const& version)
+	{
+		std::string description = ":Your host is " + hostname + ", running version " + version;
+
+		return _server_prefix + " 002 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_CREATED (003)
+	std::string ServerReplies::rpl_created(std::string const& client_name, std::string const& date)
+	{
+		std::string description = ":This server was created " + date;
+
+		return _server_prefix + " 003 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_MYINFO (004)
+	std::string ServerReplies::rpl_myinfo(std::string const& client_name, std::string const& hostname,
+			std::string const& version, std::string const& available_user_modes,
+			std::string const& available_channel_modes,
+			std::string const& channel_modes_with_parameter)
+	{
+		return _server_prefix + " 004 " + client_name + " " + hostname + " " + version + " " + available_user_modes +
+			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
+	}
+
 	// ERR_NONICKNAMEGIVEN (431)
 	std::string ServerReplies::err_nonicknamegiven(std::string const& client_name) const
 	{

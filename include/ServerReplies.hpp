@@ -16,6 +16,23 @@ namespace ft
 			template <typename T>
 			std::string to_string(T value) const;
 
+			// RPL_WELCOME (001)
+			std::string rpl_welcome(std::string const& client_name,
+					std::string const& client_prefix) const;
+
+			// RPL_YOURHOST (002)
+			std::string rpl_yourhost(std::string const& client_name, std::string const& hostname,
+					std::string const& version);
+
+			// RPL_CREATED (003)
+			std::string rpl_created(std::string const& client_name, std::string const& date);
+
+			// RPL_MYINFO (004)
+			std::string rpl_myinfo(std::string const& client_name, std::string const& hostname,
+					std::string const& version, std::string const& available_user_modes,
+					std::string const& available_channel_modes,
+					std::string const& channel_modes_with_parameter);
+
 			// ERR_NONICKNAMEGIVEN (431)
 			std::string err_nonicknamegiven(std::string const& client_name) const;
 

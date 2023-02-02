@@ -26,7 +26,7 @@ namespace ft
 
 	std::string Client::get_prefix(void) const
 	{
-		return ":" + _nickname + "!" + _username + "@" + _hostname;
+		return _nickname + "!" + _username + "@" + _hostname;
 	}
 
 	bool Client::get_password_status(void) const { return _password_status; }

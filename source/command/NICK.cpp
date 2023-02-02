@@ -36,7 +36,7 @@ namespace ft
 				}
 				else
 				{
-					std::string message = client.get_prefix() + " NICK " + nickname + _IRC_ENDL;
+					std::string message = ":" + client.get_prefix() + " NICK " + nickname + _IRC_ENDL;
 
 					client.set_nickname(nickname);
 					send_message_to_client(client, message);
