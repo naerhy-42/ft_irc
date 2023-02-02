@@ -1,101 +1,37 @@
-#include "../../include/Protocol.hpp"
+#include "Protocol.hpp"
 
 namespace ft
 {
-    void Protocol::cmd_join(Message msg)
+    void Protocol::cmd_join(ClientMessage const& cmessage)
     {
-        // Get the client joining the channel
-        Client &current_client = _get_client_from_socket(msg.get_socket());
+        Client& client = cmessage.get_client();
+        std::vector<std::string> parameters = cmessage.get_parameters();
 
-        // Extract the parameters from the message
-        std::vector<std::string> parameters = msg.get_parameters();
-
-		if (!_is_client_connected(current_client))
+		if (!is_client_connected(client))
 		{
-			std::string reply = err_notregistered(current_client.get_nickname());
-			add_to_queue(current_client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
+			ignore_socket(client.get_socket());
 		}
-        // Ensure that the message has at least one parameter (the channel name)
-        if (parameters.size() < 1)
+		else if (parameters.size() < 1)
         {
-            // If there is no channel parameter, send an error message
-            std::string error = err_needmoreparams(current_client.get_nickname(), "JOIN");
-            add_to_queue(current_client, error, 0);
-            return;
+			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "JOIN"));
+			ignore_socket(client.get_socket());
         }
+		else
+		{
+			std::string channel_name = parameters[0];
+			std::string message = ":" + client.get_prefix() + " JOIN " + channel_name + _IRC_ENDL;
 
-        // Extract the channel name from the parameters
-        std::string channel_name = parameters[0];
-
-        // Check if the channel already exists
-        bool channel_exists = false;
-        for (size_t i = 0; i < _channels.size(); i++)
-        {
-            if (_channels[i]->get_name() == channel_name)
-            {
-                channel_exists = true;
-                break;
-            }
-        }
-        std::cout << "does channel exists in JOIN : " << channel_exists << std::endl;
-        if (channel_exists)
-        {
-            // Add the client to the channel if it exists
-            Channel* channel = _get_channel_from_name(channel_name);
-            channel->add_client(&current_client);
-        }
-        else
-        {
-            bool is_channel_name_corect = is_valid_channel_name(channel_name);
-            if (is_channel_name_corect == true)
-            {
-                // Create a new channel and add the client to it if it doesn't exist
-                Channel *new_channel = new Channel(channel_name, &current_client);
-                new_channel->add_client(&current_client);
-                _channels.push_back(new_channel);
-            }
-            else
-            {
-                return;
-                // this error does not exist in protocol
-            }
-        }
-
-        // Send a JOIN message to the client
-        std::string join_msg = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
-        add_to_queue(current_client, join_msg, 0);
-
-        // Send a JOIN message to the channel
-        Channel* channel = _get_channel_from_name(channel_name);
-        std::string message = ":" + current_client.get_nickname() + "!" + current_client.get_username() + "@" + current_client.get_hostname() + " JOIN " + channel_name + "\r\n";
-
-
-        for (size_t i = 0; i < channel->get_clients().size(); i++)
-        {
-            Client *target_client = channel->get_clients()[i];
-            // int client_socket = channel->get_clients()[i]->get_socket();
-            add_to_queue(*target_client, message, 1);
-        }
-
-        // Send the topic of the channel to the client
-        std::string topic = channel->get_topic();
-        // if (!topic.empty())
-        // {
-        //     std::cout << topic << std::endl;
-        //     std::string topic_msg = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + topic + "\r\n";
-        //     add_to_queue(current_client, topic_msg, 1);
-        // }
-        if (!topic.empty())
-        {
-            // message = ":" + channel.get_author() + " TOPIC " + channel_name + " :" + topic + "\r\n";
-            message = ":irc-forty-two.com 332 " + current_client.get_nickname() + " " + channel_name + " :" + channel->get_topic() + "\r\n";
-            for (size_t i = 0; i < channel->get_clients().size(); i++)
-            {
-                int client_socket = channel->get_clients()[i]->get_socket();
-                if (current_client.get_socket() == client_socket)
-                    send(client_socket, message.c_str(), message.length(),0);
-            }
-        }
-        return;
+			if (is_channel_active(channel_name))
+			{
+				Channel& channel = get_channel_from_name(channel_name);
+				channel.add_client(&client);
+			}
+			else
+				_channels.push_back(Channel(channel_name, &client));
+			send_message_to_client(client, message);
+			send_message_to_channel(get_channel_from_name(channel_name), message, client);
+			// + send topic
+		}
     }
 }

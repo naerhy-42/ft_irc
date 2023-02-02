@@ -11,6 +11,7 @@ namespace ft
 
 	Protocol::Protocol(Server& server) : _server(server), _replies(":localhost", _IRC_ENDL)
 	{
+		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
@@ -19,7 +20,6 @@ namespace ft
 		/*
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
-		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
@@ -117,18 +117,15 @@ namespace ft
 	{
 		std::string const& command = cmessage.get_command();
 
-		if (_commands.count(command) /*&& !is_socket_ignored(msg.get_socket())*/)
+		if (_commands.count(command) && !is_socket_ignored(cmessage.get_client().get_socket()))
 			(this->*_commands[command])(cmessage);
 	}
 
 	void Protocol::send_message_to_client(Client& client, std::string const& message)
 	{
 		// disconnect the user if send return -1 ?
-		if (!is_socket_ignored(client.get_socket()))
-		{
-			if (send(client.get_socket(), message.c_str(), message.size(), 0) == -1)
-				std::cout << "Could not write to socket, aborting connection..." << std::endl;
-		}
+		if (send(client.get_socket(), message.c_str(), message.size(), 0) == -1)
+			std::cout << "Could not write to socket, aborting connection..." << std::endl;
 	}
 
 	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,
@@ -150,7 +147,7 @@ namespace ft
 
 		for (cit = _channels.begin(); cit != _channels.end(); cit++)
 		{
-			if (is_client_in_channel(client, *cit))
+			if ((*cit).has_client(&client))
 				send_message_to_channel(*cit, message, client);
 		}
 	}
@@ -205,14 +202,13 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_client_in_channel(Client const& client, Channel const& channel) const
+	bool Protocol::is_channel_active(std::string const& channel_name) const
 	{
-		std::vector<Client*> const& clients = channel.get_clients();
-		std::vector<Client*>::const_iterator cit;
+		std::vector<Channel>::const_iterator cit;
 
-		for (cit = clients.begin(); cit != clients.end(); cit++)
+		for (cit = _channels.begin(); cit != _channels.end(); cit++)
 		{
-			if ((*cit)->get_nickname() == client.get_nickname())
+			if ((*cit).get_name() == channel_name)
 				return true;
 		}
 		return false;
@@ -241,25 +237,6 @@ namespace ft
 				_server.close_socket_connection(socket);
 		}
 	}
-
-	bool Protocol::_is_client_connected(Client client) const
-	{
-		if (client.get_nickname_status() && client.get_registration_status()
-				&& client.get_password_status())
-			return true;
-		return false;
-	}
-
-	bool Protocol::_is_nickname_taken(std::string const& nickname) const
-	{
-		for (std::vector<Client>::const_iterator cit = _clients.begin(); cit != _clients.end(); cit++)
-		{
-			if (cit->get_nickname() == nickname)
-				return true;
-		}
-		return false;
-	}
-
 
 	Client &Protocol::_get_client_from_nickname(const std::string &nickname)
 	{
@@ -305,16 +282,6 @@ namespace ft
 		}
 
 		return true;
-	}
-
-	bool Protocol::_channel_exists(std::string const& channel) const
-	{
-		for (size_t i = 0; i < _channels.size(); i++)
-		{
-			if (_channels[i]->get_name() == channel)
-				return true;
-		}
-		return false;
 	}
 
 	Channel* Protocol::_get_channel_from_name(const std::string &channel_name)

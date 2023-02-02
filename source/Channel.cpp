@@ -6,6 +6,7 @@ namespace ft
 			: _name(name), _topic(""), _author("")
     {
         _operators.push_back(creator);
+        _clients.push_back(creator);
     }
 
     Channel::~Channel() {}

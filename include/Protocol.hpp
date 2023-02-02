@@ -57,10 +57,10 @@ namespace ft
 
 			bool is_nickname_already_taken(std::string const& nickname) const;
 
-			bool is_client_in_channel(Client const& client, Channel const& channel) const;
+			bool is_channel_active(std::string const& channel_name) const;
 
 			// void cmd_invite(ClientMessage msg);
-			// void cmd_join(ClientMessage msg);
+			void cmd_join(ClientMessage const& cmessage);
 			// void cmd_kick(ClientMessage msg);
 			// void cmd_mode(ClientMessage msg);
 			// void cmd_names(ClientMessage msg);
@@ -89,8 +89,6 @@ namespace ft
 			/*
 			Client &_get_client_from_nickname(const std::string &nickname);
 			
-			bool _channel_exists(std::string const& channel) const;
-
 			void _get_server_operators(void);
 			bool _is_valid_mode(std::string const& str, std::string const& modes) const;
 			*/
