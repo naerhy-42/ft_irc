@@ -33,6 +33,9 @@ namespace ft
 					std::string const& available_channel_modes,
 					std::string const& channel_modes_with_parameter);
 
+			// ERR_NOORIGIN (409)
+			std::string err_noorigin(std::string const& client_name) const;
+
 			// ERR_NONICKNAMEGIVEN (431)
 			std::string err_nonicknamegiven(std::string const& client_name) const;
 

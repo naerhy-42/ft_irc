@@ -1,22 +1,28 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-    void Protocol::cmd_ping(Message msg)
+    void Protocol::cmd_ping(ClientMessage const& cmessage)
     {
-        Client &client = _get_client_from_socket(msg.get_socket());
-        std::string pong;
+        Client& client = cmessage.get_client();
+		std::vector<std::string> parameters = cmessage.get_parameters();
 
-		if (!_is_client_connected(client))
+		if (!is_client_connected(client))
 		{
-			std::string reply = err_notregistered(client.get_nickname());
-			add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
+			ignore_socket(client.get_socket());
 		}
-        if (client.get_password_status())
+		else if (!parameters.size())
 		{
-			pong = "PONG\r\n";
-			add_to_queue(client, pong, 1);
+			send_message_to_client(client, _replies.err_noorigin(client.get_nickname()));
+			ignore_socket(client.get_socket());
+		}
+		else
+		{
+			std::string pong_reply = "PONG " + parameters[0] + _IRC_ENDL;
+
+			send_message_to_client(client, pong_reply);
 		}
     }
 }

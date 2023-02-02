@@ -13,6 +13,7 @@ namespace ft
 	{
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
+		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
 		_get_server_operators();
@@ -23,7 +24,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
-		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
@@ -97,7 +97,8 @@ namespace ft
 		{
 			pos = message.find(_IRC_ENDL);
 			line = message.substr(0, pos);
-			// std::cout << "line = " << line << std::endl;
+			// debugging:
+			std::cout << "line = " << line << std::endl;
 			if (!line.empty())
 				lines.push_back(line);
 			message.erase(0, pos + 2);

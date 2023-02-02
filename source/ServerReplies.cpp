@@ -51,6 +51,14 @@ namespace ft
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
 	}
 
+	// ERR_NOORIGIN (409)
+	std::string ServerReplies::err_noorigin(std::string const& client_name) const
+	{
+		std::string description = ":No origin specified";
+
+		return _server_prefix + " 409 " + client_name + " " + description + _endl;
+	}
+
 	// ERR_NONICKNAMEGIVEN (431)
 	std::string ServerReplies::err_nonicknamegiven(std::string const& client_name) const
 	{
