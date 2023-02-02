@@ -72,7 +72,7 @@ namespace ft
 			// void cmd_privmsg(ClientMessage msg);
 			// void cmd_quit(ClientMessage msg);
 			// void cmd_topic(ClientMessage msg);
-			// void cmd_user(ClientMessage const& cmessage);
+			void cmd_user(ClientMessage const& cmessage);
 			// void cmd_whois(ClientMessage msg);
 
 			/*

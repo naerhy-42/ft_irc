@@ -1,39 +1,38 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-    void Protocol::cmd_user(Message msg)
+    void Protocol::cmd_user(ClientMessage const& cmessage)
     {
-        std::vector<std::string> parameters = msg.get_parameters();
-        std::string reply;
-        Client &client = _get_client_from_socket(msg.get_socket());
+		Client& client = cmessage.get_client();
+        std::vector<std::string> parameters = cmessage.get_parameters();
 
         if (!client.get_password_status())
         {
-            reply = err_notregistered(client.get_nickname());
-            add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
+			ignore_socket(client.get_socket());
         }
 		else if (client.get_registration_status())
         {
-            reply = err_alreadyregistered(client.get_nickname());
-            add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_alreadyregistered(client.get_nickname()));
+			ignore_socket(client.get_socket());
         }
 		else if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty()
-				|| parameters[2].empty() || msg.get_remainder().empty())
+				|| parameters[2].empty() || cmessage.get_remainder().empty())
         {
-            reply = err_needmoreparams(client.get_nickname(), "USER");
-            add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "USER"));
+			ignore_socket(client.get_socket());
         }
 		else
 		{
 			client.set_username(parameters[0]);
 			client.set_hostname(parameters[1]);
 			client.set_servername(parameters[2]);
-			client.set_real_name(msg.get_remainder());
+			client.set_real_name(cmessage.get_remainder());
 			client.set_registration_status(true);
-			if (_is_client_connected(client))
-				_send_welcome_messages(client);
+			if (is_client_connected(client))
+				send_welcome_messages(client);
 		}
     }
 }

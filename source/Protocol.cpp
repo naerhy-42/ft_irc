@@ -13,7 +13,7 @@ namespace ft
 	{
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
-		// _commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
+		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
 		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 

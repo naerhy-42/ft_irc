@@ -9,6 +9,7 @@ SRCS =	source/ft_irc.cpp \
 		source/ServerReplies.cpp \
 		source/command/NICK.cpp \
 		source/command/PASS.cpp \
+		source/command/USER.cpp \
 		# source/command/PART.cpp \
 		source/command/JOIN.cpp \
 		source/command/NAMES.cpp \
