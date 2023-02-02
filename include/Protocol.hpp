@@ -13,7 +13,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "ClientMessage.hpp"
-#include "Reply.hpp"
+#include "ServerReplies.hpp"
 
 namespace ft
 {
@@ -30,6 +30,7 @@ namespace ft
 
 			// getters
 			Client& get_client_from_socket(int socket);
+			Channel& get_channel_from_name(std::string const& name);
 
 			void set_password(std::string const& password);
 
@@ -38,6 +39,13 @@ namespace ft
 
 			void parse_client_input(int socket, std::string& message);
 			void handle_message(ClientMessage const& cmessage);
+
+			void send_message_to_client(Client& client, std::string const& message);
+			void send_message_to_channel(Channel const& channel, std::string const& message,
+					Client const& sender);
+
+			bool is_socket_ignored(int socket) const;
+			void ignore_socket(int socket);
 
 			void cmd_pass(ClientMessage const& cmessage);
 
@@ -100,14 +108,13 @@ namespace ft
 			static std::string const _IRC_ENDL;
 
 			Server& _server;
+			ServerReplies _replies;
 			std::string _password;
 			std::map<std::string, fncts> _commands;
 			std::vector<Client> _clients;
 			std::vector<Channel> _channels;
 			std::map<std::string, std::string> _operators;
-		
-			// std::vector<int> _ignored_sockets;
-			// find a way to implement this
+			std::vector<int> _ignored_sockets;
 	};
 }
 

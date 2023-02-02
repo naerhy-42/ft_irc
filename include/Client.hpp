@@ -13,6 +13,9 @@ namespace ft
 		Client(int socket);
 		~Client(void);
 
+		bool operator==(Client const& rhs);
+		bool operator!=(Client const& rhs);
+
 		int get_socket(void) const;
 
 		std::string const& get_nickname(void) const;

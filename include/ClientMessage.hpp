@@ -6,15 +6,17 @@
 #include <string>
 #include <vector>
 
+#include "Client.hpp"
+
 namespace ft
 {
 	class ClientMessage
 	{
 		public:
-			ClientMessage(int socket, std::string& message);
+			ClientMessage(Client& client, std::string& message);
 			~ClientMessage(void);
 
-			int get_socket(void) const;
+			Client& get_client(void) const;
 			std::string const& get_command(void) const;
 			std::vector<std::string> const& get_parameters(void) const;
 			std::string const& get_remainder(void) const;
@@ -23,7 +25,7 @@ namespace ft
 			// message(message const& x);
 			// message& operator=(message const& x);
 
-			int _socket;
+			Client& _client;
 			std::string _command;
 			std::vector<std::string> _parameters;
 			std::string _remainder;

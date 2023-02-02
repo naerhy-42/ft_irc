@@ -9,7 +9,7 @@ namespace ft
 
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
-	Protocol::Protocol(Server& server) : _server(server)
+	Protocol::Protocol(Server& server) : _server(server), _replies("localhost", _IRC_ENDL)
 	{
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		/*
@@ -46,6 +46,21 @@ namespace ft
 			}
 		}
 		return _clients[pos];
+	}
+
+	Channel& Protocol::get_channel_from_name(std::string const& name)
+	{
+		size_t pos = 0;
+
+		for (size_t i = 0; i < _channels.size(); i++)
+		{
+			if (_channels[i].get_name() == name)
+			{
+				pos = i;
+				break;
+			}
+		}
+		return _channels[pos];
 	}
 
 	void Protocol::set_password(std::string const& password) { _password = password; }
@@ -89,16 +104,12 @@ namespace ft
 		} while (pos != std::string::npos);
 		for (it = lines.begin(); it != lines.end(); it++)
 		{
-			ClientMessage cmessage(socket, *it);
+			ClientMessage cmessage(get_client_from_socket(socket), *it);
 
 			if (cmessage.get_parameters().size() <= _MESSAGE_MAX_PARAMETERS)
 				handle_message(cmessage);
 		}
-		/*
-		send_replies();
-		_queue.clear();
 		_ignored_sockets.clear();
-		*/
 	}
 
 	void Protocol::handle_message(ClientMessage const& cmessage)
@@ -109,15 +120,27 @@ namespace ft
 			(this->*_commands[command])(cmessage);
 	}
 
-	void Protocol::send_message_to_client(Client& client, std::string const& message) {}
-
-	void Protocol::send_message_to_channel(void) {}
-
-	/*
-	void Protocol::ignore_socket(int socket)
+	void Protocol::send_message_to_client(Client& client, std::string const& message)
 	{
-		if (!is_socket_ignored(socket))
-			_ignored_sockets.push_back(socket);
+		// disconnect the user if send return -1 ?
+		if (!is_socket_ignored(client.get_socket()))
+		{
+			if (send(client.get_socket(), message.c_str(), message.size(), 0) == -1)
+				std::cout << "Could not write to socket, aborting connection..." << std::endl;
+		}
+	}
+
+	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,
+			Client const& sender)
+	{
+		std::vector<Client*> const& clients = channel.get_clients();
+		std::vector<Client*>::const_iterator cit;
+
+		for (cit = clients.begin(); cit != clients.end(); cit++)
+		{
+			if (*(*cit) != sender)
+				send_message_to_client(*(*cit), message);
+		}
 	}
 
 	bool Protocol::is_socket_ignored(int socket) const
@@ -132,6 +155,13 @@ namespace ft
 		return false;
 	}
 
+	void Protocol::ignore_socket(int socket)
+	{
+		if (!is_socket_ignored(socket))
+			_ignored_sockets.push_back(socket);
+	}
+
+	/*
 	void Protocol::add_to_queue(Client const& client, std::string const& message, int index)
 	{
 		Reply r(client, message);

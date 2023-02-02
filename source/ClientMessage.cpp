@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	ClientMessage::ClientMessage(int socket, std::string& message) : _socket(socket)
+	ClientMessage::ClientMessage(Client& client, std::string& message) : _client(client)
 	{
 		std::string remainder;
 		size_t remainder_pos = message.find(" :");
@@ -27,7 +27,7 @@ namespace ft
 
 	ClientMessage::~ClientMessage(void) {}
 
-	int ClientMessage::get_socket(void) const { return _socket; }
+	Client& ClientMessage::get_client(void) const { return _client; }
 
 	std::string const& ClientMessage::get_command(void) const { return _command; }
 

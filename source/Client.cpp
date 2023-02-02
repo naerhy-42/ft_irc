@@ -8,6 +8,10 @@ namespace ft
 
 	Client::~Client(void) {}
 
+	bool Client::operator==(Client const& rhs) { return _socket == rhs._socket; }
+
+	bool Client::operator!=(Client const& rhs) { return _socket != rhs._socket; }
+
 	int Client::get_socket(void) const { return _socket; }
 
 	std::string const& Client::get_nickname(void) const { return _nickname; }

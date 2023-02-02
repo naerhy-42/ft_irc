@@ -5,8 +5,8 @@ SRCS =	source/ft_irc.cpp \
 		source/Client.cpp \
 		source/ClientMessage.cpp \
 		source/Protocol.cpp \
-		source/Reply.cpp \
 		source/Server.cpp \
+		source/ServerReplies.cpp \
 		source/command/PASS.cpp \
 		# source/command/PART.cpp \
 		source/command/JOIN.cpp \
