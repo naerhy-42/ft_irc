@@ -40,6 +40,7 @@ namespace ft
 			bool is_client_connected(Client const& client) const;
 			bool is_client_active(std::string const& client_name) const;
 			bool is_channel_active(std::string const& channel_name) const;
+			bool is_valid_nickname(std::string const& nickname) const;
 			bool is_channel_name(std::string const& name) const;
 
 			void set_password(std::string const& password);

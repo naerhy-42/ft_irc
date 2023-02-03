@@ -10,7 +10,7 @@ namespace ft
 
         if (client.get_password_status())
 			send_message_to_client(client, _replies.err_alreadyregistered(client.get_nickname()));
-		else if (parameters.empty())
+		else if (parameters.size() < 1)
 		{
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "PASS"));
 			ignore_socket(client.get_socket());

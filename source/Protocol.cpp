@@ -123,6 +123,20 @@ namespace ft
 		return false;
 	}
 
+	bool Protocol::is_valid_nickname(std::string const& nickname) const
+	{
+		std::string::const_iterator cit;
+
+		if (nickname.size() > 18 || nickname.size() < 2)
+			return false;
+		for (cit = nickname.begin(); cit != nickname.end(); cit++)
+		{
+			if (!isalnum(*cit) && *cit != '-' && *cit != '_')
+				return false;
+		}
+		return true;
+	}
+
 	bool Protocol::is_channel_name(std::string const& name) const
 	{
 		if (name[0] == '#')
