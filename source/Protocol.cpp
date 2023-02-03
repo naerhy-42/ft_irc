@@ -16,6 +16,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
+		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
@@ -40,6 +41,21 @@ namespace ft
 		for (size_t i = 0; i < _clients.size(); i++)
 		{
 			if (_clients[i].get_socket() == socket)
+			{
+				pos = i;
+				break;
+			}
+		}
+		return _clients[pos];
+	}
+
+	Client& Protocol::get_client_from_name(std::string const& name)
+	{
+		size_t pos = 0;
+
+		for (size_t i = 0; i < _clients.size(); i++)
+		{
+			if (_clients[i].get_nickname() == name)
 			{
 				pos = i;
 				break;
@@ -211,6 +227,13 @@ namespace ft
 			if ((*cit).get_name() == channel_name)
 				return true;
 		}
+		return false;
+	}
+
+	bool Protocol::is_channel_name(std::string const& name) const
+	{
+		if (name[0] == '#')
+			return true;
 		return false;
 	}
 

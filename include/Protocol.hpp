@@ -32,8 +32,8 @@ namespace ft
 			Protocol(Server& server);
 			~Protocol(void);
 
-			// getters
 			Client& get_client_from_socket(int socket);
+			Client& get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
 
 			void set_password(std::string const& password);
@@ -58,6 +58,8 @@ namespace ft
 			bool is_client_active(std::string const& client_name) const;
 			bool is_channel_active(std::string const& channel_name) const;
 
+			bool is_channel_name(std::string const& name) const;
+
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
 			// void cmd_kick(ClientMessage msg);
@@ -68,7 +70,7 @@ namespace ft
 			void cmd_part(ClientMessage const& cmessage);
 			void cmd_pass(ClientMessage const& cmessage);
 			void cmd_ping(ClientMessage const& cmessage);
-			// void cmd_privmsg(ClientMessage msg);
+			void cmd_privmsg(ClientMessage const& cmessage);
 			void cmd_quit(ClientMessage const& cmessage);
 			// void cmd_topic(ClientMessage msg);
 			void cmd_user(ClientMessage const& cmessage);
