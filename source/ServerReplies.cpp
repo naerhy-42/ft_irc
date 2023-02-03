@@ -2,8 +2,8 @@
 
 namespace ft
 {
-	ServerReplies::ServerReplies(std::string const& prefix, std::string const& endl)
-			: _server_prefix(prefix), _endl(endl) {}
+	ServerReplies::ServerReplies(std::string const &prefix, std::string const &endl)
+		: _server_prefix(prefix), _endl(endl) {}
 
 	ServerReplies::~ServerReplies(void) {}
 
@@ -16,8 +16,8 @@ namespace ft
 	}
 
 	// RPL_WELCOME (001)
-	std::string ServerReplies::rpl_welcome(std::string const& client_name,
-			std::string const& client_prefix) const
+	std::string ServerReplies::rpl_welcome(std::string const &client_name,
+										   std::string const &client_prefix) const
 	{
 		std::string description = ":Welcome to our IRC server made for ft_irc project, " + client_prefix;
 
@@ -25,8 +25,8 @@ namespace ft
 	}
 
 	// RPL_YOURHOST (002)
-	std::string ServerReplies::rpl_yourhost(std::string const& client_name, std::string const& hostname,
-			std::string const& version) const
+	std::string ServerReplies::rpl_yourhost(std::string const &client_name, std::string const &hostname,
+											std::string const &version) const
 	{
 		std::string description = ":Your host is " + hostname + ", running version " + version;
 
@@ -34,7 +34,7 @@ namespace ft
 	}
 
 	// RPL_CREATED (003)
-	std::string ServerReplies::rpl_created(std::string const& client_name, std::string const& date) const
+	std::string ServerReplies::rpl_created(std::string const &client_name, std::string const &date) const
 	{
 		std::string description = ":This server was created " + date;
 
@@ -42,25 +42,26 @@ namespace ft
 	}
 
 	// RPL_MYINFO (004)
-	std::string ServerReplies::rpl_myinfo(std::string const& client_name, std::string const& hostname,
-			std::string const& version, std::string const& available_user_modes,
-			std::string const& available_channel_modes,
-			std::string const& channel_modes_with_parameter) const
+	std::string ServerReplies::rpl_myinfo(std::string const &client_name, std::string const &hostname,
+										  std::string const &version, std::string const &available_user_modes,
+										  std::string const &available_channel_modes,
+										  std::string const &channel_modes_with_parameter) const
 	{
 		return _server_prefix + " 004 " + client_name + " " + hostname + " " + version + " " + available_user_modes +
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
 	}
 
 	// ERR_NOSUCHNICK (401)
-	std::string ServerReplies::err_nosuchnick(std::string const& client_name, std::string const& nickname) const
+	std::string ServerReplies::err_nosuchnick(std::string const &client_name, std::string const &nickname) const
 	{
 		std::string description = ":No such nick/channel";
 
-		return _server_prefix + " 401 " + client_name + " " + nickname + " " + description + _endl;;
+		return _server_prefix + " 401 " + client_name + " " + nickname + " " + description + _endl;
+		;
 	}
 
 	// ERR_NOSUCHCHANNEL (403)
-	std::string ServerReplies::err_nosuchchannel(std::string const& client_name, std::string const& channel_name) const
+	std::string ServerReplies::err_nosuchchannel(std::string const &client_name, std::string const &channel_name) const
 	{
 		std::string description = ":No such channel";
 
@@ -68,7 +69,7 @@ namespace ft
 	}
 
 	// ERR_CANNOTSENDTOCHAN (404)
-	std::string ServerReplies::err_cannotsendtochan(std::string const& client_name, std::string const& channel_name) const
+	std::string ServerReplies::err_cannotsendtochan(std::string const &client_name, std::string const &channel_name) const
 	{
 		std::string description = ":Cannot send to channel";
 
@@ -76,7 +77,7 @@ namespace ft
 	}
 
 	// ERR_NOORIGIN (409)
-	std::string ServerReplies::err_noorigin(std::string const& client_name) const
+	std::string ServerReplies::err_noorigin(std::string const &client_name) const
 	{
 		std::string description = ":No origin specified";
 
@@ -84,7 +85,7 @@ namespace ft
 	}
 
 	// ERR_NONICKNAMEGIVEN (431)
-	std::string ServerReplies::err_nonicknamegiven(std::string const& client_name) const
+	std::string ServerReplies::err_nonicknamegiven(std::string const &client_name) const
 	{
 		std::string description = ":No nickname given";
 
@@ -92,7 +93,7 @@ namespace ft
 	}
 
 	// ERR_ERRONEUSNICKNAME (432)
-	std::string ServerReplies::err_erroneusnickname(std::string const& client_name, std::string const& nickname) const
+	std::string ServerReplies::err_erroneusnickname(std::string const &client_name, std::string const &nickname) const
 	{
 		std::string description = ":Erroneous nickname";
 
@@ -100,7 +101,7 @@ namespace ft
 	}
 
 	// ERR_NICKNAMEINUSE (433)
-	std::string ServerReplies::err_nicknameinuse(std::string const& client_name, std::string const& nickname) const
+	std::string ServerReplies::err_nicknameinuse(std::string const &client_name, std::string const &nickname) const
 	{
 		std::string description = ":Nickname is already in use";
 
@@ -108,14 +109,14 @@ namespace ft
 	}
 
 	// ERR_NOTONCHANNEL (442)
-	std::string ServerReplies::err_notonchannel(std::string const& client_name, std::string const& channel_name) const
+	std::string ServerReplies::err_notonchannel(std::string const &client_name, std::string const &channel_name) const
 	{
 		std::string description = ":You're not on that channel";
 		return _server_prefix + " 442 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
 	// ERR_NOTREGISTERED (451)
-	std::string ServerReplies::err_notregistered(std::string const& client_name) const
+	std::string ServerReplies::err_notregistered(std::string const &client_name) const
 	{
 		std::string description = ":You have not registered";
 
@@ -123,7 +124,7 @@ namespace ft
 	}
 
 	// ERR_NEEDMOREPARAMS (461)
-	std::string ServerReplies::err_needmoreparams(std::string const& client_name, std::string const& command) const
+	std::string ServerReplies::err_needmoreparams(std::string const &client_name, std::string const &command) const
 	{
 		std::string description = ":Not enough parameters";
 
@@ -131,7 +132,7 @@ namespace ft
 	}
 
 	// ERR_ALREADYREGISTERED (462)
-	std::string ServerReplies::err_alreadyregistered(std::string const& client_name) const
+	std::string ServerReplies::err_alreadyregistered(std::string const &client_name) const
 	{
 		std::string description = ":You may not reregister";
 
@@ -139,11 +140,25 @@ namespace ft
 	}
 
 	// ERR_PASSWDMISMATCH (464)
-	std::string ServerReplies::err_passwdmismatch(std::string const& client_name) const
+	std::string ServerReplies::err_passwdmismatch(std::string const &client_name) const
 	{
 		std::string description = ":Password incorrect";
 
 		return _server_prefix + " 464 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_TOPIC (332)
+	std::string ServerReplies::rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const
+	{
+		std::string description = ": " + topic;
+		return _server_prefix + " 332 " + client_name + " " + channel_name + description + _endl;
+	}
+
+	// RPL_NOTOPIC (331)
+	std::string ServerReplies::rpl_notopic(std::string const &client_name, std::string const &channel_name) const
+	{
+		std::string description = ":No topic is set";
+		return _server_prefix + " 331 " + client_name + " " + channel_name + description + _endl;
 	}
 
 	/*

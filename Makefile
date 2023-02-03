@@ -14,12 +14,12 @@ SRCS =	source/ft_irc.cpp \
 		source/command/PING.cpp \
 		source/command/PRIVMSG.cpp \
 		source/command/QUIT.cpp \
+		source/command/TOPIC.cpp \
 		source/command/USER.cpp \
 		# source/command/NAMES.cpp \
 		source/command/WHOIS.cpp \
 		source/command/KICK.cpp \
 		source/command/INVITE.cpp \
-		source/command/TOPIC.cpp \
 		source/command/OPER.cpp \
 		source/command/MODE.cpp \
 
@@ -55,5 +55,8 @@ fclean: clean
 	rm -fr $(OBJ)
 
 re: fclean $(NAME)
+
+valgrind: $(NAME)
+	valgrind --leak-check=full ./$(NAME) 8080 pw
 
 .PHONY: all clean fclean re

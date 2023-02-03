@@ -74,7 +74,7 @@ namespace ft
 			void cmd_ping(ClientMessage const& cmessage);
 			void cmd_privmsg(ClientMessage const& cmessage);
 			void cmd_quit(ClientMessage const& cmessage);
-			// void cmd_topic(ClientMessage msg);
+			void cmd_topic(ClientMessage const& cmessage);
 			void cmd_user(ClientMessage const& cmessage);
 			// void cmd_whois(ClientMessage msg);
 
