@@ -17,45 +17,9 @@ namespace ft
 
 	std::string const& Channel::get_author(void) const { return _author; }
 
-    bool Channel::is_operator(Client const* client)
-    {
-        std::vector<Client*>::const_iterator cit;
-
-        for (cit = _operators.begin(); cit != _operators.end(); cit++)
-        {
-            if (*cit == client)
-                return true;
-        }
-        return false;
-    }
-
     std::vector<Client*> const& Channel::get_operators(void) const { return _operators; }
 
-    bool Channel::has_client(Client const* client) const
-    {
-        std::vector<Client*>::const_iterator cit;
-
-        for (cit = _clients.begin(); cit != _clients.end(); cit++)
-        {
-            if (*cit == client)
-                return true;
-        }
-        return false;
-    }
-
     std::vector<Client*> const& Channel::get_clients(void) const { return _clients; }
-
-	bool Channel::has_mode(char mode) const
-	{
-		std::vector<char>::const_iterator cit;
-
-		for (cit = _modes.begin(); cit != _modes.end(); cit++)
-		{
-			if (*cit == mode)
-				return true;
-		}
-		return false;
-	}
 
 	std::vector<char> const& Channel::get_modes(void) const { return _modes; }
 
@@ -69,9 +33,65 @@ namespace ft
 		return modes_str;
 	}
 
+    bool Channel::is_operator(Client const* client)
+    {
+        std::vector<Client*>::const_iterator cit;
+
+        for (cit = _operators.begin(); cit != _operators.end(); cit++)
+        {
+            if (*cit == client)
+                return true;
+        }
+        return false;
+    }
+
+    bool Channel::has_client(Client const* client) const
+    {
+        std::vector<Client*>::const_iterator cit;
+
+        for (cit = _clients.begin(); cit != _clients.end(); cit++)
+        {
+            if (*cit == client)
+                return true;
+        }
+        return false;
+    }
+
+	bool Channel::has_mode(char mode) const
+	{
+		std::vector<char>::const_iterator cit;
+
+		for (cit = _modes.begin(); cit != _modes.end(); cit++)
+		{
+			if (*cit == mode)
+				return true;
+		}
+		return false;
+	}
+
+
     void Channel::set_topic(std::string const& topic) { _topic = topic; }
 
     void Channel::set_author(std::string const& author) { _author = author; }
+
+	void Channel::set_mode(char sign, char mode)
+	{
+		if (sign == '+')
+			_modes.push_back(mode);
+		else
+		{
+			std::vector<char>::iterator it;
+
+			for (it = _modes.begin(); it != _modes.end(); it++)
+			{
+				if (*it == mode)
+				{
+					_modes.erase(it);
+					break;
+				}
+			}
+		}
+	}
 
     void Channel::add_client(Client* client)
     {
@@ -92,23 +112,4 @@ namespace ft
             }
         }
     }
-
-	void Channel::set_mode(char sign, char mode)
-	{
-		if (sign == '+')
-			_modes.push_back(mode);
-		else
-		{
-			std::vector<char>::iterator it;
-
-			for (it = _modes.begin(); it != _modes.end(); it++)
-			{
-				if (*it == mode)
-				{
-					_modes.erase(it);
-					break;
-				}
-			}
-		}
-	}
 }

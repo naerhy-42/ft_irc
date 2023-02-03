@@ -24,6 +24,7 @@ namespace ft
 			{
 				std::string message = ":" + client.get_prefix() + " PRIVMSG " + parameters[0] + " :"
 						+ cmessage.get_remainder() + _IRC_ENDL;
+
 				send_message_to_channel(get_channel_from_name(parameters[0]), message, client);
 			}
 		}
@@ -35,6 +36,7 @@ namespace ft
 			{
 				std::string message = ":" + client.get_prefix() + " PRIVMSG " + parameters[0] + " :"
 						+ cmessage.get_remainder() + _IRC_ENDL;
+
 				send_message_to_client(get_client_from_name(parameters[0]), message);
 			}
         }

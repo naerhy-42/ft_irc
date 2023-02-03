@@ -79,6 +79,57 @@ namespace ft
 		return _channels[pos];
 	}
 
+	bool Protocol::is_socket_ignored(int socket) const
+	{
+		std::vector<int>::const_iterator cit;
+
+		for (cit = _ignored_sockets.begin(); cit != _ignored_sockets.end(); cit++)
+		{
+			if (*cit == socket)
+				return true;
+		}
+		return false;
+	}
+
+	bool Protocol::is_client_connected(Client const& client) const
+	{
+		if (client.get_password_status() && client.get_nickname_status()
+				&& client.get_registration_status())
+			return true;
+		return false;
+	}
+
+	bool Protocol::is_client_active(std::string const& client_name) const
+	{
+		std::vector<Client>::const_iterator cit;
+
+		for (cit = _clients.begin(); cit != _clients.end(); cit++)
+		{
+			if ((*cit).get_nickname() == client_name)
+				return true;
+		}
+		return false;
+	}
+
+	bool Protocol::is_channel_active(std::string const& channel_name) const
+	{
+		std::vector<Channel>::const_iterator cit;
+
+		for (cit = _channels.begin(); cit != _channels.end(); cit++)
+		{
+			if ((*cit).get_name() == channel_name)
+				return true;
+		}
+		return false;
+	}
+
+	bool Protocol::is_channel_name(std::string const& name) const
+	{
+		if (name[0] == '#')
+			return true;
+		return false;
+	}
+
 	void Protocol::set_password(std::string const& password) { _password = password; }
 
 	void Protocol::add_client(int socket) { _clients.push_back(Client(socket)); }
@@ -95,6 +146,12 @@ namespace ft
 				break;
 			}
 		}
+	}
+
+	void Protocol::ignore_socket(int socket)
+	{
+		if (!is_socket_ignored(socket))
+			_ignored_sockets.push_back(socket);
 	}
 
 	void Protocol::parse_client_input(int socket, std::string& message)
@@ -180,143 +237,7 @@ namespace ft
 				_server.get_hostname(), _server.get_version(), "io", "TEMP", "TEMP"));
 	}
 
-	bool Protocol::is_socket_ignored(int socket) const
-	{
-		std::vector<int>::const_iterator cit;
-
-		for (cit = _ignored_sockets.begin(); cit != _ignored_sockets.end(); cit++)
-		{
-			if (*cit == socket)
-				return true;
-		}
-		return false;
-	}
-
-	void Protocol::ignore_socket(int socket)
-	{
-		if (!is_socket_ignored(socket))
-			_ignored_sockets.push_back(socket);
-	}
-
-	bool Protocol::is_client_connected(Client const& client) const
-	{
-		if (client.get_password_status() && client.get_nickname_status()
-				&& client.get_registration_status())
-			return true;
-		return false;
-	}
-
-	bool Protocol::is_client_active(std::string const& client_name) const
-	{
-		std::vector<Client>::const_iterator cit;
-
-		for (cit = _clients.begin(); cit != _clients.end(); cit++)
-		{
-			if ((*cit).get_nickname() == client_name)
-				return true;
-		}
-		return false;
-	}
-
-	bool Protocol::is_channel_active(std::string const& channel_name) const
-	{
-		std::vector<Channel>::const_iterator cit;
-
-		for (cit = _channels.begin(); cit != _channels.end(); cit++)
-		{
-			if ((*cit).get_name() == channel_name)
-				return true;
-		}
-		return false;
-	}
-
-	bool Protocol::is_channel_name(std::string const& name) const
-	{
-		if (name[0] == '#')
-			return true;
-		return false;
-	}
-
 	/*
-	void Protocol::add_to_queue(Client const& client, std::string const& message, int index)
-	{
-		Reply r(client, message);
-		_queue.push_back(r);
-		if (!index)
-			ignore_socket(client.get_socket());
-	}
-
-	void Protocol::send_replies(void)
-	{
-		std::vector<Reply>::const_iterator cit;
-		ssize_t x;
-
-		for (cit = _queue.begin(); cit != _queue.end(); cit++)
-		{
-			int socket = cit->client.get_socket();
-			std::string message = cit->message;
-			x = send(socket, message.c_str(), message.size(), 0);
-			if (x == -1)
-				_server.close_socket_connection(socket);
-		}
-	}
-
-	Client &Protocol::_get_client_from_nickname(const std::string &nickname)
-	{
-		size_t pos;
-
-		for (size_t i = 0; i < _clients.size(); i++)
-		{
-			if (_clients[i].get_nickname() == nickname)
-				pos = i;
-		}
-
-		// Return a reference to the client at the found position
-		return _clients[pos];
-	}
-	// void Protocol::add_channel(std::string channel_name)
-	// {
-	// 	_channels.push_back(Channel(channel_name));
-	// }
-
-	void Protocol::delete_channel(std::string channel_name)
-	{
-		for (size_t i = 0; i < _channels.size(); i++)
-		{
-			if (_channels[i]->get_name() == channel_name)
-				_channels.erase(_channels.begin() + i);
-		}
-	}
-
-	bool Protocol::is_valid_channel_name(std::string channel_name)
-	{
-		// check if the channel name starts with '#'
-		if (channel_name.size() < 1)
-			return false;
-		if (channel_name[0] != '#')
-			return false;
-
-		// check if the channel name contains only valid characters
-		for (unsigned int i = 0; i < channel_name.size(); i++)
-		{
-			char c = channel_name[i];
-			if (!isalnum(c) && c != '#' && c != '-' && c != '_')
-				return false;
-		}
-
-		return true;
-	}
-
-	Channel* Protocol::_get_channel_from_name(const std::string &channel_name)
-	{
-		for (size_t i = 0; i < _channels.size(); i++)
-		{
-			if (_channels[i]->get_name() == channel_name)
-				return _channels[i];
-		}
-		throw std::out_of_range("channel not found");
-	}
-
 	// no data validation or parsing -> might be an issue
 	void Protocol::_get_server_operators(void)
 	{
@@ -345,22 +266,6 @@ namespace ft
 		if (str.size() != 2 || str.find_first_of("+-") != 0 || str.find_first_of(modes) != 1)
 			return false;
 		return true;
-	}
-
-	void Protocol::_send_welcome_messages(Client const& client)
-	{
-		std::string reply;
-
-		reply = rpl_welcome(client.get_nickname(), "42FT_IRC", client.get_nickname(),
-				client.get_username(), client.get_hostname());
-		add_to_queue(client, reply, 1);
-		reply = rpl_yourhost(client.get_nickname(), client.get_hostname(), _server.get_version());
-		add_to_queue(client, reply, 1);
-		reply = rpl_created(client.get_nickname(), _server.get_creation_time());
-		add_to_queue(client, reply, 1);
-		reply = rpl_myinfo(client.get_nickname(), client.get_servername(), _server.get_version(),
-			   "TEMP VALUES", "TEMP VALUES", "TEMP VALUES");
-		add_to_queue(client, reply, 1);
 	}
 	*/
 }

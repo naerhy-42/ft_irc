@@ -35,18 +35,6 @@ namespace ft
 
 	bool Client::get_registration_status(void) const { return _registration_status; }
 
-	bool Client::has_mode(char mode) const
-	{
-		std::vector<char>::const_iterator cit;
-
-		for (cit = _modes.begin(); cit != _modes.end(); cit++)
-		{
-			if (*cit == mode)
-				return true;
-		}
-		return false;
-	}
-
 	std::vector<char> const& Client::get_modes(void) const { return _modes; }
 
 	std::string Client::get_modes_str(void) const
@@ -57,6 +45,18 @@ namespace ft
 		for (cit = _modes.begin(); cit != _modes.end(); cit++)
 			modes_str.append(1, *cit);
 		return modes_str;
+	}
+
+	bool Client::has_mode(char mode) const
+	{
+		std::vector<char>::const_iterator cit;
+
+		for (cit = _modes.begin(); cit != _modes.end(); cit++)
+		{
+			if (*cit == mode)
+				return true;
+		}
+		return false;
 	}
 
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }

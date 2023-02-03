@@ -36,10 +36,18 @@ namespace ft
 			Client& get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
 
+			bool is_socket_ignored(int socket) const;
+			bool is_client_connected(Client const& client) const;
+			bool is_client_active(std::string const& client_name) const;
+			bool is_channel_active(std::string const& channel_name) const;
+			bool is_channel_name(std::string const& name) const;
+
 			void set_password(std::string const& password);
 
 			void add_client(int socket);
 			void delete_client(int socket);
+
+			void ignore_socket(int socket);
 
 			void parse_client_input(int socket, std::string& message);
 			void handle_message(ClientMessage const& cmessage);
@@ -49,16 +57,6 @@ namespace ft
 					Client const& sender);
 			void send_message_to_client_channels(Client& client, std::string const& message);
 			void send_welcome_messages(Client& client);
-
-			bool is_socket_ignored(int socket) const;
-			void ignore_socket(int socket);
-
-			bool is_client_connected(Client const& client) const;
-
-			bool is_client_active(std::string const& client_name) const;
-			bool is_channel_active(std::string const& channel_name) const;
-
-			bool is_channel_name(std::string const& name) const;
 
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
@@ -76,20 +74,11 @@ namespace ft
 			void cmd_user(ClientMessage const& cmessage);
 			// void cmd_whois(ClientMessage msg);
 
-			/*
-			void add_channel(std::string channel_name);
-			void delete_channel(std::string channel_name);
-
-			bool is_valid_channel_name(std::string channel_name);
-			*/
-
 		private:
 			// Protocol(Protocol const& x);
 			// Protocol& operator=(Protocol const& x);
 
 			/*
-			Client &_get_client_from_nickname(const std::string &nickname);
-			
 			void _get_server_operators(void);
 			bool _is_valid_mode(std::string const& str, std::string const& modes) const;
 			*/
