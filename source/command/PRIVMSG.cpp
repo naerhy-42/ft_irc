@@ -12,7 +12,7 @@ namespace ft
 			send_message_to_client(client, _replies.err_notregistered(client.get_nickname()));
 			ignore_socket(client.get_socket());
 		}
-		else if (parameters.size() != 2)
+		else if (parameters.size() != 1)
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "PRIVMSG"));
 		else if (is_channel_name(parameters[0]))
 		{

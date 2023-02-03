@@ -51,12 +51,28 @@ namespace ft
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
 	}
 
+	// ERR_NOSUCHNICK (401)
+	std::string ServerReplies::err_nosuchnick(std::string const& client_name, std::string const& nickname) const
+	{
+		std::string description = ":No such nick/channel";
+
+		return _server_prefix + " 401 " + client_name + " " + nickname + " " + description + _endl;;
+	}
+
 	// ERR_NOSUCHCHANNEL (403)
 	std::string ServerReplies::err_nosuchchannel(std::string const& client_name, std::string const& channel_name) const
 	{
 		std::string description = ":No such channel";
 
 		return _server_prefix + " 403 " + client_name + " " + channel_name + " " + description + _endl;
+	}
+
+	// ERR_CANNOTSENDTOCHAN (404)
+	std::string ServerReplies::err_cannotsendtochan(std::string const& client_name, std::string const& channel_name) const
+	{
+		std::string description = ":Cannot send to channel";
+
+		return _server_prefix + " 404 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
 	// ERR_NOORIGIN (409)

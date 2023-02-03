@@ -33,8 +33,14 @@ namespace ft
 					std::string const& available_channel_modes,
 					std::string const& channel_modes_with_parameter) const;
 
+			// ERR_NOSUCHNICK (401)
+			std::string err_nosuchnick(std::string const& client_name, std::string const& nickname) const;
+
 			// ERR_NOSUCHCHANNEL (403)
 			std::string err_nosuchchannel(std::string const& client_name, std::string const& channel_name) const;
+
+			// ERR_CANNOTSENDTOCHAN (404)
+			std::string err_cannotsendtochan(std::string const& client_name, std::string const& channel_name) const;
 
 			// ERR_NOORIGIN (409)
 			std::string err_noorigin(std::string const& client_name) const;
