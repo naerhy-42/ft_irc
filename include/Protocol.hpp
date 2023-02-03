@@ -32,12 +32,12 @@ namespace ft
 			Protocol(Server& server);
 			~Protocol(void);
 
-			Client& get_client_from_socket(int socket);
-			Client& get_client_from_name(std::string const& name);
+			Client* get_client_from_socket(int socket);
+			Client* get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
 
 			bool is_socket_ignored(int socket) const;
-			bool is_client_connected(Client const& client) const;
+			bool is_client_connected(Client const* client) const;
 			bool is_client_active(std::string const& client_name) const;
 			bool is_channel_active(std::string const& channel_name) const;
 			bool is_valid_nickname(std::string const& nickname) const;
@@ -56,11 +56,11 @@ namespace ft
 			void parse_client_input(int socket, std::string& message);
 			void handle_message(ClientMessage const& cmessage);
 
-			void send_message_to_client(Client& client, std::string const& message);
+			void send_message_to_client(Client* client, std::string const& message);
 			void send_message_to_channel(Channel const& channel, std::string const& message,
-					Client const& sender);
-			void send_message_to_client_channels(Client& client, std::string const& message);
-			void send_welcome_messages(Client& client);
+					Client const* sender);
+			void send_message_to_client_channels(Client* client, std::string const& message);
+			void send_welcome_messages(Client* client);
 
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
@@ -91,7 +91,7 @@ namespace ft
 			ServerReplies _replies;
 			std::string _password;
 			std::map<std::string, fncts> _commands;
-			std::vector<Client> _clients;
+			std::vector<Client*> _clients;
 			std::vector<Channel> _channels;
 			std::map<std::string, std::string> _operators;
 			std::vector<int> _ignored_sockets;

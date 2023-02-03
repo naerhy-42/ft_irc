@@ -34,13 +34,13 @@ namespace ft
 
 	Protocol::~Protocol(void) {}
 
-	Client& Protocol::get_client_from_socket(int socket)
+	Client* Protocol::get_client_from_socket(int socket)
 	{
 		size_t pos = 0;
 
 		for (size_t i = 0; i < _clients.size(); i++)
 		{
-			if (_clients[i].get_socket() == socket)
+			if (_clients[i]->get_socket() == socket)
 			{
 				pos = i;
 				break;
@@ -49,13 +49,13 @@ namespace ft
 		return _clients[pos];
 	}
 
-	Client& Protocol::get_client_from_name(std::string const& name)
+	Client* Protocol::get_client_from_name(std::string const& name)
 	{
 		size_t pos = 0;
 
 		for (size_t i = 0; i < _clients.size(); i++)
 		{
-			if (_clients[i].get_nickname() == name)
+			if (_clients[i]->get_nickname() == name)
 			{
 				pos = i;
 				break;
@@ -91,21 +91,21 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_client_connected(Client const& client) const
+	bool Protocol::is_client_connected(Client const* client) const
 	{
-		if (client.get_password_status() && client.get_nickname_status()
-				&& client.get_registration_status())
+		if (client->get_password_status() && client->get_nickname_status()
+				&& client->get_registration_status())
 			return true;
 		return false;
 	}
 
 	bool Protocol::is_client_active(std::string const& client_name) const
 	{
-		std::vector<Client>::const_iterator cit;
+		std::vector<Client*>::const_iterator cit;
 
 		for (cit = _clients.begin(); cit != _clients.end(); cit++)
 		{
-			if ((*cit).get_nickname() == client_name)
+			if ((*cit)->get_nickname() == client_name)
 				return true;
 		}
 		return false;
@@ -146,15 +146,15 @@ namespace ft
 
 	void Protocol::set_password(std::string const& password) { _password = password; }
 
-	void Protocol::add_client(int socket) { _clients.push_back(Client(socket)); }
+	void Protocol::add_client(int socket) { _clients.push_back(new Client(socket)); }
 
 	void Protocol::delete_client(int socket)
 	{
-		std::vector<Client>::iterator it;
+		std::vector<Client*>::iterator it;
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if ((*it).get_socket() == socket)
+			if ((*it)->get_socket() == socket)
 			{
 				_clients.erase(it);
 				break;
@@ -223,50 +223,50 @@ namespace ft
 	{
 		std::string const& command = cmessage.get_command();
 
-		if (_commands.count(command) && !is_socket_ignored(cmessage.get_client().get_socket()))
+		if (_commands.count(command) && !is_socket_ignored(cmessage.get_client()->get_socket()))
 			(this->*_commands[command])(cmessage);
 	}
 
-	void Protocol::send_message_to_client(Client& client, std::string const& message)
+	void Protocol::send_message_to_client(Client* client, std::string const& message)
 	{
 		// disconnect the user if send return -1 ?
-		if (send(client.get_socket(), message.c_str(), message.size(), 0) == -1)
+		if (send(client->get_socket(), message.c_str(), message.size(), 0) == -1)
 			std::cout << "Could not write to socket..." << std::endl;
 	}
 
 	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,
-			Client const& sender)
+			Client const* sender)
 	{
 		std::vector<Client*> const& clients = channel.get_clients();
 		std::vector<Client*>::const_iterator cit;
 
 		for (cit = clients.begin(); cit != clients.end(); cit++)
 		{
-			if (*(*cit) != sender)
-				send_message_to_client(*(*cit), message);
+			if (*cit != sender)
+				send_message_to_client(*cit, message);
 		}
 	}
 
-	void Protocol::send_message_to_client_channels(Client& client, std::string const& message)
+	void Protocol::send_message_to_client_channels(Client* client, std::string const& message)
 	{
 		std::vector<Channel>::const_iterator cit;
 
 		for (cit = _channels.begin(); cit != _channels.end(); cit++)
 		{
-			if ((*cit).has_client(&client))
+			if ((*cit).has_client(client))
 				send_message_to_channel(*cit, message, client);
 		}
 	}
 
-	void Protocol::send_welcome_messages(Client& client)
+	void Protocol::send_welcome_messages(Client* client)
 	{
-		send_message_to_client(client, _replies.rpl_welcome(client.get_nickname(),
-				client.get_prefix()));
-		send_message_to_client(client, _replies.rpl_yourhost(client.get_nickname(),
+		send_message_to_client(client, _replies.rpl_welcome(client->get_nickname(),
+				client->get_prefix()));
+		send_message_to_client(client, _replies.rpl_yourhost(client->get_nickname(),
 				_server.get_hostname(), _server.get_version()));
-		send_message_to_client(client, _replies.rpl_created(client.get_nickname(),
+		send_message_to_client(client, _replies.rpl_created(client->get_nickname(),
 				_server.get_creation_time()));
-		send_message_to_client(client, _replies.rpl_myinfo(client.get_nickname(),
+		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
 				_server.get_hostname(), _server.get_version(), "io", "TEMP", "TEMP"));
 	}
 

@@ -1,8 +1,8 @@
-#include "../include/ClientMessage.hpp"
+#include "ClientMessage.hpp"
 
 namespace ft
 {
-	ClientMessage::ClientMessage(Client& client, std::string& message) : _client(client)
+	ClientMessage::ClientMessage(Client* client, std::string& message) : _client(client)
 	{
 		std::string remainder;
 		size_t remainder_pos = message.find(" :");
@@ -27,7 +27,7 @@ namespace ft
 
 	ClientMessage::~ClientMessage(void) {}
 
-	Client& ClientMessage::get_client(void) const { return _client; }
+	Client* ClientMessage::get_client(void) const { return _client; }
 
 	std::string const& ClientMessage::get_command(void) const { return _command; }
 
