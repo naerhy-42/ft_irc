@@ -9,7 +9,7 @@ namespace ft
         _clients.push_back(creator);
     }
 
-    Channel::~Channel() {}
+    Channel::~Channel(void) {}
 
     std::string const& Channel::get_name(void) const { return _name; }
 

@@ -48,6 +48,9 @@ namespace ft
 			void add_client(int socket);
 			void delete_client(int socket);
 
+			void add_channel(std::string const& name, Client* client);
+			void delete_channel(std::string const& name);
+
 			void ignore_socket(int socket);
 
 			void parse_client_input(int socket, std::string& message);

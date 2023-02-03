@@ -139,7 +139,7 @@ namespace ft
 
 	bool Protocol::is_channel_name(std::string const& name) const
 	{
-		if (name[0] == '#')
+		if (name.size() > 1 && name[0] == '#')
 			return true;
 		return false;
 	}
@@ -157,6 +157,25 @@ namespace ft
 			if ((*it).get_socket() == socket)
 			{
 				_clients.erase(it);
+				break;
+			}
+		}
+	}
+
+	void Protocol::add_channel(std::string const& name, Client* client)
+	{
+		_channels.push_back(Channel(name, client));
+	}
+
+	void Protocol::delete_channel(std::string const& name)
+	{
+		std::vector<Channel>::iterator it;
+
+		for (it = _channels.begin(); it != _channels.end(); it++)
+		{
+			if ((*it).get_name() == name)
+			{
+				_channels.erase(it);
 				break;
 			}
 		}
@@ -212,7 +231,7 @@ namespace ft
 	{
 		// disconnect the user if send return -1 ?
 		if (send(client.get_socket(), message.c_str(), message.size(), 0) == -1)
-			std::cout << "Could not write to socket, aborting connection..." << std::endl;
+			std::cout << "Could not write to socket..." << std::endl;
 	}
 
 	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,

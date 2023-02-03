@@ -13,7 +13,7 @@ namespace ft
     {
     public:
         Channel(std::string const &name, Client* creator);
-        ~Channel();
+        ~Channel(void);
 
         std::string const& get_name(void) const;
         std::string const& get_topic(void) const;
@@ -39,7 +39,7 @@ namespace ft
 		// Channel(Channel const& x);
 		// Channel& operator=(Channel const& x);
 
-        std::string const _name;
+        std::string _name;
         std::string _topic;
         std::string _author;
         std::vector<Client*> _operators;

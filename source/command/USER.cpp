@@ -6,7 +6,7 @@ namespace ft
     void Protocol::cmd_user(ClientMessage const& cmessage)
     {
 		Client& client = cmessage.get_client();
-        std::vector<std::string> parameters = cmessage.get_parameters();
+        std::vector<std::string> const& parameters = cmessage.get_parameters();
 
         if (!client.get_password_status())
         {
@@ -15,8 +15,7 @@ namespace ft
         }
 		else if (client.get_registration_status())
 			send_message_to_client(client, _replies.err_alreadyregistered(client.get_nickname()));
-		else if (parameters.size() < 3 || parameters[0].empty() || parameters[1].empty()
-				|| parameters[2].empty() || cmessage.get_remainder().empty())
+		else if (parameters.size() < 3 || cmessage.get_remainder().empty())
 			send_message_to_client(client, _replies.err_needmoreparams(client.get_nickname(), "USER"));
 		else
 		{
