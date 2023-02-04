@@ -1,41 +1,30 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-	void Protocol::cmd_oper(Message msg)
+	void Protocol::cmd_oper(ClientMessage const& cmessage)
 	{
-        Client &client = _get_client_from_socket(msg.get_socket());
-		std::vector<std::string> parameters = msg.get_parameters();
-		std::string reply;
+		Client* client = cmessage.get_client();
+		std::vector<std::string> const& parameters = cmessage.get_parameters();
 
-		if (!_is_client_connected(client))
+		if (!is_client_connected(client))
 		{
-			reply = err_notregistered(client.get_nickname());
-			add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client->get_nickname()));
+			ignore_socket(client->get_socket());
 		}
 		else if (parameters.size() < 2)
-		{
-			reply = err_needmoreparams(client.get_nickname(), "OPER");
-			add_to_queue(client, reply, 0);
-		}
-		else if (!_server_ops.count(parameters[0]))
-		{
-			reply = err_nooperhost(client.get_nickname());
-			add_to_queue(client, reply, 0);
-		}
-		else if (_server_ops[parameters[0]] != parameters[1])
-		{
-			reply = err_passwdmismatch(client.get_nickname());
-			add_to_queue(client, reply, 0);
-		}
+			send_message_to_client(client, _replies.err_needmoreparams(client->get_nickname(), "OPER"));
+		else if (!_global_operators.count(parameters[0]))
+			send_message_to_client(client, _replies.err_nooperhost(client->get_nickname()));
+		else if (_global_operators[parameters[0]] != parameters[1])
+			send_message_to_client(client, _replies.err_passwdmismatch(client->get_nickname()));
 		else
 		{
-			if (!client.has_mode('o'))
+			if (!client->has_mode('o'))
 			{
-				reply = rpl_youreoper(client.get_nickname());
-				add_to_queue(client, reply, 1);
-				client.set_mode('+', 'o');
+				send_message_to_client(client, _replies.rpl_youreoper(client->get_nickname()));
+				client->set_mode('+', 'o');
 			}
 		}
 	}

@@ -39,6 +39,9 @@ namespace ft
 		// RPL_TOPIC (332)
 		std::string rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const;
 
+		// RPL_YOUREOPER (381)
+		std::string rpl_youreoper(std::string const& client_name) const;
+
 		// ERR_NOSUCHNICK (401)
 		std::string err_nosuchnick(std::string const &client_name, std::string const &nickname) const;
 
@@ -81,6 +84,9 @@ namespace ft
 
 		// ERR_CHANOPRIVSNEEDED (482)
 		std::string err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const;
+
+		// ERR_NOOPERHOST (491)
+		std::string err_nooperhost(std::string const& client_name) const;
 
 			/*
 			// RPL_WELCOME (001)
