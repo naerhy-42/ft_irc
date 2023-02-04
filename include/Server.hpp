@@ -50,6 +50,8 @@ namespace ft
 			std::string const& get_version(void) const;
 			std::string const& get_creation_time(void) const;
 
+			void parse_config_file(std::vector<std::string>& op_lines);
+
 		private:
 			int _get_max_fd(void) const;
 
@@ -58,7 +60,6 @@ namespace ft
 			int _socket;
 			std::vector<int> _fds;
 			fd_set _rfds;
-			fd_set _rfds_temp;
 			std::string _hostname;
 			std::string _version;
 			std::string _creation_time;

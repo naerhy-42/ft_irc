@@ -4,11 +4,14 @@ namespace ft
 {
 	int const Server::_buffer_size = 512;
 
-	Server::Server(void) : _fds(), _hostname("localhost"), _version("0.42"), _protocol(*this)
+	Server::Server(void) : _hostname("localhost"), _protocol(*this, _hostname)
 	{
 		time_t now = std::time(0);
+		std::vector<std::string> operators;
 
 		_creation_time = ctime(&now);
+		parse_config_file(operators);
+		_protocol.set_global_operators(operators);
 	}
 
 	bool Server::validate_args(std::string port, std::string password)
@@ -214,5 +217,42 @@ namespace ft
 				max_fd = *cit;
 		}
 		return max_fd;
+	}
+
+	void Server::parse_config_file(std::vector<std::string>& operators)
+	{
+		std::ifstream file;
+		std::string line;
+
+		file.open(".server_conf", std::ios::in);
+		// check error return
+		while (getline(file, line))
+		{
+			std::cout << "size = " << line.size() << std::endl;
+			if (!line.empty())
+			{
+				std::stringstream ss(line);
+				std::vector<std::string> words;
+				std::string word;
+
+				while (ss >> word)
+					words.push_back(word);
+				// check if words is empty = error
+				// add more rules if we add more options in the file in the future
+				if ((words[0] == "operator" && words.size() == 3))
+				{
+					operators.push_back(words[1]);
+					operators.push_back(words[2]);
+				}
+				else if (words[0] == "version" && words.size() == 2)
+					_version = words[1];
+				else
+				{
+					// error
+				}
+			}
+		}
+		file.close();
+		// check if operator is empty or a config line was missing = error
 	}
 }

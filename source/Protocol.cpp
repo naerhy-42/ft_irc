@@ -9,7 +9,8 @@ namespace ft
 
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
-	Protocol::Protocol(Server& server) : _server(server), _replies(":localhost", _IRC_ENDL)
+	Protocol::Protocol(Server& server, std::string const& hostname)
+			: _server(server), _replies(":" + hostname, _IRC_ENDL)
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
@@ -147,6 +148,14 @@ namespace ft
 	}
 
 	void Protocol::set_password(std::string const& password) { _password = password; }
+
+	void Protocol::set_global_operators(std::vector<std::string> const& operators)
+	{
+		std::vector<std::string>::const_iterator cit;
+
+		for (cit = operators.begin(); cit != operators.end(); cit += 2)
+			_global_operators.insert(std::make_pair(*cit, *(cit + 1)));
+	}
 
 	void Protocol::add_client(int socket) { _clients.push_back(new Client(socket)); }
 
