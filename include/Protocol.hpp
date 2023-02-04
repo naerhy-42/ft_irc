@@ -29,7 +29,7 @@ namespace ft
 			static std::string const _IRC_ENDL;
 
 		public:
-			Protocol(Server& server);
+			Protocol(Server& server, std::string const& hostname);
 			~Protocol(void);
 
 			Client* get_client_from_socket(int socket);
@@ -44,6 +44,7 @@ namespace ft
 			bool is_channel_name(std::string const& name) const;
 
 			void set_password(std::string const& password);
+			void set_global_operators(std::vector<std::string> const& operators);
 
 			void add_client(int socket);
 			void delete_client(int socket);
@@ -79,11 +80,10 @@ namespace ft
 			// void cmd_whois(ClientMessage msg);
 
 		private:
-			// Protocol(Protocol const& x);
-			// Protocol& operator=(Protocol const& x);
+			Protocol(Protocol const& x);
+			Protocol& operator=(Protocol const& x);
 
 			/*
-			void _get_server_operators(void);
 			bool _is_valid_mode(std::string const& str, std::string const& modes) const;
 			*/
 
@@ -93,7 +93,7 @@ namespace ft
 			std::map<std::string, fncts> _commands;
 			std::vector<Client*> _clients;
 			std::vector<Channel> _channels;
-			std::map<std::string, std::string> _operators;
+			std::map<std::string, std::string> _global_operators;
 			std::vector<int> _ignored_sockets;
 	};
 }
