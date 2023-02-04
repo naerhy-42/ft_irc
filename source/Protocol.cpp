@@ -14,6 +14,7 @@ namespace ft
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
+		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
 		_commands.insert(std::pair<std::string, fncts>("PASS", &Protocol::cmd_pass));
 		_commands.insert(std::pair<std::string, fncts>("PING", &Protocol::cmd_ping));
@@ -27,8 +28,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
-		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
-		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		*/
 	}

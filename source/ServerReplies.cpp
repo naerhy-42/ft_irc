@@ -68,6 +68,14 @@ namespace ft
 		return _server_prefix + " 332 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
+	// RPL_YOUREOPER (381)
+	std::string ServerReplies::rpl_youreoper(std::string const& client_name) const
+	{
+		std::string description = ":You are now an IRC operator";
+
+		return _server_prefix + " 381 " + client_name + " " + description + _endl;
+	}
+
 	// ERR_NOSUCHNICK (401)
 	std::string ServerReplies::err_nosuchnick(std::string const &client_name, std::string const &nickname) const
 	{
@@ -179,6 +187,14 @@ namespace ft
 		std::string description = ":You're not channel operator";
 
 		return _server_prefix + " 482 " + client_name + " " + channel_name + " " + description + _endl;
+	}
+
+	// ERR_NOOPERHOST (491)
+	std::string ServerReplies::err_nooperhost(std::string const& client_name) const
+	{
+		std::string description = ":No O-lines for your host";
+
+		return _server_prefix + " 491 " + client_name + " " + description + _endl;
 	}
 
 	/*
