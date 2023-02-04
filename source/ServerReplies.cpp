@@ -51,6 +51,23 @@ namespace ft
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
 	}
 
+	// RPL_NOTOPIC (331)
+	std::string ServerReplies::rpl_notopic(std::string const &client_name, std::string const &channel_name) const
+	{
+		std::string description = ":No topic is set";
+
+		return _server_prefix + " 331 " + client_name + " " + channel_name + " " + description + _endl;
+	}
+
+	// RPL_TOPIC (332)
+	std::string ServerReplies::rpl_topic(std::string const &client_name,
+			std::string const &channel_name, std::string const &topic) const
+	{
+		std::string description = ": " + topic;
+
+		return _server_prefix + " 332 " + client_name + " " + channel_name + " " + description + _endl;
+	}
+
 	// ERR_NOSUCHNICK (401)
 	std::string ServerReplies::err_nosuchnick(std::string const &client_name, std::string const &nickname) const
 	{
@@ -108,6 +125,15 @@ namespace ft
 		return _server_prefix + " 433 " + client_name + " " + nickname + " " + description + _endl;
 	}
 
+	// ERR_USERNOTINCHANNEL (441)
+	std::string ServerReplies::err_usernotinchannel(std::string const &client_name,
+			std::string const &target_nickname, std::string const &channel_name) const
+	{
+		std::string description = ":They aren't on that channel";
+
+		return _server_prefix + " 441 " + client_name + " " + target_nickname + " " + channel_name + " " + description + _endl;
+	}
+
 	// ERR_NOTONCHANNEL (442)
 	std::string ServerReplies::err_notonchannel(std::string const &client_name, std::string const &channel_name) const
 	{
@@ -147,31 +173,14 @@ namespace ft
 		return _server_prefix + " 464 " + client_name + " " + description + _endl;
 	}
 
-	// RPL_TOPIC (332)
-	std::string ServerReplies::rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const
-	{
-		std::string description = ": " + topic;
-		return _server_prefix + " 332 " + client_name + " " + channel_name + description + _endl;
-	}
-
-	// RPL_NOTOPIC (331)
-	std::string ServerReplies::rpl_notopic(std::string const &client_name, std::string const &channel_name) const
-	{
-		std::string description = ":No topic is set";
-		return _server_prefix + " 331 " + client_name + " " + channel_name + description + _endl;
-	}
-
+	// ERR_CHANOPRIVSNEEDED (482)
 	std::string ServerReplies::err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const
 	{
 		std::string description = ":You're not channel operator";
-		return _server_prefix + " 482 " + client_name + " " + channel_name + description + _endl;
+
+		return _server_prefix + " 482 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
-	// (441)
-	std::string ServerReplies::err_usernotinchannel(std::string const &client_name, std::string const &target_nickname, std::string const &channel_name) const
-	{
-		return _server_prefix + " 441 " + client_name + " " + target_nickname + " " + channel_name + " :They aren't on that channel" + _endl;
-	}
 	/*
 	// RPL_WELCOME (001)
 	std::string rpl_welcome(const std::string &client, const std::string &networkname,

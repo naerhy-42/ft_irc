@@ -33,6 +33,12 @@ namespace ft
 							   std::string const &available_channel_modes,
 							   std::string const &channel_modes_with_parameter) const;
 
+		// RPL_NOTOPIC (331)
+		std::string rpl_notopic(std::string const &client_name, std::string const &channel_name) const;
+
+		// RPL_TOPIC (332)
+		std::string rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const;
+
 		// ERR_NOSUCHNICK (401)
 		std::string err_nosuchnick(std::string const &client_name, std::string const &nickname) const;
 
@@ -54,6 +60,10 @@ namespace ft
 		// ERR_NICKNAMEINUSE (433)
 		std::string err_nicknameinuse(std::string const &client_name, std::string const &nickname) const;
 
+		// ERR_USERNOTINCHANNEL (441)
+		std::string err_usernotinchannel(std::string const &client_name, std::string const &target_nickname,
+				std::string const &channel_name) const;
+
 		// ERR_NOTONCHANNEL (442)
 		std::string err_notonchannel(std::string const &client_name, std::string const &channel_name) const;
 
@@ -69,16 +79,9 @@ namespace ft
 		// ERR_PASSWDMISMATCH (464)
 		std::string err_passwdmismatch(std::string const &client_name) const;
 
-		// RPL_TOPIC (332)
-		std::string rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const;
+		// ERR_CHANOPRIVSNEEDED (482)
+		std::string err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const;
 
-		// RPL_NOTOPIC (331)
-		std::string rpl_notopic(std::string const &client_name, std::string const &channel_name) const;
-
-		std::string ServerReplies::err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const;
-
-		// (441)
-		std::string ServerReplies::err_usernotinchannel(std::string const &client_name, std::string const &target_nickname, std::string const &channel_name) const;
 			/*
 			// RPL_WELCOME (001)
 			std::string rpl_welcome(const std::string &client, const std::string &networkname,
@@ -261,9 +264,6 @@ namespace ft
 			// ERR_BADCHANNELKEY (475)
 			std::string err_badchannelkey(const std::string &client, const std::string &channel);
 
-			// ERR_CHANOPRIVSNEEDED (482)
-			std::string err_chanoprivsneeded(std::string const& client, std::string const& channel);
-
 			// ERR_NOOPERHOST (491)
 			std::string err_nooperhost(const std::string &client);
 
@@ -279,9 +279,6 @@ namespace ft
 
 			// RPL_ENDOFNAMES (366)
 			std::string rpl_endofnames(const std::string &client, const std::string &channel);
-
-			std::string err_chanoprivsneeded(const std::string &client, const std::string &channel);
-			std::string rpl_topic(const std::string &channel, const std::string &topic);
 			*/
 
 			private :
