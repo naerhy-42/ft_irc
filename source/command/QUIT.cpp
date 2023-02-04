@@ -1,5 +1,5 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {

@@ -32,36 +32,38 @@ namespace ft
 		*/
 	}
 
-	Protocol::~Protocol(void) {}
+	Protocol::~Protocol(void)
+	{
+		std::vector<Client*>::iterator it;
+
+		for (it = _clients.begin(); it != _clients.end(); it++)
+			delete *it;
+		// no need to use _clients.clear() in order to remove dangling pointers as
+		// Protocol is only destroyed at end of program
+	}
 
 	Client* Protocol::get_client_from_socket(int socket)
 	{
-		size_t pos = 0;
+		std::vector<Client*>::iterator it;
 
-		for (size_t i = 0; i < _clients.size(); i++)
+		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if (_clients[i]->get_socket() == socket)
-			{
-				pos = i;
-				break;
-			}
+			if ((*it)->get_socket() == socket)
+				return *it;
 		}
-		return _clients[pos];
+		return NULL;
 	}
 
 	Client* Protocol::get_client_from_name(std::string const& name)
 	{
-		size_t pos = 0;
+		std::vector<Client*>::iterator it;
 
-		for (size_t i = 0; i < _clients.size(); i++)
+		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
-			if (_clients[i]->get_nickname() == name)
-			{
-				pos = i;
-				break;
-			}
+			if ((*it)->get_nickname() == name)
+				return *it;
 		}
-		return _clients[pos];
+		return NULL;
 	}
 
 	Channel& Protocol::get_channel_from_name(std::string const& name)
@@ -156,6 +158,7 @@ namespace ft
 		{
 			if ((*it)->get_socket() == socket)
 			{
+				delete *it;
 				_clients.erase(it);
 				break;
 			}
