@@ -161,6 +161,17 @@ namespace ft
 		return _server_prefix + " 331 " + client_name + " " + channel_name + description + _endl;
 	}
 
+	std::string ServerReplies::err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const
+	{
+		std::string description = ":You're not channel operator";
+		return _server_prefix + " 482 " + client_name + " " + channel_name + description + _endl;
+	}
+
+	// (441)
+	std::string ServerReplies::err_usernotinchannel(std::string const &client_name, std::string const &target_nickname, std::string const &channel_name) const
+	{
+		return _server_prefix + " 441 " + client_name + " " + target_nickname + " " + channel_name + " :They aren't on that channel" + _endl;
+	}
 	/*
 	// RPL_WELCOME (001)
 	std::string rpl_welcome(const std::string &client, const std::string &networkname,

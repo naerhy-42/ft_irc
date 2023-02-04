@@ -64,7 +64,7 @@ namespace ft
 
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
-			// void cmd_kick(ClientMessage msg);
+			void cmd_kick(ClientMessage const& cmessage);
 			// void cmd_mode(ClientMessage msg);
 			// void cmd_names(ClientMessage msg);
 			void cmd_nick(ClientMessage const& cmessage);
