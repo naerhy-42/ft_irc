@@ -21,17 +21,7 @@ namespace ft
 
     std::vector<Client*> const& Channel::get_clients(void) const { return _clients; }
 
-	std::vector<char> const& Channel::get_modes(void) const { return _modes; }
-
-	std::string Channel::get_modes_str(void) const
-	{
-		std::string modes_str;
-		std::vector<char>::const_iterator cit;
-
-		for (cit = _modes.begin(); cit != _modes.end(); cit++)
-			modes_str.append(1, *cit);
-		return modes_str;
-	}
+	Modes& Channel::get_modes_obj(void) { return _modes; }
 
     bool Channel::is_operator(Client const* client)
     {
@@ -57,41 +47,9 @@ namespace ft
         return false;
     }
 
-	bool Channel::has_mode(char mode) const
-	{
-		std::vector<char>::const_iterator cit;
-
-		for (cit = _modes.begin(); cit != _modes.end(); cit++)
-		{
-			if (*cit == mode)
-				return true;
-		}
-		return false;
-	}
-
-
     void Channel::set_topic(std::string const& topic) { _topic = topic; }
 
     void Channel::set_author(std::string const& author) { _author = author; }
-
-	void Channel::set_mode(char sign, char mode)
-	{
-		if (sign == '+')
-			_modes.push_back(mode);
-		else
-		{
-			std::vector<char>::iterator it;
-
-			for (it = _modes.begin(); it != _modes.end(); it++)
-			{
-				if (*it == mode)
-				{
-					_modes.erase(it);
-					break;
-				}
-			}
-		}
-	}
 
     void Channel::add_client(Client* client)
     {

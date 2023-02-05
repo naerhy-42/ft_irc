@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Client.hpp"
+#include "Modes.hpp"
 
 namespace ft
 {
@@ -20,17 +21,14 @@ namespace ft
         std::string const& get_author(void) const;
 		std::vector<Client*> const& get_operators(void) const;
         std::vector<Client*> const& get_clients(void) const;
-		std::vector<char> const& get_modes(void) const;
-		std::string get_modes_str(void) const;
+		Modes& get_modes_obj(void);
 
         bool is_operator(Client const* client);
 
         bool has_client(Client const* client) const;
-		bool has_mode(char mode) const;
 
         void set_topic(std::string const& topic);
         void set_author(std::string const& author);
-		void set_mode(char sign, char mode);
 
         void add_client(Client* client);
         void remove_client(Client* client);
@@ -44,7 +42,7 @@ namespace ft
         std::string _author;
         std::vector<Client*> _operators;
         std::vector<Client*> _clients;
-		std::vector<char> _modes;
+		Modes _modes;
     };
 }
 

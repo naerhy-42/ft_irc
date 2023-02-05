@@ -228,7 +228,6 @@ namespace ft
 		// check error return
 		while (getline(file, line))
 		{
-			std::cout << "size = " << line.size() << std::endl;
 			if (!line.empty())
 			{
 				std::stringstream ss(line);

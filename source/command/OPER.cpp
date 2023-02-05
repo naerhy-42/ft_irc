@@ -15,16 +15,16 @@ namespace ft
 		}
 		else if (parameters.size() < 2)
 			send_message_to_client(client, _replies.err_needmoreparams(client->get_nickname(), "OPER"));
-		else if (!_global_operators.count(parameters[0]))
+		else if (!_global_operators.count(client->get_nickname()) || client->get_nickname() != parameters[0])
 			send_message_to_client(client, _replies.err_nooperhost(client->get_nickname()));
 		else if (_global_operators[parameters[0]] != parameters[1])
 			send_message_to_client(client, _replies.err_passwdmismatch(client->get_nickname()));
 		else
 		{
-			if (!client->has_mode('o'))
+			if (!client->get_modes_obj().has_mode('o'))
 			{
 				send_message_to_client(client, _replies.rpl_youreoper(client->get_nickname()));
-				client->set_mode('+', 'o');
+				client->get_modes_obj().set_mode('+', 'o');
 			}
 		}
 	}
