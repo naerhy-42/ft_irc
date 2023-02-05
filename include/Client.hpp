@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "Modes.hpp"
+
 namespace ft
 {
 	class Client
@@ -26,10 +28,7 @@ namespace ft
 		bool get_password_status(void) const;
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;
-		std::vector<char> const& get_modes(void) const;
-		std::string get_modes_str(void) const;
-
-		bool has_mode(char mode) const;
+		Modes& get_modes_obj(void);
 
 		void set_nickname(std::string const &nickname);
 		void set_username(std::string const &username);
@@ -39,7 +38,6 @@ namespace ft
 		void set_password_status(bool status);
 		void set_nickname_status(bool status);
 		void set_registration_status(bool status);
-		void set_mode(char sign, char mode);
 
 	private:
 		// Client(Client const& x);
@@ -54,7 +52,7 @@ namespace ft
 		bool _password_status;
 		bool _nickname_status;
 		bool _registration_status;
-		std::vector<char> _modes;
+		Modes _modes;
 	};
 }
 

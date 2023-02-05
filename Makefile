@@ -4,6 +4,7 @@ SRCS =	source/ft_irc.cpp \
 		source/Channel.cpp \
 		source/Client.cpp \
 		source/ClientMessage.cpp \
+		source/Modes.cpp \
 		source/Protocol.cpp \
 		source/Server.cpp \
 		source/ServerReplies.cpp \
