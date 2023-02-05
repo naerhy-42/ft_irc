@@ -9,6 +9,7 @@ SRCS =	source/ft_irc.cpp \
 		source/Server.cpp \
 		source/ServerReplies.cpp \
 		source/command/JOIN.cpp \
+		source/command/KICK.cpp \
 		source/command/NICK.cpp \
 		source/command/OPER.cpp \
 		source/command/PART.cpp \
@@ -17,7 +18,6 @@ SRCS =	source/ft_irc.cpp \
 		source/command/PRIVMSG.cpp \
 		source/command/QUIT.cpp \
 		source/command/TOPIC.cpp \
-		source/command/KICK.cpp \
 		source/command/USER.cpp \
 		# source/command/NAMES.cpp \
 		source/command/WHOIS.cpp \
