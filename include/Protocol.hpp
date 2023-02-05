@@ -57,11 +57,11 @@ namespace ft
 			void parse_client_input(int socket, std::string& message);
 			void handle_message(ClientMessage const& cmessage);
 
-			void send_message_to_client(Client* client, std::string const& message);
+			void send_message_to_client(Client const* client, std::string const& message);
 			void send_message_to_channel(Channel const& channel, std::string const& message,
 					Client const* sender);
-			void send_message_to_client_channels(Client* client, std::string const& message);
-			void send_welcome_messages(Client* client);
+			void send_message_to_client_channels(Client const* client, std::string const& message);
+			void send_welcome_messages(Client const* client);
 
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);

@@ -13,6 +13,7 @@ namespace ft
 			: _server(server), _replies(":" + hostname, _IRC_ENDL)
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
+		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
@@ -23,9 +24,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
-		_get_server_operators();
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
-		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
@@ -238,7 +237,7 @@ namespace ft
 			(this->*_commands[command])(cmessage);
 	}
 
-	void Protocol::send_message_to_client(Client* client, std::string const& message)
+	void Protocol::send_message_to_client(Client const* client, std::string const& message)
 	{
 		// disconnect the user if send return -1 ?
 		if (send(client->get_socket(), message.c_str(), message.size(), 0) == -1)
@@ -248,17 +247,17 @@ namespace ft
 	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,
 			Client const* sender)
 	{
-		std::vector<Client*> const& clients = channel.get_clients();
-		std::vector<Client*>::const_iterator cit;
+		std::map<Client const*, Modes> const& clients = channel.get_clients();
+		std::map<Client const*, Modes>::const_iterator cit;
 
 		for (cit = clients.begin(); cit != clients.end(); cit++)
 		{
-			if (*cit != sender)
-				send_message_to_client(*cit, message);
+			if (cit->first != sender)
+				send_message_to_client(cit->first, message);
 		}
 	}
 
-	void Protocol::send_message_to_client_channels(Client* client, std::string const& message)
+	void Protocol::send_message_to_client_channels(Client const* client, std::string const& message)
 	{
 		std::vector<Channel>::const_iterator cit;
 
@@ -269,7 +268,7 @@ namespace ft
 		}
 	}
 
-	void Protocol::send_welcome_messages(Client* client)
+	void Protocol::send_welcome_messages(Client const* client)
 	{
 		send_message_to_client(client, _replies.rpl_welcome(client->get_nickname(),
 				client->get_prefix()));

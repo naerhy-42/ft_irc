@@ -2,7 +2,7 @@
 
 namespace ft 
 {
-    	void Protocol::cmd_part(ClientMessage const& cmessage)
+	void Protocol::cmd_part(ClientMessage const& cmessage)
 	{
 		Client* client = cmessage.get_client();
 		std::vector<std::string> const& parameters = cmessage.get_parameters();
@@ -28,7 +28,6 @@ namespace ft
 			channel.remove_client(client);
 			if (!channel.get_clients().size())
 				delete_channel(parameters[0]);
-			// remove channel if empty
 		}
 	}
 }
