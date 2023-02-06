@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gnome-terminal -e "irssi -c localhost -p 8080 -w 'pw' -n dd" &
+gnome-terminal -e "irssi -c localhost -p 8080 -w 'pw' -n qq"
