@@ -17,6 +17,27 @@ namespace ft
 
 	Server::~Server(void) {}
 
+	bool Server::get_config_status(void) const { return _config_status; }
+
+	std::string const& Server::get_hostname(void) const { return _hostname; }
+
+	std::string const& Server::get_version(void) const { return _version; }
+
+	std::string const& Server::get_creation_time(void) const { return _creation_time; }
+
+	int Server::_get_max_fd(void) const
+	{
+		int max_fd;
+
+		max_fd = _socket;
+		for (std::vector<int>::const_iterator cit = _fds.begin(); cit != _fds.end(); cit++)
+		{
+			if (*cit > max_fd)
+				max_fd = *cit;
+		}
+		return max_fd;
+	}
+
 	bool Server::validate_args(std::string port, std::string password)
 	{
 		std::stringstream ss;
@@ -28,6 +49,55 @@ namespace ft
 		ss >> _port;
 		_protocol.set_password(password);
 		return true;
+	}
+
+	int Server::parse_config_file(std::vector<std::string>& operators)
+	{
+		std::ifstream file;
+		std::string line;
+
+		file.open(".server_conf", std::ios::in);
+		if (!file.is_open())
+		{
+			std::cout << "The file doesn't exist, create one" << std::endl;
+			return 0;
+		}
+		while (getline(file, line))
+		{
+			if (!line.empty())
+			{
+				std::stringstream ss(line);
+				std::vector<std::string> words;
+				std::string word;
+
+				while (ss >> word)
+					words.push_back(word);
+				if (words.empty())
+				{
+					std::cout << "Config file is not valid" << std::endl;
+					return 0;
+				}
+				if ((words[0] == "operator" && words.size() == 3))
+				{
+					operators.push_back(words[1]);
+					operators.push_back(words[2]);
+				}
+				else if (words[0] == "version" && words.size() == 2)
+					_version = words[1];
+				else
+				{
+					std::cout << "Unknown line in config file, remove it" << std::endl;
+					return 0;
+				}
+			}
+		}
+		file.close();
+		if (operators.empty() || _version.empty())
+		{
+			std::cout << "Operator or version line is missing" << std::endl;
+			return 0;
+		}
+		return 1;
 	}
 
 	int Server::init_socket(void)
@@ -175,75 +245,5 @@ namespace ft
 			}
 		}
 		close(socket);
-	}
-
-	std::string const& Server::get_hostname(void) const { return _hostname; }
-
-	std::string const& Server::get_version(void) const { return _version; }
-
-	std::string const& Server::get_creation_time(void) const { return _creation_time; }
-
-	int Server::_get_max_fd(void) const
-	{
-		int max_fd;
-
-		max_fd = _socket;
-		for (std::vector<int>::const_iterator cit = _fds.begin(); cit != _fds.end(); cit++)
-		{
-			if (*cit > max_fd)
-				max_fd = *cit;
-		}
-		return max_fd;
-	}
-
-	bool Server::get_config_status(void) const { return _config_status; }
-
-	int Server::parse_config_file(std::vector<std::string>& operators)
-	{
-		std::ifstream file;
-		std::string line;
-
-		file.open(".server_conf", std::ios::in);
-		if (!file.is_open())
-		{
-			std::cout << "The file doesn't exist, create one" << std::endl;
-			return 0;
-		}
-		while (getline(file, line))
-		{
-			if (!line.empty())
-			{
-				std::stringstream ss(line);
-				std::vector<std::string> words;
-				std::string word;
-
-				while (ss >> word)
-					words.push_back(word);
-				if (words.empty())
-				{
-					std::cout << "Config file is not valid" << std::endl;
-					return 0;
-				}
-				if ((words[0] == "operator" && words.size() == 3))
-				{
-					operators.push_back(words[1]);
-					operators.push_back(words[2]);
-				}
-				else if (words[0] == "version" && words.size() == 2)
-					_version = words[1];
-				else
-				{
-					std::cout << "Unknown line in config file, remove it" << std::endl;
-					return 0;
-				}
-			}
-		}
-		file.close();
-		if (operators.empty() || _version.empty())
-		{
-			std::cout << "Operator or version line is missing" << std::endl;
-			return 0;
-		}
-		return 1;
 	}
 }

@@ -39,24 +39,22 @@ namespace ft
 			Server(void);
 			~Server(void);
 
+			bool get_config_status(void) const;
+			std::string const& get_hostname(void) const;
+			std::string const& get_version(void) const;
+			std::string const& get_creation_time(void) const;
+			int get_max_fd(void) const;
+
 			bool validate_args(std::string port, std::string password);
+			int parse_config_file(std::vector<std::string>& op_lines);
+
 			int init_socket(void);
 			void wait_connections(void);
 			void close_socket_connection(int socket);
 
-			std::string const& get_hostname(void) const;
-			std::string const& get_version(void) const;
-			std::string const& get_creation_time(void) const;
-
-			bool get_config_status(void) const;
-
-			int parse_config_file(std::vector<std::string>& op_lines);
-
 		private:
 			// Server(Server const& x);
 			// Server& operator=(Server const& x);
-
-			int _get_max_fd(void) const;
 
 			static int const _buffer_size;
 			uint16_t _port;
