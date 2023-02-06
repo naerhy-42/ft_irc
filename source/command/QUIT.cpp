@@ -7,15 +7,14 @@ namespace ft
     {
         Client* client = cmessage.get_client();
 		std::string client_reply = "ERROR :Closing link (Client Quit)" + _server.get_hostname() + _IRC_ENDL;
+
 		send_message_to_client(client, client_reply);
 		ignore_socket(client->get_socket());
 		if (is_client_connected(client))
 		{
-			std::string message;
+			std::string message = ":" + client->get_prefix() + " QUIT :Client Quit" + _IRC_ENDL;
 
-			message = ":" + client->get_prefix() + " QUIT :Client Quit" + _IRC_ENDL;
 			send_message_to_client_channels(client, message);
 		}
-		// _server.close_socket_connection(client->get_socket());
     }
 }
