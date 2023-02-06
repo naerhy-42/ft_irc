@@ -33,6 +33,9 @@ namespace ft
 							   std::string const &available_channel_modes,
 							   std::string const &channel_modes_with_parameter) const;
 
+		// RPL_UMODEIS (221)
+		std::string rpl_umodeis(std::string const& client_name, std::string const& modes) const;
+
 		// RPL_NOTOPIC (331)
 		std::string rpl_notopic(std::string const &client_name, std::string const &channel_name) const;
 
@@ -87,6 +90,12 @@ namespace ft
 
 		// ERR_NOOPERHOST (491)
 		std::string err_nooperhost(std::string const& client_name) const;
+
+		// ERR_UMODEUNKNOWNFLAG (501)
+		std::string err_umodeunknownflag(std::string const& client_name) const;
+
+		// ERR_USERSDONTMATCH (502)
+		std::string err_usersdontmatch(std::string const& client_name) const;
 
 			/*
 			// RPL_WELCOME (001)

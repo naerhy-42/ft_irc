@@ -51,6 +51,12 @@ namespace ft
 			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
 	}
 
+	// RPL_UMODEIS (221)
+	std::string ServerReplies::rpl_umodeis(std::string const& client_name, std::string const& modes) const
+	{
+		return _server_prefix + " 221 " + client_name + " " + modes + _endl;
+	}
+
 	// RPL_NOTOPIC (331)
 	std::string ServerReplies::rpl_notopic(std::string const &client_name, std::string const &channel_name) const
 	{
@@ -195,6 +201,22 @@ namespace ft
 		std::string description = ":No O-lines for your host";
 
 		return _server_prefix + " 491 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_UMODEUNKNOWNFLAG (501)
+	std::string ServerReplies::err_umodeunknownflag(std::string const& client_name) const
+	{
+		std::string description = ":Unknown MODE flag";
+
+		return _server_prefix + " 501 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_USERSDONTMATCH (502)
+	std::string ServerReplies::err_usersdontmatch(std::string const& client_name) const
+	{
+		std::string description = ":Cannot change mode for other users";
+
+		return _server_prefix + " 502 " + client_name + " " + description + _endl;
 	}
 
 	/*

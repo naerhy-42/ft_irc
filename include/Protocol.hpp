@@ -35,6 +35,7 @@ namespace ft
 			Client* get_client_from_socket(int socket);
 			Client* get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
+			std::string get_enabled_modes(int id) const;
 
 			bool is_socket_ignored(int socket) const;
 			bool is_client_connected(Client const* client) const;
@@ -42,6 +43,7 @@ namespace ft
 			bool is_channel_active(std::string const& channel_name) const;
 			bool is_valid_nickname(std::string const& nickname) const;
 			bool is_channel_name(std::string const& name) const;
+			bool is_valid_mode(std::string const& mode, int id) const;
 
 			void set_password(std::string const& password);
 			void set_global_operators(std::vector<std::string> const& operators);
@@ -66,7 +68,7 @@ namespace ft
 			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
 			void cmd_kick(ClientMessage const& cmessage);
-			// void cmd_mode(ClientMessage msg);
+			void cmd_mode(ClientMessage const& cmessage);
 			// void cmd_names(ClientMessage msg);
 			void cmd_nick(ClientMessage const& cmessage);
 			void cmd_oper(ClientMessage const& cmessage);
@@ -82,10 +84,6 @@ namespace ft
 		private:
 			Protocol(Protocol const& x);
 			Protocol& operator=(Protocol const& x);
-
-			/*
-			bool _is_valid_mode(std::string const& str, std::string const& modes) const;
-			*/
 
 			Server& _server;
 			ServerReplies _replies;

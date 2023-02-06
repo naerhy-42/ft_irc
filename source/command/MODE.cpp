@@ -1,25 +1,41 @@
-#include "../../include/Protocol.hpp"
-#include "../../include/Server.hpp"
+#include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
-	void Protocol::cmd_mode(Message msg)
+	void Protocol::cmd_mode(ClientMessage const& cmessage)
 	{
-		Client& client = _get_client_from_socket(msg.get_socket());
-		std::vector<std::string> parameters = msg.get_parameters();
-		std::string reply;
+		Client* client = cmessage.get_client();
+		std::vector<std::string> const& parameters = cmessage.get_parameters();
 
-		if (!_is_client_connected(client))
+		if (!is_client_connected(client))
 		{
-			reply = err_notregistered(client.get_nickname());
-			add_to_queue(client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client->get_nickname()));
+			ignore_socket(client->get_socket());
 		}
 		else if (parameters.size() < 1)
+			send_message_to_client(client, _replies.err_needmoreparams(client->get_nickname(), "MODE"));
+		else if (!is_channel_name(parameters[0]))
 		{
-			reply = err_needmoreparams(client.get_nickname(), "MODE");
-			add_to_queue(client, reply, 0);
+			if (client->get_nickname() != parameters[0])
+				send_message_to_client(client, _replies.err_usersdontmatch(client->get_nickname()));
+			else if (parameters.size() == 1)
+				send_message_to_client(client, _replies.rpl_umodeis(client->get_nickname(),
+						client->get_modes_obj().get_modes_str()));
+			else if (!is_valid_mode(parameters[1], 0))
+				send_message_to_client(client, _replies.err_umodeunknownflag(client->get_nickname()));
+			else
+			{
+				std::string message = ":" + client->get_prefix() + " MODE " + parameters[0] + " " + parameters[1] + _IRC_ENDL;
+
+				// set mode - do nothing if has already mode
+				send_message_to_client(client, message);
+			}
 		}
-		else if (!parameters[0].find_first_of("#")) // if target is a channel
+		else
+		{
+		}
+		/*
 		{
 			if (_channel_exists(parameters[0]))
 			{
@@ -81,6 +97,6 @@ namespace ft
 							+ client.get_nickname() + " :" + parameters[1] + "\r\n", 1);
 				}
 			}
-		}
+		}*/
 	}
 }

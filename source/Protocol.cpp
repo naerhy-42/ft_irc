@@ -14,6 +14,7 @@ namespace ft
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
+		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
@@ -25,7 +26,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
-		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		*/
@@ -78,6 +78,14 @@ namespace ft
 			}
 		}
 		return _channels[pos];
+	}
+
+	std::string Protocol::get_enabled_modes(int id) const
+	{
+		if (!id)
+			return "io";
+		return "mtov";
+
 	}
 
 	bool Protocol::is_socket_ignored(int socket) const
@@ -143,6 +151,15 @@ namespace ft
 		if (name.size() > 1 && name[0] == '#')
 			return true;
 		return false;
+	}
+
+	bool Protocol::is_valid_mode(std::string const& mode, int id) const
+	{
+		std::string enabled_modes = get_enabled_modes(id);
+
+		if (mode.size() != 2 || mode.find_first_of("+-") || mode.find_first_of(enabled_modes) != 1)
+			return false;
+		return true;
 	}
 
 	void Protocol::set_password(std::string const& password) { _password = password; }
@@ -277,38 +294,6 @@ namespace ft
 		send_message_to_client(client, _replies.rpl_created(client->get_nickname(),
 				_server.get_creation_time()));
 		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
-				_server.get_hostname(), _server.get_version(), "io", "TEMP", "TEMP"));
+				_server.get_hostname(), _server.get_version(), "io", "mt", "ov"));
 	}
-
-	/*
-	// no data validation or parsing -> might be an issue
-	void Protocol::_get_server_operators(void)
-	{
-		std::ifstream env_file;
-		std::vector<std::string> words;
-		std::string line;
-		std::string word;
-
-		env_file.open(".env", std::ios::in);
-		// if (!env_file)
-			// error
-		while (std::getline(env_file, line))
-		{
-			std::stringstream ss(line);
-
-			while (std::getline(ss, word, '='))
-				words.push_back(word);
-		}
-		env_file.close();
-		for (size_t i = 0; i < words.size(); i += 2)
-			_server_ops.insert(std::make_pair(words[i], words[i + 1]));
-	}
-
-	bool Protocol::_is_valid_mode(std::string const& str, std::string const& modes) const
-	{
-		if (str.size() != 2 || str.find_first_of("+-") != 0 || str.find_first_of(modes) != 1)
-			return false;
-		return true;
-	}
-	*/
 }
