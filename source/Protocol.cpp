@@ -23,11 +23,11 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("PRIVMSG", &Protocol::cmd_privmsg));
 		_commands.insert(std::pair<std::string, fncts>("TOPIC", &Protocol::cmd_topic));
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
+		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
 		/*
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
-		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		*/
 	}
 

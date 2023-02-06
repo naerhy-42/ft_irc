@@ -79,7 +79,7 @@ namespace ft
 			void cmd_quit(ClientMessage const& cmessage);
 			void cmd_topic(ClientMessage const& cmessage);
 			void cmd_user(ClientMessage const& cmessage);
-			// void cmd_whois(ClientMessage msg);
+			void cmd_whois(ClientMessage const& cmessage);
 
 		private:
 			Protocol(Protocol const& x);

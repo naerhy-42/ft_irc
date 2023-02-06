@@ -112,6 +112,17 @@ namespace ft
 		// ERR_USERSDONTMATCH (502)
 		std::string err_usersdontmatch(std::string const& client_name) const;
 
+
+		// RPL_WHOISUSER (311)
+		std::string rpl_whoisuser(const std::string &client, const std::string &nick,
+								  const std::string &username, const std::string &host,
+								  const std::string &realname) const;
+
+		// RPL_WHOISCHANNELS (319)
+		std::string rpl_whoischannels(const std::string &client, const std::string &nick, const std::string &channels) const;
+
+		// RPL_ENDOFWHOIS (318)
+		std::string rpl_endofwhois(const std::string &client, const std::string &nick) const;
 			/*
 			// RPL_WELCOME (001)
 			std::string rpl_welcome(const std::string &client, const std::string &networkname,
@@ -157,21 +168,16 @@ namespace ft
 			// RPL_WHOISREGNICK (307)
 			std::string rpl_whoisregnick(const std::string &client, const std::string &nick);
 
-			// RPL_WHOISUSER (311)
-			std::string rpl_whoisuser(const std::string &client, const std::string &nick,
-									  const std::string &username, const std::string &host,
-									  const std::string &realname);
+
 
 			// RPL_WHOWASUSER (314)
 			std::string rpl_whowasuser(const std::string &client, const std::string &nick,
 									   const std::string &username, const std::string &host,
 									   const std::string &realname);
 
-			// RPL_ENDOFWHOIS (318)
-			std::string rpl_endofwhois(const std::string &client, const std::string &nick);
 
-			// RPL_WHOISCHANNELS (319)
-			std::string rpl_whoischannels(const std::string &client, const std::string &nick, const std::string &channels);
+
+
 
 			// RPL_LISTSTART (321)
 			std::string rpl_liststart(const std::string &client);

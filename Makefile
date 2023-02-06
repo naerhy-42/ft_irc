@@ -19,9 +19,9 @@ SRCS =	source/ft_irc.cpp \
 		source/command/PRIVMSG.cpp \
 		source/command/QUIT.cpp \
 		source/command/TOPIC.cpp \
+		source/command/WHOIS.cpp \
 		source/command/USER.cpp \
 		# source/command/NAMES.cpp \
-		source/command/WHOIS.cpp \
 		source/command/INVITE.cpp \
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)
