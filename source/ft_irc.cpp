@@ -10,10 +10,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 	if (!server.get_config_status() || server.init_socket() == EXIT_FAILURE)
-	{
-		std::cout << server.get_config_status() << std::endl;
 		return EXIT_FAILURE;
-	}
 	server.wait_connections();
 	return EXIT_SUCCESS;
 }
