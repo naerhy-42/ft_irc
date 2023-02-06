@@ -57,6 +57,13 @@ namespace ft
 		return _server_prefix + " 221 " + client_name + " " + modes + _endl;
 	}
 
+	// RPL_CHANNELMODEIS (324)
+	std::string ServerReplies::rpl_channelmodeis(std::string const& client_name,
+			std::string const& channel, std::string const& modes) const
+	{
+		return _server_prefix + " 324 " + client_name + " " + channel + " " + modes + _endl;
+	}
+
 	// RPL_NOTOPIC (331)
 	std::string ServerReplies::rpl_notopic(std::string const &client_name, std::string const &channel_name) const
 	{
@@ -185,6 +192,14 @@ namespace ft
 		std::string description = ":Password incorrect";
 
 		return _server_prefix + " 464 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_UNKNOWNMODE (472)
+	std::string ServerReplies::err_unknownmode(std::string const& client_name, char mode) const
+	{
+		std::string description = ":is unknown mode char to me";
+
+		return _server_prefix + " 472 " + client_name + " " + mode + " " + description + _endl;
 	}
 
 	// ERR_CHANOPRIVSNEEDED (482)

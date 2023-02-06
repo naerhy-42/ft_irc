@@ -27,76 +27,63 @@ namespace ft
 			else
 			{
 				std::string message = ":" + client->get_prefix() + " MODE " + parameters[0] + " " + parameters[1] + _IRC_ENDL;
+				Modes& modes = client->get_modes_obj();
 
-				// set mode - do nothing if has already mode
-				send_message_to_client(client, message);
+				if (parameters[1] != "+o" && ((parameters[1][0] == '+'
+						&& !modes.has_mode(parameters[1][1])) || (parameters[1][0] == '-'
+						&& modes.has_mode(parameters[1][1]))))
+				{
+					modes.set_mode(parameters[1][0], parameters[1][1]);
+					send_message_to_client(client, message);
+				}
 			}
 		}
 		else
 		{
-		}
-		/*
-		{
-			if (_channel_exists(parameters[0]))
+			if (!is_channel_active(parameters[0]))
+				send_message_to_client(client, _replies.err_nosuchchannel(client->get_nickname(), parameters[0]));
+			else if (parameters.size() == 1)
+				send_message_to_client(client, _replies.rpl_channelmodeis(client->get_nickname(),
+						parameters[0], get_channel_from_name(parameters[0]).get_modes_obj().get_modes_str()));
+			else if (!get_channel_from_name(parameters[0]).has_client_chanmode(client, 'o') && !client->get_modes_obj().has_mode('o'))
+				send_message_to_client(client, _replies.err_chanoprivsneeded(client->get_nickname(), parameters[0]));
+			else if (!is_valid_mode(parameters[1], 1))
+				send_message_to_client(client, _replies.err_unknownmode(client->get_nickname(), parameters[1][1]));
+			else
 			{
-				Channel* channel = _get_channel_from_name(parameters[0]);
-				if (parameters.size() == 1)
+				std::string message;
+				Channel& channel = get_channel_from_name(parameters[0]);
+				Modes& modes = channel.get_modes_obj();
+
+				if (parameters.size() == 2)
 				{
-					reply = rpl_channelmodeis(client.get_nickname(), channel->get_name(), channel->get_modes_str());
-					add_to_queue(client, reply, 0);
-				}
-				else if (!channel->is_operator(&client))
-				{
-					reply = err_chanoprivsneeded(client.get_nickname(), channel->get_name());
-					add_to_queue(client, reply, 0);
-				}
-				else if (!_is_valid_mode(parameters[1], "mt"))
-				{
-					reply = err_unknownmode(client.get_nickname(), parameters[1][1]);
-					add_to_queue(client, reply, 0);
+					message = ":" + client->get_prefix() + " MODE " + parameters[0] + " "
+							+ parameters[1] + _IRC_ENDL;
+
+					if ((parameters[1][0] == '+' && !modes.has_mode(parameters[1][1]))
+							|| (parameters[1][0] == '-' && modes.has_mode(parameters[1][1])))
+					{
+						modes.set_mode(parameters[1][0], parameters[1][1]);
+						send_message_to_client(client, message);
+						send_message_to_channel(channel, message, client);
+					}
 				}
 				else
 				{
-					channel->set_mode(parameters[1][0], parameters[1][1]);
-					add_to_queue(client, ":" + client.get_nickname() + " MODE "
-							+ client.get_nickname() + " :" + parameters[1] + "\r\n", 1);
-					// send message to all users in channel
-					// send message to all users in channel
+					Client* target = get_client_from_name(parameters[2]);
+
+					message = ":" + client->get_prefix() + " MODE " + parameters[0] + " "
+							+ parameters[1] + " " + parameters[2] + _IRC_ENDL;
+
+					if ((parameters[1][0] == '+' && !channel.has_client_chanmode(target, parameters[1][1]))
+							|| (parameters[1][0] == '-' && channel.has_client_chanmode(target, parameters[1][1])))
+					{
+						channel.set_client_chanmode(target, parameters[1][0], parameters[1][1]);
+						send_message_to_client(client, message);
+						send_message_to_channel(channel, message, client);
+					}
 				}
-			}
-			else
-			{
-				reply = err_nosuchchannel(client.get_nickname(), parameters[0]);
-				add_to_queue(client, reply, 0);
 			}
 		}
-		else
-		{
-			if (client.get_nickname() != parameters[0])
-			{
-				reply = err_usersdontmatch(client.get_nickname());
-				add_to_queue(client, reply, 0);
-			}
-			else if (parameters.size() == 1)
-			{
-				reply = rpl_umodeis(client.get_nickname(), client.get_modes_str());
-				add_to_queue(client, reply, 1);
-			}
-			else if (!_is_valid_mode(parameters[1], "oi"))
-			{
-				reply = err_umodeunknownflag(client.get_nickname());
-				add_to_queue(client, reply, 0);
-			}
-			else
-			{
-				if (parameters[1] != "+o" && ((parameters[1][0] == '+' && !client.has_mode(parameters[1][1]))
-						|| (parameters[1][0] == '-' && client.has_mode(parameters[1][1]))))
-				{
-					client.set_mode(parameters[1][0], parameters[1][1]);
-					add_to_queue(client, ":" + client.get_nickname() + " MODE "
-							+ client.get_nickname() + " :" + parameters[1] + "\r\n", 1);
-				}
-			}
-		}*/
 	}
 }

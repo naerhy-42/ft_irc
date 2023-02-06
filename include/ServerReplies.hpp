@@ -36,6 +36,9 @@ namespace ft
 		// RPL_UMODEIS (221)
 		std::string rpl_umodeis(std::string const& client_name, std::string const& modes) const;
 
+		// RPL_CHANNELMODEIS (324)
+		std::string rpl_channelmodeis(std::string const& client_name, std::string const& channel, std::string const& modes) const;
+
 		// RPL_NOTOPIC (331)
 		std::string rpl_notopic(std::string const &client_name, std::string const &channel_name) const;
 
@@ -84,6 +87,9 @@ namespace ft
 
 		// ERR_PASSWDMISMATCH (464)
 		std::string err_passwdmismatch(std::string const &client_name) const;
+
+		// ERR_UNKNOWNMODE (472)
+		std::string err_unknownmode(std::string const& client_name, char mode) const;
 
 		// ERR_CHANOPRIVSNEEDED (482)
 		std::string err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const;
