@@ -22,7 +22,7 @@ namespace ft
 		{
 			Channel& channel = get_channel_from_name(parameters[0]);
 
-			std::string message = ":" + client->get_prefix() + " PART " + parameters[0] + _IRC_ENDL;
+			std::string message = ":" + client->get_prefix() + " PART " + parameters[0] + " :" + cmessage.get_remainder() + _IRC_ENDL;
 			send_message_to_client(client, message);
 			send_message_to_channel(channel, message, client);
 			channel.remove_client(client);

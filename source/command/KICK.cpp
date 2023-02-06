@@ -31,7 +31,7 @@ namespace ft
 						parameters[1], parameters[0]));
 			else
 			{
-				std::string message = ":" + client->get_prefix() + " KICK " + parameters[0] + " " + parameters[1] + _IRC_ENDL;
+				std::string message = ":" + client->get_prefix() + " KICK " + parameters[0] + " " + parameters[1] + " :" + cmessage.get_remainder() + _IRC_ENDL;
 
 				send_message_to_client(client, message);
 				send_message_to_channel(channel, message, client);
