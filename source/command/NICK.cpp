@@ -25,11 +25,11 @@ namespace ft
 				send_message_to_client(client, _replies.err_nicknameinuse(client->get_nickname(), nickname));
 			else
 			{
+				std::string message = ":" + client->get_prefix() + " NICK " + nickname + _IRC_ENDL;
+
 				client->set_nickname(nickname);
 				if (is_client_connected(client))
 				{
-					std::string message = ":" + client->get_prefix() + " NICK " + nickname + _IRC_ENDL;
-
 					send_message_to_client(client, message);
 					send_message_to_client_channels(client, message);
 				}
