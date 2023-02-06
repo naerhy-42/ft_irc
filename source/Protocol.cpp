@@ -208,6 +208,25 @@ namespace ft
 		}
 	}
 
+	void Protocol::remove_client_from_channels(Client const* client)
+	{
+		std::vector<Channel>::iterator it;
+		std::vector<std::vector<Channel>::iterator> channels_to_delete;
+		std::vector<std::vector<Channel>::iterator>::iterator itt;
+
+		for (it = _channels.begin(); it != _channels.end(); it++)
+		{
+			if ((*it).has_client(client))
+			{
+				(*it).remove_client(client);
+				if (!(*it).get_clients().size())
+					channels_to_delete.push_back(it);
+			}
+		}
+		for (itt = channels_to_delete.begin(); itt != channels_to_delete.end(); itt++)
+			_channels.erase(*itt);
+	}
+
 	void Protocol::ignore_socket(int socket)
 	{
 		if (!is_socket_ignored(socket))
