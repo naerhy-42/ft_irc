@@ -25,7 +25,7 @@ namespace ft
 
 	std::string const& Server::get_creation_time(void) const { return _creation_time; }
 
-	int Server::_get_max_fd(void) const
+	int Server::get_max_fd(void) const
 	{
 		int max_fd;
 
@@ -185,7 +185,7 @@ namespace ft
 	        FD_SET(_socket, &read_fds);
 	        for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
 	            FD_SET(_fds[i], &read_fds);
-	        int result = select(_get_max_fd() + 1, &read_fds, NULL, NULL, NULL);
+	        int result = select(get_max_fd() + 1, &read_fds, NULL, NULL, NULL);
 	        if (result == -1)
 	        {
 	            perror("Error waiting for activity on sockets");
