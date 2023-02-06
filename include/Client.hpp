@@ -15,9 +15,6 @@ namespace ft
 		Client(int socket);
 		~Client(void);
 
-		bool operator==(Client const& rhs);
-		bool operator!=(Client const& rhs);
-
 		int get_socket(void) const;
 		std::string const& get_nickname(void) const;
 		std::string const& get_username(void) const;
@@ -40,8 +37,8 @@ namespace ft
 		void set_registration_status(bool status);
 
 	private:
-		// Client(Client const& x);
-		// Client& operator=(Client const& x);
+		Client(Client const& x);
+		Client& operator=(Client const& x);
 
 		int _socket;
 		std::string _nickname;

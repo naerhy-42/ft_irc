@@ -53,8 +53,8 @@ namespace ft
 			void close_socket_connection(int socket);
 
 		private:
-			// Server(Server const& x);
-			// Server& operator=(Server const& x);
+			Server(Server const& x);
+			Server& operator=(Server const& x);
 
 			static int const _buffer_size;
 			uint16_t _port;

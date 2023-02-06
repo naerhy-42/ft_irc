@@ -2,20 +2,32 @@
 
 namespace ft
 {
-    Channel::Channel(std::string const& name, Client const* creator)
-			: _name(name), _topic(""), _author("")
+    Channel::Channel(std::string const& name, Client const* creator) : _name(name)
     {
 		add_client(creator);
 		set_client_chanmode(creator, '+', 'o');
     }
+
+	Channel::Channel(Channel const& x)
+			: _name(x._name), _topic(x._topic), _clients(x._clients), _modes(x._modes) {}
+
+	Channel& Channel::operator=(Channel const& x)
+	{
+		if (this != &x)
+		{
+			_name = x._name;
+			_topic = x._topic;
+			_clients = x._clients;
+			_modes = x._modes;
+		}
+		return *this;
+	}
 
     Channel::~Channel(void) {}
 
     std::string const& Channel::get_name(void) const { return _name; }
 
 	std::string const& Channel::get_topic(void) const { return _topic; }
-
-	std::string const& Channel::get_author(void) const { return _author; }
 
     std::map<Client const*, Modes> const& Channel::get_clients(void) const { return _clients; }
 
@@ -36,8 +48,6 @@ namespace ft
 	}
 
     void Channel::set_topic(std::string const& topic) { _topic = topic; }
-
-    void Channel::set_author(std::string const& author) { _author = author; }
 
 	void Channel::set_client_chanmode(Client const* client, char sign, char mode)
 	{

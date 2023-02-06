@@ -317,11 +317,11 @@ namespace ft
 			std::string rpl_endofnames(const std::string &client, const std::string &channel);
 			*/
 
-			private :
-			// ServerReplies(ServerReplies const& x);
-			// ServerReplies& operator=(ServerReplies const& x);
+	private:
+		ServerReplies(ServerReplies const& x);
+		ServerReplies& operator=(ServerReplies const& x);
 
-			std::string _server_prefix;
+		std::string _server_prefix;
 		std::string _endl;
 	};
 }

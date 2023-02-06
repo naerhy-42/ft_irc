@@ -22,8 +22,8 @@ namespace ft
 			std::string const& get_remainder(void) const;
 
 		private:
-			// message(message const& x);
-			// message& operator=(message const& x);
+			ClientMessage(ClientMessage const& x);
+			ClientMessage& operator=(ClientMessage const& x);
 
 			Client* _client;
 			std::string _command;
