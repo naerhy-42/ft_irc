@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <netinet/in.h> // for ipv6
+#include <netinet/in.h>
 
 #include <sstream>
 #include <vector>

@@ -104,44 +104,24 @@ namespace ft
 	{
 	    sockaddr_storage_st client_addr;
 	    socklen_t addr_size = sizeof(client_addr);
-
-	    // Set up the file descriptor set for the select function
 	    fd_set read_fds;
 
-	    // Set up the timeout for the select function
-	    timeval timeout;
-	    timeout.tv_sec = 5; // Wait for up to 5 seconds
-	    timeout.tv_usec = 0;
-
-	    // Enter an infinite loop to handle incoming connections
 	    while (true)
 	    {
-	        // Set up the file descriptor set for the select function
 	        FD_ZERO(&read_fds);
 	        FD_SET(_socket, &read_fds);
 	        for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
-	        {
 	            FD_SET(_fds[i], &read_fds);
-	        }
-
-	        // Wait for activity on any of the file descriptors
-	        int result = select(_get_max_fd()+1, &read_fds, NULL, NULL, &timeout);
+	        int result = select(_get_max_fd() + 1, &read_fds, NULL, NULL, NULL);
 	        if (result == -1)
 	        {
 	            perror("Error waiting for activity on sockets");
 	            continue;
 	        }
-	        else if (result == 0)
-	        {
-	            // Timeout occurred
-	            continue;
-	        }
 	        else
 	        {
-	            // Activity occurred on one or more sockets
 	            if (FD_ISSET(_socket, &read_fds))
 	            {
-	                // Accept the new connection
 	                int client_fd = accept(_socket, reinterpret_cast<sockaddr_st*>(&client_addr), &addr_size);
 	                if (client_fd == -1)
 	                {
@@ -149,20 +129,16 @@ namespace ft
 						sleep(3);
 	                    continue;
 	                }
-
-	                // Add the client file descriptor to the set of file descriptors
 	                _fds.push_back(client_fd);
 					_protocol.add_client(client_fd);
 	            }
 	            else
 	            {
-	                // Activity occurred on one of the client sockets
 					for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
 					{
 					    int client_fd = _fds[i];
 					    if (FD_ISSET(client_fd, &read_fds))
 					    {
-					        // Read data from the client socket
 					        char buffer[_buffer_size];
 					        memset(buffer, 0, _buffer_size); // Clear the buffer
 					        ssize_t bytes_received = recv(client_fd, buffer, _buffer_size - 1, 0);
@@ -174,8 +150,6 @@ namespace ft
 							}
 					        else
 					        {
-					            // Data was received from the client
-					            // Process the data
 								std::string str_buffer(buffer, bytes_received);
 								_protocol.parse_client_input(client_fd, str_buffer);
 					        }
