@@ -4,15 +4,18 @@ namespace ft
 {
 	int const Server::_buffer_size = 512;
 
-	Server::Server(void) : _hostname("localhost"), _protocol(*this, _hostname)
+	Server::Server(void) : _config_status(false), _hostname("localhost"), _protocol(*this, _hostname)
 	{
 		time_t now = std::time(0);
 		std::vector<std::string> operators;
 
 		_creation_time = ctime(&now);
-		parse_config_file(operators);
+		if (parse_config_file(operators))
+			_config_status = true;
 		_protocol.set_global_operators(operators);
 	}
+
+	Server::~Server(void) {}
 
 	bool Server::validate_args(std::string port, std::string password)
 	{
@@ -193,13 +196,19 @@ namespace ft
 		return max_fd;
 	}
 
-	void Server::parse_config_file(std::vector<std::string>& operators)
+	bool Server::get_config_status(void) const { return _config_status; }
+
+	int Server::parse_config_file(std::vector<std::string>& operators)
 	{
 		std::ifstream file;
 		std::string line;
 
 		file.open(".server_conf", std::ios::in);
-		// check error return
+		if (!file.is_open())
+		{
+			std::cout << "The file doesn't exist, create one" << std::endl;
+			return 0;
+		}
 		while (getline(file, line))
 		{
 			if (!line.empty())
@@ -210,8 +219,11 @@ namespace ft
 
 				while (ss >> word)
 					words.push_back(word);
-				// check if words is empty = error
-				// add more rules if we add more options in the file in the future
+				if (words.empty())
+				{
+					std::cout << "Config file is not valid" << std::endl;
+					return 0;
+				}
 				if ((words[0] == "operator" && words.size() == 3))
 				{
 					operators.push_back(words[1]);
@@ -221,11 +233,17 @@ namespace ft
 					_version = words[1];
 				else
 				{
-					// error
+					std::cout << "Unknown line in config file, remove it" << std::endl;
+					return 0;
 				}
 			}
 		}
 		file.close();
-		// check if operator is empty or a config line was missing = error
+		if (operators.empty() || _version.empty())
+		{
+			std::cout << "Operator or version line is missing" << std::endl;
+			return 0;
+		}
+		return 1;
 	}
 }

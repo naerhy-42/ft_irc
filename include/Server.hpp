@@ -37,9 +37,7 @@ namespace ft
 
 		public:
 			Server(void);
-			// Server(Server const& x);
-			// Server& operator=(Server const& x);
-			// ~Server(void);
+			~Server(void);
 
 			bool validate_args(std::string port, std::string password);
 			int init_socket(void);
@@ -50,14 +48,20 @@ namespace ft
 			std::string const& get_version(void) const;
 			std::string const& get_creation_time(void) const;
 
-			void parse_config_file(std::vector<std::string>& op_lines);
+			bool get_config_status(void) const;
+
+			int parse_config_file(std::vector<std::string>& op_lines);
 
 		private:
+			// Server(Server const& x);
+			// Server& operator=(Server const& x);
+
 			int _get_max_fd(void) const;
 
 			static int const _buffer_size;
 			uint16_t _port;
 			int _socket;
+			bool _config_status;
 			std::vector<int> _fds;
 			fd_set _rfds;
 			std::string _hostname;
