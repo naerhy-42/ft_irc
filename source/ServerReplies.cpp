@@ -81,6 +81,29 @@ namespace ft
 		return _server_prefix + " 332 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
+	// RPL_NAMREPLY (353)
+	std::string ServerReplies::rpl_namreply(std::string const& client_name, Channel const& channel) const
+	{
+		std::string names_msg = ":" + _server_prefix + " 353 " + client_name + " = " + channel.get_name() + " :";
+		std::map<Client const*, Modes>::const_iterator cit;
+
+		for (cit = channel.get_clients().begin(); cit != channel.get_clients().end(); cit++)
+		{
+			if (channel.has_client_chanmode(cit->first, 'o'))
+				names_msg += "@";
+			names_msg += cit->first->get_nickname() + " ";
+		}
+		names_msg.erase(names_msg.size() - 1, 1);
+		names_msg += _endl;
+		return names_msg;
+	}
+
+	// RPL_ENDOFNAMES (366)
+	std::string ServerReplies::rpl_endofnames(const std::string &client_name, const std::string &channel_name) const
+	{
+		return _server_prefix + " 366 " + client_name + " " + channel_name + " :End of /NAMES list" + _endl;
+	}
+
 	// RPL_YOUREOPER (381)
 	std::string ServerReplies::rpl_youreoper(std::string const& client_name) const
 	{
