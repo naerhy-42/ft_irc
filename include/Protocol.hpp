@@ -60,7 +60,7 @@ namespace ft
 
 			void ignore_socket(int socket);
 
-			void parse_client_input(int socket, std::string& message);
+			void parse_client_input(int socket, std::string message);
 			void handle_message(ClientMessage const& cmessage);
 
 			void send_message_to_client(Client const* client, std::string const& message);

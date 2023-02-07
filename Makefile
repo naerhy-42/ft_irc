@@ -8,6 +8,7 @@ SRCS =	source/ft_irc.cpp \
 		source/Protocol.cpp \
 		source/Server.cpp \
 		source/ServerReplies.cpp \
+		source/command/DIE.cpp \
 		source/command/JOIN.cpp \
 		source/command/KICK.cpp \
 		source/command/MODE.cpp \
@@ -21,7 +22,6 @@ SRCS =	source/ft_irc.cpp \
 		source/command/TOPIC.cpp \
 		source/command/WHOIS.cpp \
 		source/command/USER.cpp \
-		source/command/DIE.cpp \
 		# source/command/NAMES.cpp \
 		source/command/INVITE.cpp \
 

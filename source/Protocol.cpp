@@ -259,7 +259,7 @@ namespace ft
 			_ignored_sockets.push_back(socket);
 	}
 
-	void Protocol::parse_client_input(int socket, std::string &message)
+	void Protocol::parse_client_input(int socket, std::string message)
 	{
 		std::string line;
 		size_t pos;

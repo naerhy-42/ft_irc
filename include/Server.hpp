@@ -50,6 +50,7 @@ namespace ft
 
 			int init_socket(void);
 			void wait_connections(void);
+			void check_received_input(std::map<int, std::string>& recvstr);
 			void close_socket_connection(int socket);
 
 		private:

@@ -179,19 +179,17 @@ namespace ft
 	    sockaddr_storage_st client_addr;
 	    socklen_t addr_size = sizeof(client_addr);
 	    fd_set read_fds;
+		std::map<int, std::string> recvstr;
 
 	    while (_protocol.get_server_status())
 	    {
 	        FD_ZERO(&read_fds);
 	        FD_SET(_socket, &read_fds);
-	        for (std::vector<int>::size_type i = 0; i < _fds.size(); i++)
-	            FD_SET(_fds[i], &read_fds);
+			for (std::vector<int>::const_iterator cit = _fds.begin(); cit != _fds.end(); cit++)
+	            FD_SET(*cit, &read_fds);
 	        int result = select(get_max_fd() + 1, &read_fds, NULL, NULL, NULL);
 	        if (result == -1)
-	        {
-	            perror("Error waiting for activity on sockets");
 	            continue;
-	        }
 	        else
 	        {
 	            if (FD_ISSET(_socket, &read_fds))
@@ -199,7 +197,6 @@ namespace ft
 	                int client_fd = accept(_socket, reinterpret_cast<sockaddr_st*>(&client_addr), &addr_size);
 	                if (client_fd == -1)
 	                {
-	                    perror("Error accepting connection");
 						sleep(3);
 	                    continue;
 	                }
@@ -216,18 +213,42 @@ namespace ft
 					        char buffer[_buffer_size];
 					        memset(buffer, 0, _buffer_size); // Clear the buffer
 					        ssize_t bytes_received = recv(client_fd, buffer, _buffer_size - 1, 0);
+							std::cout << "bytes = " << bytes_received << std::endl;
 					        if (!bytes_received || (bytes_received == -1 && errno == EWOULDBLOCK))
 								close_socket_connection(client_fd);
 					        else
 					        {
 								std::string str_buffer(buffer, bytes_received);
-								_protocol.parse_client_input(client_fd, str_buffer);
+
+								if (recvstr.count(client_fd))
+									recvstr.find(client_fd)->second += str_buffer;
+								else
+									recvstr.insert(std::pair<int, std::string>(client_fd, str_buffer));
 					        }
 					    }
 					}
+					check_received_input(recvstr);
 	            }
 	        }
 		}
+	}
+
+	void Server::check_received_input(std::map<int, std::string>& recvstr)
+	{
+		std::map<int, std::string>::iterator it;
+		std::vector<std::map<int, std::string>::iterator> str_to_delete;
+		std::vector<std::map<int, std::string>::iterator>::iterator itt;
+
+		for (it = recvstr.begin(); it != recvstr.end(); it++)
+		{
+			if (it->second.find_last_of("\r\n") == it->second.size() - 1)
+			{
+				_protocol.parse_client_input(it->first, it->second);
+				str_to_delete.push_back(it);
+			}
+		}
+		for (itt = str_to_delete.begin(); itt != str_to_delete.end(); itt++)
+			recvstr.erase(*itt);
 	}
 
 	void Server::close_socket_connection(int socket)
