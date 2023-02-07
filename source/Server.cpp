@@ -10,6 +10,7 @@ namespace ft
 		std::vector<std::string> operators;
 
 		_creation_time = ctime(&now);
+		_creation_time.erase(_creation_time.size() - 1);
 		if (parse_config_file(operators))
 			_config_status = true;
 		_protocol.set_global_operators(operators);

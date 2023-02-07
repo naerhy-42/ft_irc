@@ -26,13 +26,13 @@ namespace ft
 			send_message_to_client(client, _replies.rpl_whoisuser(client->get_nickname(),
 					target->get_nickname(), target->get_username(), target->get_hostname(),
 					target->get_real_name()));
-			channels_list = get_user_channels_list(client);
+			channels_list = get_user_channels_list(target);
 			if (!channels_list.empty())
 				send_message_to_client(client, _replies.rpl_whoischannels(client->get_nickname(),
 						target->get_nickname(), channels_list));
 			send_message_to_client(client, _replies.rpl_whoisserver(client->get_nickname(),
 					target->get_nickname()));
-			if (client->is_global_operator())
+			if (target->is_global_operator())
 				send_message_to_client(client, _replies.rpl_whoisoperator(client->get_nickname(),
 						target->get_nickname()));
 			send_message_to_client(client, _replies.rpl_endofwhois(client->get_nickname(),

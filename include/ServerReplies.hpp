@@ -120,6 +120,9 @@ namespace ft
 		// ERR_UNKNOWNMODE (472)
 		std::string err_unknownmode(std::string const& client_name, char mode) const;
 
+		// ERR_NOPRIVILEGES (481)
+		std::string err_noprivileges(std::string const& client_name) const;
+
 		// ERR_CHANOPRIVSNEEDED (482)
 		std::string err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const;
 

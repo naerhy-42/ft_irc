@@ -1,4 +1,4 @@
-#include "../../include/Protocol.hpp"
+#include "Protocol.hpp"
 
 namespace ft
 {
@@ -11,13 +11,9 @@ namespace ft
             send_message_to_client(client, _replies.err_notregistered(client->get_nickname()));
             ignore_socket(client->get_socket());
         }
-        else if (client->is_global_operator())
-        {
-            _SERVER_RUNNING = false;
-        }
+        else if (!client->is_global_operator())
+			send_message_to_client(client, _replies.err_noprivileges(client->get_nickname()));
         else
-        {
-			send_message_to_client(client, _replies.err_nooperhost(client->get_nickname()));
-        }
+            _SERVER_RUNNING = false;
     }
 }

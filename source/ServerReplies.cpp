@@ -271,6 +271,14 @@ namespace ft
 		return _server_prefix + " 472 " + client_name + " " + mode + " " + description + _endl;
 	}
 
+	// ERR_NOPRIVILEGES (481)
+	std::string ServerReplies::err_noprivileges(std::string const& client_name) const
+	{
+		std::string description = ":Permission denied - You're not an IRC operator";
+
+		return _server_prefix + " 481 " + client_name + " " + description + _endl;
+	}
+
 	// ERR_CHANOPRIVSNEEDED (482)
 	std::string ServerReplies::err_chanoprivsneeded(std::string const &client_name, std::string const &channel_name) const
 	{
