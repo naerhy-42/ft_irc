@@ -24,7 +24,7 @@ namespace ft
 
 			if (!channel.has_client(client))
 				send_message_to_client(client, _replies.err_notonchannel(client->get_nickname(), parameters[0]));
-			else if (!channel.has_client_chanmode(client, 'o'))
+			else if (!channel.has_client_chanmode(client, 'o') && !client->is_global_operator())
 				send_message_to_client(client, _replies.err_chanoprivsneeded(client->get_nickname(), parameters[0]));
 			else if (!channel.has_client(get_client_from_name(parameters[1])))
 				send_message_to_client(client, _replies.err_usernotinchannel(client->get_nickname(),

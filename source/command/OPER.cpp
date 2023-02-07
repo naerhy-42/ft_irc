@@ -21,7 +21,7 @@ namespace ft
 			send_message_to_client(client, _replies.err_passwdmismatch(client->get_nickname()));
 		else
 		{
-			if (!client->get_modes_obj().has_mode('o'))
+			if (!client->is_global_operator())
 			{
 				send_message_to_client(client, _replies.rpl_youreoper(client->get_nickname()));
 				client->get_modes_obj().set_mode('+', 'o');
