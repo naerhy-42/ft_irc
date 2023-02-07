@@ -29,7 +29,7 @@ namespace ft
 				else
 					send_message_to_client(client, _replies.rpl_topic(client->get_nickname(), parameters[0], channel.get_topic()));
 			}
-			else if (channel.get_modes_obj().has_mode('t') && !channel.has_client_chanmode(client, 'o'))
+			else if (channel.is_topic_restricted() && !channel.has_client_chanmode(client, 'o'))
 				send_message_to_client(client, _replies.err_chanoprivsneeded(client->get_nickname(), parameters[0]));
 			else
 			{
