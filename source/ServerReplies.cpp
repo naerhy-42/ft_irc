@@ -57,6 +57,27 @@ namespace ft
 		return _server_prefix + " 221 " + client_name + " " + modes + _endl;
 	}
 
+	// RPL_WHOISUSER (311)
+	std::string ServerReplies::rpl_whoisuser(const std::string &client, const std::string &nick,
+							  const std::string &username, const std::string &host,
+							  const std::string &realname) const
+	{
+		return _server_prefix + " 311 " + client + " " + nick + " " + username + " " + host + " * :" + realname + _endl;
+	}
+
+	// RPL_ENDOFWHOIS (318)
+	std::string ServerReplies::rpl_endofwhois(const std::string &client, const std::string &nick) const
+	{
+		return _server_prefix + " 318 " + client + " " + nick + " :End of /WHOIS list" + _endl;
+	}
+
+	// RPL_WHOISCHANNELS (319)
+	std::string ServerReplies::rpl_whoischannels(const std::string &client, const std::string &nick,
+			const std::string &channels_list) const
+	{
+		return _server_prefix + " 319 " + client + " " + nick + " :" + channels_list + _endl;
+	}
+
 	// RPL_CHANNELMODEIS (324)
 	std::string ServerReplies::rpl_channelmodeis(std::string const& client_name,
 			std::string const& channel, std::string const& modes) const
@@ -265,25 +286,6 @@ namespace ft
 		return _server_prefix + " 502 " + client_name + " " + description + _endl;
 	}
 
-	// RPL_WHOISUSER (311)
-	std::string ServerReplies::rpl_whoisuser(const std::string &client, const std::string &nick,
-							  const std::string &username, const std::string &host,
-							  const std::string &realname) const
-	{
-		return _server_prefix + " 311 " + client + " " + nick + " " + username + " " + host + " * :" + realname + _endl;
-	}
-
-	// RPL_WHOISCHANNELS (319)
-	std::string ServerReplies::rpl_whoischannels(const std::string &client, const std::string &nick, const std::string &channels) const
-	{
-		return _server_prefix + " 319 " + client + " " + nick + " :" + channels + _endl;
-	}
-
-	// RPL_ENDOFWHOIS (318)
-	std::string ServerReplies::rpl_endofwhois(const std::string &client, const std::string &nick) const
-	{
-		return _server_prefix + " 318 " + client + " " + nick + " :End of /WHOIS list" + _endl;
-	}
 	/*
 	// RPL_WELCOME (001)
 	std::string rpl_welcome(const std::string &client, const std::string &networkname,

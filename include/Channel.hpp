@@ -20,6 +20,7 @@ namespace ft
 
         std::string const& get_name(void) const;
         std::string const& get_topic(void) const;
+		std::string get_client_prefix(Client const* client) const;
         std::map<Client const*, Modes> const& get_clients(void) const;
 		Modes& get_modes_obj(void);
 		Modes const& get_modes_obj(void) const;

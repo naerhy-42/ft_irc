@@ -88,6 +88,24 @@ namespace ft
 
 	}
 
+	std::string Protocol::get_user_channels_list(Client const* client) const
+	{
+		std::string user_channels_str;
+		std::vector<Channel>::const_iterator cit;
+
+		for (cit = _channels.begin(); cit != _channels.end(); cit++)
+		{
+			if ((*cit).has_client(client))
+			{
+				if (user_channels_str.empty())
+					user_channels_str += (*cit).get_client_prefix(client) + (*cit).get_name();
+				else
+					user_channels_str += " " + (*cit).get_client_prefix(client) + (*cit).get_name();
+			}
+		}
+		return user_channels_str;
+	}
+
 	bool Protocol::is_socket_ignored(int socket) const
 	{
 		std::vector<int>::const_iterator cit;

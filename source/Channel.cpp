@@ -30,6 +30,16 @@ namespace ft
 
 	std::string const& Channel::get_topic(void) const { return _topic; }
 
+	std::string Channel::get_client_prefix(Client const* client) const
+	{
+		if (has_client_chanmode(client, 'o'))
+			return "@";
+		else if (has_client_chanmode(client, 'v'))
+			return "+";
+		else
+			return "";
+	}
+
     std::map<Client const*, Modes> const& Channel::get_clients(void) const { return _clients; }
 
 	Modes& Channel::get_modes_obj(void) { return _modes; }

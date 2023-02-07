@@ -36,6 +36,7 @@ namespace ft
 			Client* get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
 			std::string get_enabled_modes(int id) const;
+			std::string get_user_channels_list(Client const* client) const;
 
 			bool is_socket_ignored(int socket) const;
 			bool is_client_connected(Client const* client) const;

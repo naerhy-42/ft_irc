@@ -45,7 +45,7 @@ namespace ft
 			else if (parameters.size() == 1)
 				send_message_to_client(client, _replies.rpl_channelmodeis(client->get_nickname(),
 						parameters[0], get_channel_from_name(parameters[0]).get_modes_obj().get_modes_str()));
-			else if (!get_channel_from_name(parameters[0]).has_client_chanmode(client, 'o') && !client->get_modes_obj().has_mode('o'))
+			else if (!get_channel_from_name(parameters[0]).has_client_chanmode(client, 'o') && !client->is_global_operator())
 				send_message_to_client(client, _replies.err_chanoprivsneeded(client->get_nickname(), parameters[0]));
 			else if (!is_valid_mode(parameters[1], 1))
 				send_message_to_client(client, _replies.err_unknownmode(client->get_nickname(), parameters[1][1]));
