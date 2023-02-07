@@ -15,7 +15,8 @@ namespace ft
 			std::string message = ":" + client->get_prefix() + " QUIT :Client Quit" + _IRC_ENDL;
 
 			send_message_to_client_channels(client, message);
-			remove_client_from_channels(client);
+			ignore_socket(client->get_socket());
+			_server.close_socket_connection(client->get_socket());
 		}
     }
 }

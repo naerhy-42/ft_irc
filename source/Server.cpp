@@ -231,6 +231,7 @@ namespace ft
 
 	void Server::close_socket_connection(int socket)
 	{
+		_protocol.remove_client_from_channels(_protocol.get_client_from_socket(socket));
 		for (std::vector<int>::iterator it = _fds.begin(); it != _fds.end(); ++it)
 		{
 			if (*it == socket)
