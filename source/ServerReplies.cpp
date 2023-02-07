@@ -145,6 +145,14 @@ namespace ft
 		return _server_prefix + " 409 " + client_name + " " + description + _endl;
 	}
 
+	// ERR_NOTEXTTOSEND (412)
+	std::string ServerReplies::err_notexttosend(std::string const& client_name) const
+	{
+		std::string description = ":No text to send";
+
+		return _server_prefix + " 412 " + client_name + " " + description + _endl;
+	}
+
 	// ERR_NONICKNAMEGIVEN (431)
 	std::string ServerReplies::err_nonicknamegiven(std::string const &client_name) const
 	{

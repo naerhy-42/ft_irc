@@ -26,6 +26,10 @@ namespace ft
 		bool get_nickname_status(void) const;
 		bool get_registration_status(void) const;
 		Modes& get_modes_obj(void);
+		Modes const& get_modes_obj(void) const;
+
+		bool is_global_operator(void) const;
+		bool is_invisible(void) const;
 
 		void set_nickname(std::string const &nickname);
 		void set_username(std::string const &username);

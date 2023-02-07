@@ -4,6 +4,7 @@ namespace ft
 {
     Channel::Channel(std::string const& name, Client const* creator) : _name(name)
     {
+		get_modes_obj().set_mode('+', 't');
 		add_client(creator);
 		set_client_chanmode(creator, '+', 'o');
     }
@@ -32,6 +33,11 @@ namespace ft
     std::map<Client const*, Modes> const& Channel::get_clients(void) const { return _clients; }
 
 	Modes& Channel::get_modes_obj(void) { return _modes; }
+	Modes const& Channel::get_modes_obj(void) const { return _modes; }
+
+	bool Channel::is_moderated(void) const { return get_modes_obj().has_mode('m'); }
+
+	bool Channel::is_topic_restricted(void) const { return get_modes_obj().has_mode('t'); }
 
     bool Channel::has_client(Client const* client) const { return _clients.count(client); }
 
@@ -44,6 +50,14 @@ namespace ft
 			if (cit->first == client)
 				return cit->second.has_mode(mode);
 		}
+		return false;
+	}
+
+	bool Channel::has_talk_privilege(Client const* client) const
+	{
+		if (has_client_chanmode(client, 'v') || has_client_chanmode(client, 'o')
+				|| client->is_global_operator())
+			return true;
 		return false;
 	}
 

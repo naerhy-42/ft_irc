@@ -32,6 +32,11 @@ namespace ft
 	bool Client::get_registration_status(void) const { return _registration_status; }
 
 	Modes& Client::get_modes_obj(void) { return _modes; }
+	Modes const& Client::get_modes_obj(void) const { return _modes; }
+
+	bool Client::is_global_operator(void) const { return get_modes_obj().has_mode('o'); }
+
+	bool Client::is_invisible(void) const { return get_modes_obj().has_mode('i'); }
 
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 

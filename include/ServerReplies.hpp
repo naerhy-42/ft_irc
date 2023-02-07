@@ -69,6 +69,9 @@ namespace ft
 		// ERR_NOORIGIN (409)
 		std::string err_noorigin(std::string const &client_name) const;
 
+		// ERR_NOTEXTTOSEND (412)
+		std::string err_notexttosend(std::string const& client_name) const;
+
 		// ERR_NONICKNAMEGIVEN (431)
 		std::string err_nonicknamegiven(std::string const &client_name) const;
 
