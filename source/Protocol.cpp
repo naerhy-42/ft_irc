@@ -9,8 +9,8 @@ namespace ft
 
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
-	Protocol::Protocol(Server& server, std::string const& hostname)
-			: _server(server), _replies(":" + hostname, _IRC_ENDL)
+	Protocol::Protocol(Server &server, std::string const &hostname)
+		: _server(server), _replies(":" + hostname, _IRC_ENDL), _SERVER_RUNNING(true)
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
@@ -25,15 +25,16 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
+		_commands.insert(std::pair<std::string, fncts>("die", &Protocol::cmd_die));
 		/*
-		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel 
+		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		*/
 	}
 
 	Protocol::~Protocol(void)
 	{
-		std::vector<Client*>::iterator it;
+		std::vector<Client *>::iterator it;
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 			delete *it;
@@ -41,9 +42,9 @@ namespace ft
 		// Protocol is only destroyed at end of program
 	}
 
-	Client* Protocol::get_client_from_socket(int socket)
+	Client *Protocol::get_client_from_socket(int socket)
 	{
-		std::vector<Client*>::iterator it;
+		std::vector<Client *>::iterator it;
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
@@ -53,9 +54,9 @@ namespace ft
 		return NULL;
 	}
 
-	Client* Protocol::get_client_from_name(std::string const& name)
+	Client *Protocol::get_client_from_name(std::string const &name)
 	{
-		std::vector<Client*>::iterator it;
+		std::vector<Client *>::iterator it;
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
@@ -65,7 +66,7 @@ namespace ft
 		return NULL;
 	}
 
-	Channel& Protocol::get_channel_from_name(std::string const& name)
+	Channel &Protocol::get_channel_from_name(std::string const &name)
 	{
 		size_t pos = 0;
 
@@ -85,10 +86,9 @@ namespace ft
 		if (!id)
 			return "io";
 		return "mtov";
-
 	}
 
-	std::string Protocol::get_user_channels_list(Client const* client) const
+	std::string Protocol::get_user_channels_list(Client const *client) const
 	{
 		std::string user_channels_str;
 		std::vector<Channel>::const_iterator cit;
@@ -106,6 +106,11 @@ namespace ft
 		return user_channels_str;
 	}
 
+	bool Protocol::get_server_status(void) const
+	{
+		return _SERVER_RUNNING;
+	}
+
 	bool Protocol::is_socket_ignored(int socket) const
 	{
 		std::vector<int>::const_iterator cit;
@@ -118,17 +123,16 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_client_connected(Client const* client) const
+	bool Protocol::is_client_connected(Client const *client) const
 	{
-		if (client->get_password_status() && client->get_nickname_status()
-				&& client->get_registration_status())
+		if (client->get_password_status() && client->get_nickname_status() && client->get_registration_status())
 			return true;
 		return false;
 	}
 
-	bool Protocol::is_client_active(std::string const& client_name) const
+	bool Protocol::is_client_active(std::string const &client_name) const
 	{
-		std::vector<Client*>::const_iterator cit;
+		std::vector<Client *>::const_iterator cit;
 
 		for (cit = _clients.begin(); cit != _clients.end(); cit++)
 		{
@@ -138,7 +142,7 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_channel_active(std::string const& channel_name) const
+	bool Protocol::is_channel_active(std::string const &channel_name) const
 	{
 		std::vector<Channel>::const_iterator cit;
 
@@ -150,7 +154,7 @@ namespace ft
 		return false;
 	}
 
-	bool Protocol::is_valid_nickname(std::string const& nickname) const
+	bool Protocol::is_valid_nickname(std::string const &nickname) const
 	{
 		std::string::const_iterator cit;
 
@@ -164,14 +168,14 @@ namespace ft
 		return true;
 	}
 
-	bool Protocol::is_channel_name(std::string const& name) const
+	bool Protocol::is_channel_name(std::string const &name) const
 	{
 		if (name.size() > 1 && name[0] == '#')
 			return true;
 		return false;
 	}
 
-	bool Protocol::is_valid_mode(std::string const& mode, int id) const
+	bool Protocol::is_valid_mode(std::string const &mode, int id) const
 	{
 		std::string enabled_modes = get_enabled_modes(id);
 
@@ -180,9 +184,9 @@ namespace ft
 		return true;
 	}
 
-	void Protocol::set_password(std::string const& password) { _password = password; }
+	void Protocol::set_password(std::string const &password) { _password = password; }
 
-	void Protocol::set_global_operators(std::vector<std::string> const& operators)
+	void Protocol::set_global_operators(std::vector<std::string> const &operators)
 	{
 		std::vector<std::string>::const_iterator cit;
 
@@ -194,7 +198,7 @@ namespace ft
 
 	void Protocol::delete_client(int socket)
 	{
-		std::vector<Client*>::iterator it;
+		std::vector<Client *>::iterator it;
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 		{
@@ -207,12 +211,12 @@ namespace ft
 		}
 	}
 
-	void Protocol::add_channel(std::string const& name, Client* client)
+	void Protocol::add_channel(std::string const &name, Client *client)
 	{
 		_channels.push_back(Channel(name, client));
 	}
 
-	void Protocol::delete_channel(std::string const& name)
+	void Protocol::delete_channel(std::string const &name)
 	{
 		std::vector<Channel>::iterator it;
 
@@ -226,7 +230,7 @@ namespace ft
 		}
 	}
 
-	void Protocol::remove_client_from_channels(Client const* client)
+	void Protocol::remove_client_from_channels(Client const *client)
 	{
 		std::vector<Channel>::iterator it;
 		std::vector<std::vector<Channel>::iterator> channels_to_delete;
@@ -251,7 +255,7 @@ namespace ft
 			_ignored_sockets.push_back(socket);
 	}
 
-	void Protocol::parse_client_input(int socket, std::string& message)
+	void Protocol::parse_client_input(int socket, std::string &message)
 	{
 		std::string line;
 		size_t pos;
@@ -283,26 +287,26 @@ namespace ft
 		_ignored_sockets.clear();
 	}
 
-	void Protocol::handle_message(ClientMessage const& cmessage)
+	void Protocol::handle_message(ClientMessage const &cmessage)
 	{
-		std::string const& command = cmessage.get_command();
+		std::string const &command = cmessage.get_command();
 
 		if (_commands.count(command) && !is_socket_ignored(cmessage.get_client()->get_socket()))
 			(this->*_commands[command])(cmessage);
 	}
 
-	void Protocol::send_message_to_client(Client const* client, std::string const& message)
+	void Protocol::send_message_to_client(Client const *client, std::string const &message)
 	{
 		// disconnect the user if send return -1 ?
 		if (send(client->get_socket(), message.c_str(), message.size(), 0) == -1)
 			std::cout << "Could not write to socket..." << std::endl;
 	}
 
-	void Protocol::send_message_to_channel(Channel const& channel, std::string const& message,
-			Client const* sender)
+	void Protocol::send_message_to_channel(Channel const &channel, std::string const &message,
+										   Client const *sender)
 	{
-		std::map<Client const*, Modes> const& clients = channel.get_clients();
-		std::map<Client const*, Modes>::const_iterator cit;
+		std::map<Client const *, Modes> const &clients = channel.get_clients();
+		std::map<Client const *, Modes>::const_iterator cit;
 
 		for (cit = clients.begin(); cit != clients.end(); cit++)
 		{
@@ -311,7 +315,7 @@ namespace ft
 		}
 	}
 
-	void Protocol::send_message_to_client_channels(Client const* client, std::string const& message)
+	void Protocol::send_message_to_client_channels(Client const *client, std::string const &message)
 	{
 		std::vector<Channel>::const_iterator cit;
 
@@ -322,15 +326,15 @@ namespace ft
 		}
 	}
 
-	void Protocol::send_welcome_messages(Client const* client)
+	void Protocol::send_welcome_messages(Client const *client)
 	{
 		send_message_to_client(client, _replies.rpl_welcome(client->get_nickname(),
-				client->get_prefix()));
+															client->get_prefix()));
 		send_message_to_client(client, _replies.rpl_yourhost(client->get_nickname(),
-				_server.get_hostname(), _server.get_version()));
+															 _server.get_hostname(), _server.get_version()));
 		send_message_to_client(client, _replies.rpl_created(client->get_nickname(),
-				_server.get_creation_time()));
+															_server.get_creation_time()));
 		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
-				_server.get_hostname(), _server.get_version(), "io", "mt", "ov"));
+														   _server.get_hostname(), _server.get_version(), "io", "mt", "ov"));
 	}
 }

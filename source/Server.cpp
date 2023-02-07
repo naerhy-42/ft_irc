@@ -179,7 +179,7 @@ namespace ft
 	    socklen_t addr_size = sizeof(client_addr);
 	    fd_set read_fds;
 
-	    while (true)
+	    while (_protocol.get_server_status())
 	    {
 	        FD_ZERO(&read_fds);
 	        FD_SET(_socket, &read_fds);
