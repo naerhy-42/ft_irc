@@ -47,7 +47,7 @@ namespace ft
 						parameters[0], get_channel_from_name(parameters[0]).get_modes_obj().get_modes_str()));
 			else if (!get_channel_from_name(parameters[0]).has_client_chanmode(client, 'o') && !client->is_global_operator())
 				send_message_to_client(client, _replies.err_chanoprivsneeded(client->get_nickname(), parameters[0]));
-			else if (!is_valid_mode(parameters[1], 1))
+			else if (!is_valid_mode(parameters[1], 1) && !is_valid_mode(parameters[1], 2))
 				send_message_to_client(client, _replies.err_unknownmode(client->get_nickname(), parameters[1][1]));
 			else
 			{
@@ -59,9 +59,9 @@ namespace ft
 				{
 					message = ":" + client->get_prefix() + " MODE " + parameters[0] + " "
 							+ parameters[1] + _IRC_ENDL;
-
-					if ((parameters[1][0] == '+' && !modes.has_mode(parameters[1][1]))
-							|| (parameters[1][0] == '-' && modes.has_mode(parameters[1][1])))
+					if (is_valid_mode(parameters[1], 1)
+							&& ((parameters[1][0] == '+' && !modes.has_mode(parameters[1][1]))
+							|| (parameters[1][0] == '-' && modes.has_mode(parameters[1][1]))))
 					{
 						modes.set_mode(parameters[1][0], parameters[1][1]);
 						send_message_to_client(client, message);
@@ -70,17 +70,20 @@ namespace ft
 				}
 				else
 				{
-					Client* target = get_client_from_name(parameters[2]);
-
-					message = ":" + client->get_prefix() + " MODE " + parameters[0] + " "
-							+ parameters[1] + " " + parameters[2] + _IRC_ENDL;
-
-					if ((parameters[1][0] == '+' && !channel.has_client_chanmode(target, parameters[1][1]))
-							|| (parameters[1][0] == '-' && channel.has_client_chanmode(target, parameters[1][1])))
+					if (is_client_active(parameters[2]))
 					{
-						channel.set_client_chanmode(target, parameters[1][0], parameters[1][1]);
-						send_message_to_client(client, message);
-						send_message_to_channel(channel, message, client);
+						Client* target = get_client_from_name(parameters[2]);
+
+						if (is_valid_mode(parameters[1], 2) && channel.has_client(target)
+								&& ((parameters[1][0] == '+' && !channel.has_client_chanmode(target, parameters[1][1]))
+								|| (parameters[1][0] == '-' && channel.has_client_chanmode(target, parameters[1][1]))))
+						{
+							message = ":" + client->get_prefix() + " MODE " + parameters[0] + " "
+									+ parameters[1] + " " + parameters[2] + _IRC_ENDL;
+							channel.set_client_chanmode(target, parameters[1][0], parameters[1][1]);
+							send_message_to_client(client, message);
+							send_message_to_channel(channel, message, client);
+						}
 					}
 				}
 			}

@@ -98,6 +98,9 @@ namespace ft
 			std::vector<Client*> _clients;
 			std::vector<Channel> _channels;
 			std::map<std::string, std::string> _global_operators;
+			std::string _user_modes;
+			std::string _channel_modes;
+			std::string _user_chan_modes;
 			std::vector<int> _ignored_sockets;
 			bool _SERVER_RUNNING;
 	};

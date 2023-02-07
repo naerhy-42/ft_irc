@@ -10,7 +10,8 @@ namespace ft
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
 	Protocol::Protocol(Server &server, std::string const &hostname)
-		: _server(server), _replies(":" + hostname, _IRC_ENDL), _SERVER_RUNNING(true)
+		: _server(server), _replies(":" + hostname, _IRC_ENDL), _user_modes("io"),
+		_channel_modes("mt"), _user_chan_modes("ov"), _SERVER_RUNNING(true)
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
@@ -84,8 +85,11 @@ namespace ft
 	std::string Protocol::get_enabled_modes(int id) const
 	{
 		if (!id)
-			return "io";
-		return "mtov";
+			return _user_modes;
+		if (id == 1)
+			return _channel_modes;
+		else
+			return _user_chan_modes;
 	}
 
 	std::string Protocol::get_user_channels_list(Client const *client) const
@@ -335,6 +339,7 @@ namespace ft
 		send_message_to_client(client, _replies.rpl_created(client->get_nickname(),
 															_server.get_creation_time()));
 		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
-														   _server.get_hostname(), _server.get_version(), "io", "mt", "ov"));
+														   _server.get_hostname(), _server.get_version(),
+														   _user_modes, _channel_modes, _user_chan_modes));
 	}
 }

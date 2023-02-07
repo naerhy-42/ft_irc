@@ -48,7 +48,7 @@ namespace ft
 										  std::string const &channel_modes_with_parameter) const
 	{
 		return _server_prefix + " 004 " + client_name + " " + hostname + " " + version + " " + available_user_modes +
-			   " " + available_channel_modes + " [" + channel_modes_with_parameter + "]" + _endl;
+			   " " + available_channel_modes + " " + channel_modes_with_parameter + _endl;
 	}
 
 	// RPL_UMODEIS (221)
