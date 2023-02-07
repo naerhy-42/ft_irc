@@ -30,6 +30,11 @@ namespace ft
 			if (!channels_list.empty())
 				send_message_to_client(client, _replies.rpl_whoischannels(client->get_nickname(),
 						target->get_nickname(), channels_list));
+			send_message_to_client(client, _replies.rpl_whoisserver(client->get_nickname(),
+					target->get_nickname()));
+			if (client->is_global_operator())
+				send_message_to_client(client, _replies.rpl_whoisoperator(client->get_nickname(),
+						target->get_nickname()));
 			send_message_to_client(client, _replies.rpl_endofwhois(client->get_nickname(),
 					target->get_nickname()));
 		}

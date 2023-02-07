@@ -65,6 +65,23 @@ namespace ft
 		return _server_prefix + " 311 " + client + " " + nick + " " + username + " " + host + " * :" + realname + _endl;
 	}
 
+	// RPL_WHOISSERVER (312)
+	std::string ServerReplies::rpl_whoisserver(std::string const& client_name, std::string const& nickname) const
+	{
+		std::string description = ":irc server for 42 project";
+		std::string server_name = _server_prefix.substr(1);
+
+		return _server_prefix + " 312 " + client_name + " " + nickname + " " + server_name + " " + description + _endl;
+	}
+
+	// RPL_WHOISOPERATOR (313)
+	std::string ServerReplies::rpl_whoisoperator(std::string const& client_name, std::string const& nickname) const
+	{
+		std::string description = ":is an IRC operator";
+
+		return _server_prefix + " 313 " + client_name + " " + nickname + " " + description + _endl;
+	}
+
 	// RPL_ENDOFWHOIS (318)
 	std::string ServerReplies::rpl_endofwhois(const std::string &client, const std::string &nick) const
 	{

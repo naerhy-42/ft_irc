@@ -44,6 +44,12 @@ namespace ft
 								  const std::string &username, const std::string &host,
 								  const std::string &realname) const;
 
+		// RPL_WHOISSERVER (312)
+		std::string rpl_whoisserver(std::string const& client_name, std::string const& nickname) const;
+
+		// RPL_WHOISOPERATOR (313)
+		std::string rpl_whoisoperator(std::string const& client_name, std::string const& nickname) const;
+
 		// RPL_ENDOFWHOIS (318)
 		std::string rpl_endofwhois(const std::string &client, const std::string &nick) const;
 
