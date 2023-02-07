@@ -21,6 +21,7 @@ SRCS =	source/ft_irc.cpp \
 		source/command/TOPIC.cpp \
 		source/command/WHOIS.cpp \
 		source/command/USER.cpp \
+		source/command/DIE.cpp \
 		# source/command/NAMES.cpp \
 		source/command/INVITE.cpp \
 
