@@ -78,6 +78,7 @@ namespace ft
 			void cmd_motd(ClientMessage const& cmessage);
 			void cmd_names(ClientMessage const& cmessage);
 			void cmd_nick(ClientMessage const& cmessage);
+			void cmd_notice(ClientMessage const& cmessage);
 			void cmd_oper(ClientMessage const& cmessage);
 			void cmd_part(ClientMessage const& cmessage);
 			void cmd_pass(ClientMessage const& cmessage);

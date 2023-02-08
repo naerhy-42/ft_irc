@@ -17,6 +17,7 @@ SRCS =	source/ft_irc.cpp \
 		source/command/MOTD.cpp \
 		source/command/NAMES.cpp \
 		source/command/NICK.cpp \
+		source/command/NOTICE.cpp \
 		source/command/OPER.cpp \
 		source/command/PART.cpp \
 		source/command/PASS.cpp \
