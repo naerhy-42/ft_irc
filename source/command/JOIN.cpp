@@ -34,8 +34,7 @@ namespace ft
 			topic = get_channel_from_name(channel_name).get_topic();
 			if (!topic.empty())
 				send_message_to_client(client, _replies.rpl_topic(client->get_nickname(), channel_name, topic));
-			send_message_to_client(client, _replies.rpl_namreply(client->get_nickname(), get_channel_from_name(channel_name)));
-			send_message_to_client(client, _replies.rpl_endofnames(client->get_nickname(), channel_name));
+			cmd_names(ClientMessage(client, "NAMES " + channel_name));
 		}
     }
 }

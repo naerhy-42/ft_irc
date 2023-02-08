@@ -1,56 +1,27 @@
-#include "../../include/Protocol.hpp"
+#include "Protocol.hpp"
 
 namespace ft
 {
-	void Protocol::cmd_names(Message msg)
+	void Protocol::cmd_names(ClientMessage const& cmessage)
 	{
-		// Get the client sending the message
-		Client &current_client = _get_client_from_socket(msg.get_socket());
+		Client* client = cmessage.get_client();
+		std::vector<std::string> const& parameters = cmessage.get_parameters();
 
-		// Extract the parameters from the message
-		std::vector<std::string> parameters = msg.get_parameters();
-
-		if (!_is_client_connected(current_client))
+		if (!is_client_connected(client))
 		{
-			std::string reply = err_notregistered(current_client.get_nickname());
-			add_to_queue(current_client, reply, 0);
+			send_message_to_client(client, _replies.err_notregistered(client->get_nickname()));
+			ignore_socket(client->get_socket());
 		}
-		// Check if the channel exists
-		std::string const target_channel_name = parameters[0];
-		bool channel_exists = false;
-		for (size_t i = 0; i < _channels.size(); i++)
-		{
-			if (_channels[i]->get_name() == target_channel_name)
-			{
-				channel_exists = true;
-				break;
-			}
-		}
-		std::cout << "channel exists :" << channel_exists << std::endl;
-		if (channel_exists)
-		{
-			// Send the names of all clients in the channel
-			Channel* target_channel = _get_channel_from_name(target_channel_name);
-			std::vector<std::string> list_of_users;
-			std::vector<Client*> clients = target_channel->get_clients();
-			for (size_t i = 0; i < clients.size(); i++)
-			{
-				list_of_users.push_back(clients[i]->get_nickname());
-				std::cout << clients[i]->get_nickname() << std::endl;
-			}
-			std::string names_msg = rpl_namreply("irc.forty-two.com", current_client.get_nickname(), target_channel->get_name(), list_of_users);
-			send(msg.get_socket(), names_msg.c_str(), names_msg.size(), 0);
-			add_to_queue(_get_client_from_socket(msg.get_socket()), names_msg, 1);
-			names_msg = rpl_endofnames(current_client.get_nickname(), target_channel->get_name());
-			add_to_queue(_get_client_from_socket(msg.get_socket()), names_msg, 1);
-			return ;
-		}
+		if (parameters.empty())
+			send_message_to_client(client, _replies.rpl_endofnames(client->get_nickname(), "*"));
+		else if (!is_channel_active(parameters[0]))
+			send_message_to_client(client, _replies.rpl_endofnames(client->get_nickname(), parameters[0]));
 		else
 		{
-			// If there is no target channel, send an error message
-			std::string error = err_nosuchchannel(current_client.get_nickname(), target_channel_name);
-			add_to_queue(_get_client_from_socket(msg.get_socket()), error, 0);
-			return ;
+			std::string users_list = get_users_in_channel_list(get_channel_from_name(parameters[0]));
+
+			send_message_to_client(client, _replies.rpl_namreply(client->get_nickname(), parameters[0], users_list));
+			send_message_to_client(client, _replies.rpl_endofnames(client->get_nickname(), parameters[0]));
 		}
 	}
 }

@@ -36,6 +36,7 @@ namespace ft
 			Client* get_client_from_name(std::string const& name);
 			Channel& get_channel_from_name(std::string const& name);
 			std::string get_enabled_modes(int id) const;
+			std::string get_users_in_channel_list(Channel const& channel) const;
 			std::string get_user_channels_list(Client const* client) const;
 
 			bool is_socket_ignored(int socket) const;
@@ -68,12 +69,11 @@ namespace ft
 			void send_message_to_client_channels(Client const* client, std::string const& message);
 			void send_welcome_messages(Client const* client);
 
-			// void cmd_invite(ClientMessage msg);
 			void cmd_join(ClientMessage const& cmessage);
 			void cmd_kick(ClientMessage const& cmessage);
 			void cmd_mode(ClientMessage const& cmessage);
 			void cmd_motd(ClientMessage const& cmessage);
-			// void cmd_names(ClientMessage msg);
+			void cmd_names(ClientMessage const& cmessage);
 			void cmd_nick(ClientMessage const& cmessage);
 			void cmd_oper(ClientMessage const& cmessage);
 			void cmd_part(ClientMessage const& cmessage);

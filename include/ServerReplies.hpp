@@ -5,9 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "Channel.hpp"
-#include "Client.hpp"
-
 namespace ft
 {
 	class ServerReplies
@@ -66,7 +63,8 @@ namespace ft
 		std::string rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const;
 
 		// RPL_NAMREPLY (353)
-		std::string rpl_namreply(std::string const& client_name, Channel const& channel) const;
+		std::string rpl_namreply(std::string const& client_name, std::string const& channel_name,
+				std::string const& users_list) const;
 
 		// RPL_ENDOFNAMES (366)
 		std::string rpl_endofnames(const std::string &client_name, const std::string &channel_name) const;

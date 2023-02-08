@@ -13,7 +13,7 @@ namespace ft
 	class ClientMessage
 	{
 		public:
-			ClientMessage(Client* client, std::string& message);
+			ClientMessage(Client* client, std::string message);
 			~ClientMessage(void);
 
 			Client* get_client(void) const;

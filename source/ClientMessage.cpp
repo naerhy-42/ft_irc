@@ -2,7 +2,7 @@
 
 namespace ft
 {
-	ClientMessage::ClientMessage(Client* client, std::string& message) : _client(client)
+	ClientMessage::ClientMessage(Client* client, std::string message) : _client(client)
 	{
 		std::string remainder;
 		size_t remainder_pos = message.find(" :");

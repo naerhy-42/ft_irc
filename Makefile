@@ -13,6 +13,7 @@ SRCS =	source/ft_irc.cpp \
 		source/command/KICK.cpp \
 		source/command/MODE.cpp \
 		source/command/MOTD.cpp \
+		source/command/NAMES.cpp \
 		source/command/NICK.cpp \
 		source/command/OPER.cpp \
 		source/command/PART.cpp \
@@ -21,10 +22,8 @@ SRCS =	source/ft_irc.cpp \
 		source/command/PRIVMSG.cpp \
 		source/command/QUIT.cpp \
 		source/command/TOPIC.cpp \
-		source/command/WHOIS.cpp \
 		source/command/USER.cpp \
-		# source/command/NAMES.cpp \
-		source/command/INVITE.cpp \
+		source/command/WHOIS.cpp
 
 OBJS = $(SRCS:%.cpp=$(OBJ)/%.o)
 

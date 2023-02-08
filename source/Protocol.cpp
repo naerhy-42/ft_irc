@@ -18,6 +18,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("MOTD", &Protocol::cmd_motd));
+		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
@@ -28,10 +29,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
-		/*
-		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel
-		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
-		*/
 	}
 
 	Protocol::~Protocol(void)
@@ -40,8 +37,6 @@ namespace ft
 
 		for (it = _clients.begin(); it != _clients.end(); it++)
 			delete *it;
-		// no need to use _clients.clear() in order to remove dangling pointers as
-		// Protocol is only destroyed at end of program
 	}
 
 	Client *Protocol::get_client_from_socket(int socket)
@@ -91,6 +86,22 @@ namespace ft
 			return _channel_modes;
 		else
 			return _user_chan_modes;
+	}
+
+	std::string Protocol::get_users_in_channel_list(Channel const& channel) const
+	{
+		std::map<Client const*, Modes> const& clients = channel.get_clients();
+		std::map<Client const*, Modes>::const_iterator cit;
+		std::string users_list;
+
+		for (cit = clients.begin(); cit != clients.end(); cit++)
+		{
+			if (users_list.empty())
+				users_list += channel.get_client_prefix(cit->first) + cit->first->get_nickname();
+			else
+				users_list += " " + channel.get_client_prefix(cit->first) + cit->first->get_nickname();
+		}
+		return users_list;
 	}
 
 	std::string Protocol::get_user_channels_list(Client const *client) const
@@ -328,8 +339,6 @@ namespace ft
 
 	void Protocol::send_welcome_messages(Client const *client)
 	{
-		std::string motd = "motd";
-
 		send_message_to_client(client, _replies.rpl_welcome(client->get_nickname(),
 															client->get_prefix()));
 		send_message_to_client(client, _replies.rpl_yourhost(client->get_nickname(),
@@ -339,6 +348,6 @@ namespace ft
 		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
 														   _server.get_hostname(), _server.get_version(),
 														   _user_modes, _channel_modes, _user_chan_modes));
-		cmd_motd(ClientMessage(get_client_from_socket(client->get_socket()), motd));
+		cmd_motd(ClientMessage(get_client_from_socket(client->get_socket()), "MOTD"));
 	}
 }

@@ -120,20 +120,10 @@ namespace ft
 	}
 
 	// RPL_NAMREPLY (353)
-	std::string ServerReplies::rpl_namreply(std::string const& client_name, Channel const& channel) const
+	std::string ServerReplies::rpl_namreply(std::string const& client_name, std::string const& channel_name,
+			std::string const& users_list) const
 	{
-		std::string names_msg = ":" + _server_prefix + " 353 " + client_name + " = " + channel.get_name() + " :";
-		std::map<Client const*, Modes>::const_iterator cit;
-
-		for (cit = channel.get_clients().begin(); cit != channel.get_clients().end(); cit++)
-		{
-			if (channel.has_client_chanmode(cit->first, 'o'))
-				names_msg += "@";
-			names_msg += cit->first->get_nickname() + " ";
-		}
-		names_msg.erase(names_msg.size() - 1, 1);
-		names_msg += _endl;
-		return names_msg;
+		return _server_prefix + " 353 " + client_name + " = " + channel_name + " :" + users_list + _endl;
 	}
 
 	// RPL_ENDOFNAMES (366)
@@ -409,29 +399,6 @@ namespace ft
 		return _server_prefix + " 352 " + client + " " + channel + " " + username + " " + host + " " +
 			   server + " " + nick + " " + flags + " " + to_string(hopcount) +
 			   " " + realname + "\r\n";
-	}
-
-	// RPL_NAMREPLY (353)
-	std::string rpl_namreply(const std::string &server_name, const std::string &client, const std::string &channel_name,
-							 const std::vector<std::string> &user_list)
-	{
-		std::string names_msg = ":" + server_name + " 353 " + client + " = " + channel_name + " :";
-		for (size_t i = 0; i < user_list.size(); i++)
-		{
-			names_msg += user_list[i];
-			if (i != user_list.size() - 1)
-			{
-				names_msg += " ";
-			}
-		}
-		names_msg += "\r\n";
-		return names_msg;
-	}
-
-	// RPL_ENDOFNAMES (366)
-	std::string rpl_endofnames(const std::string &client, const std::string &channel)
-	{
-		return _server_prefix + " 366 " + client + " " + channel + " : End of /NAMES list\r\n";
 	}
 
 	// RPL_ENDOFWHO (315)
