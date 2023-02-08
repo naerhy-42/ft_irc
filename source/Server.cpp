@@ -60,7 +60,7 @@ namespace ft
 		std::ifstream file;
 		std::string line;
 
-		file.open(".server_conf", std::ios::in);
+		file.open("config/server_conf", std::ios::in);
 		if (!file.is_open())
 		{
 			std::cout << "The file doesn't exist, create one" << std::endl;
@@ -214,9 +214,8 @@ namespace ft
 					    if (FD_ISSET(client_fd, &read_fds))
 					    {
 					        char buffer[_buffer_size];
-					        memset(buffer, 0, _buffer_size); // Clear the buffer
+					        memset(buffer, 0, _buffer_size);
 					        ssize_t bytes_received = recv(client_fd, buffer, _buffer_size - 1, 0);
-							std::cout << "bytes = " << bytes_received << std::endl;
 					        if (!bytes_received || (bytes_received == -1 && errno == EWOULDBLOCK))
 								close_socket_connection(client_fd);
 					        else
@@ -273,7 +272,7 @@ namespace ft
 
 	void Server::signal_handler(int signum)
 	{
-		std::cout << "Signal has been caught, closing server: " << signum << std::endl;
+		std::cout << "- signal has been caught, closing server (" << signum << ") -" << std::endl;
 		_server_status = false;
 	}
 }

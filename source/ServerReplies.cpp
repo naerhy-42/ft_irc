@@ -142,6 +142,28 @@ namespace ft
 		return _server_prefix + " 366 " + client_name + " " + channel_name + " :End of /NAMES list" + _endl;
 	}
 
+	// RPL_MOTD (372)
+	std::string ServerReplies::rpl_motd(std::string const& client_name, std::string const& line) const
+	{
+		return _server_prefix + " 372 " + client_name + " :- " + line + _endl;
+	}
+
+	// RPL_MOTDSTART (375)
+	std::string ServerReplies::rpl_motdstart(std::string const& client_name, std::string const& hostname) const
+	{
+		std::string description = ":- " + hostname + " Message of the day -";
+
+		return _server_prefix + " 375 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_ENDOFMOTD (376)
+	std::string ServerReplies::rpl_endofmotd(std::string const& client_name) const
+	{
+		std::string description = ":End of /MOTD command";
+
+		return _server_prefix + " 376 " + client_name + " " + description + _endl;
+	}
+
 	// RPL_YOUREOPER (381)
 	std::string ServerReplies::rpl_youreoper(std::string const& client_name) const
 	{
@@ -189,6 +211,14 @@ namespace ft
 		std::string description = ":No text to send";
 
 		return _server_prefix + " 412 " + client_name + " " + description + _endl;
+	}
+
+	// ERR_NOMOTD (422)
+	std::string ServerReplies::err_nomotd(std::string const& client_name) const
+	{
+		std::string description = ":MOTD file is missing";
+
+		return _server_prefix + " 422 " + client_name + " " + description + _endl;
 	}
 
 	// ERR_NONICKNAMEGIVEN (431)

@@ -19,7 +19,11 @@ namespace ft
 		while (ss >> word)
 		{
 			if (_command.empty())
+			{
 				_command = word;
+				for (std::string::iterator it = _command.begin(); it != _command.end(); it++)
+					*it = toupper(*it);
+			}
 			else
 				_parameters.push_back(word);
 		}

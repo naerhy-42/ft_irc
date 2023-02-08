@@ -71,6 +71,15 @@ namespace ft
 		// RPL_ENDOFNAMES (366)
 		std::string rpl_endofnames(const std::string &client_name, const std::string &channel_name) const;
 
+		// RPL_MOTD (372)
+		std::string rpl_motd(std::string const& client_name, std::string const& line) const;
+
+		// RPL_MOTDSTART (375)
+		std::string rpl_motdstart(std::string const& client_name, std::string const& hostname) const;
+
+		// RPL_ENDOFMOTD (376)
+		std::string rpl_endofmotd(std::string const& client_name) const;
+
 		// RPL_YOUREOPER (381)
 		std::string rpl_youreoper(std::string const& client_name) const;
 
@@ -88,6 +97,9 @@ namespace ft
 
 		// ERR_NOTEXTTOSEND (412)
 		std::string err_notexttosend(std::string const& client_name) const;
+
+		// ERR_NOMOTD (422)
+		std::string err_nomotd(std::string const& client_name) const;
 
 		// ERR_NONICKNAMEGIVEN (431)
 		std::string err_nonicknamegiven(std::string const &client_name) const;

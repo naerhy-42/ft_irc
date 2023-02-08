@@ -13,9 +13,11 @@ namespace ft
 		: _server(server), _replies(":" + hostname, _IRC_ENDL), _user_modes("io"),
 		_channel_modes("mt"), _user_chan_modes("ov")
 	{
+		_commands.insert(std::pair<std::string, fncts>("DIE", &Protocol::cmd_die));
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
+		_commands.insert(std::pair<std::string, fncts>("MOTD", &Protocol::cmd_motd));
 		_commands.insert(std::pair<std::string, fncts>("NICK", &Protocol::cmd_nick));
 		_commands.insert(std::pair<std::string, fncts>("OPER", &Protocol::cmd_oper));
 		_commands.insert(std::pair<std::string, fncts>("PART", &Protocol::cmd_part));
@@ -26,7 +28,6 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("QUIT", &Protocol::cmd_quit));
 		_commands.insert(std::pair<std::string, fncts>("WHOIS", &Protocol::cmd_whois));
 		_commands.insert(std::pair<std::string, fncts>("USER", &Protocol::cmd_user));
-		_commands.insert(std::pair<std::string, fncts>("die", &Protocol::cmd_die));
 		/*
 		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite)); // no mode invite for the channel
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));
@@ -327,6 +328,8 @@ namespace ft
 
 	void Protocol::send_welcome_messages(Client const *client)
 	{
+		std::string motd = "motd";
+
 		send_message_to_client(client, _replies.rpl_welcome(client->get_nickname(),
 															client->get_prefix()));
 		send_message_to_client(client, _replies.rpl_yourhost(client->get_nickname(),
@@ -336,5 +339,6 @@ namespace ft
 		send_message_to_client(client, _replies.rpl_myinfo(client->get_nickname(),
 														   _server.get_hostname(), _server.get_version(),
 														   _user_modes, _channel_modes, _user_chan_modes));
+		cmd_motd(ClientMessage(get_client_from_socket(client->get_socket()), motd));
 	}
 }
