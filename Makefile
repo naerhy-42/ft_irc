@@ -12,6 +12,7 @@ SRCS =	source/ft_irc.cpp \
 		source/command/DIE.cpp \
 		source/command/JOIN.cpp \
 		source/command/KICK.cpp \
+		source/command/KILL.cpp \
 		source/command/MODE.cpp \
 		source/command/MOTD.cpp \
 		source/command/NAMES.cpp \

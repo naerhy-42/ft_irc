@@ -17,6 +17,7 @@ namespace ft
 		_commands.insert(std::pair<std::string, fncts>("DIE", &Protocol::cmd_die));
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
+		_commands.insert(std::pair<std::string, fncts>("KILL", &Protocol::cmd_kill));
 		_commands.insert(std::pair<std::string, fncts>("MODE", &Protocol::cmd_mode));
 		_commands.insert(std::pair<std::string, fncts>("MOTD", &Protocol::cmd_motd));
 		_commands.insert(std::pair<std::string, fncts>("NAMES", &Protocol::cmd_names));

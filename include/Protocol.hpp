@@ -70,8 +70,10 @@ namespace ft
 			void send_welcome_messages(Client const* client);
 
 			void cmd_away(ClientMessage const& cmessage);
+		    void cmd_die(ClientMessage const& cmessage);
 			void cmd_join(ClientMessage const& cmessage);
 			void cmd_kick(ClientMessage const& cmessage);
+			void cmd_kill(ClientMessage const& cmessage);
 			void cmd_mode(ClientMessage const& cmessage);
 			void cmd_motd(ClientMessage const& cmessage);
 			void cmd_names(ClientMessage const& cmessage);
@@ -85,7 +87,6 @@ namespace ft
 			void cmd_topic(ClientMessage const& cmessage);
 			void cmd_user(ClientMessage const& cmessage);
 			void cmd_whois(ClientMessage const& cmessage);
-		    void cmd_die(ClientMessage const& cmessage);
 
 
 		private:
