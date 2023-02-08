@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 #include <arpa/inet.h>
+#include <signal.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -53,11 +54,15 @@ namespace ft
 			void check_received_input(std::map<int, std::string>& recvstr);
 			void close_socket_connection(int socket);
 
+			static void set_server_status(bool status);
+			static void signal_handler(int signum);
+
 		private:
 			Server(Server const& x);
 			Server& operator=(Server const& x);
 
 			static int const _buffer_size;
+			static bool _server_status;
 			uint16_t _port;
 			int _socket;
 			bool _config_status;

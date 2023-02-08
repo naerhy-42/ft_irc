@@ -11,7 +11,7 @@ namespace ft
 
 	Protocol::Protocol(Server &server, std::string const &hostname)
 		: _server(server), _replies(":" + hostname, _IRC_ENDL), _user_modes("io"),
-		_channel_modes("mt"), _user_chan_modes("ov"), _SERVER_RUNNING(true)
+		_channel_modes("mt"), _user_chan_modes("ov")
 	{
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
@@ -108,11 +108,6 @@ namespace ft
 			}
 		}
 		return user_channels_str;
-	}
-
-	bool Protocol::get_server_status(void) const
-	{
-		return _SERVER_RUNNING;
 	}
 
 	bool Protocol::is_socket_ignored(int socket) const

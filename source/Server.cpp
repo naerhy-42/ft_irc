@@ -4,6 +4,8 @@ namespace ft
 {
 	int const Server::_buffer_size = 512;
 
+	bool Server::_server_status = true;
+
 	Server::Server(void) : _config_status(false), _hostname("localhost"), _protocol(*this, _hostname)
 	{
 		time_t now = std::time(0);
@@ -14,6 +16,7 @@ namespace ft
 		if (parse_config_file(operators))
 			_config_status = true;
 		_protocol.set_global_operators(operators);
+		signal(SIGINT, Server::signal_handler);
 	}
 
 	Server::~Server(void) {}
@@ -181,7 +184,7 @@ namespace ft
 	    fd_set read_fds;
 		std::map<int, std::string> recvstr;
 
-	    while (_protocol.get_server_status())
+	    while (_server_status)
 	    {
 	        FD_ZERO(&read_fds);
 	        FD_SET(_socket, &read_fds);
@@ -264,5 +267,13 @@ namespace ft
 			}
 		}
 		close(socket);
+	}
+
+	void Server::set_server_status(bool status) { _server_status = status; }
+
+	void Server::signal_handler(int signum)
+	{
+		std::cout << "Signal has been caught, closing server: " << signum << std::endl;
+		_server_status = false;
 	}
 }

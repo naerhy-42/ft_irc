@@ -1,4 +1,5 @@
 #include "Protocol.hpp"
+#include "Server.hpp"
 
 namespace ft
 {
@@ -14,6 +15,6 @@ namespace ft
         else if (!client->is_global_operator())
 			send_message_to_client(client, _replies.err_noprivileges(client->get_nickname()));
         else
-            _SERVER_RUNNING = false;
+            Server::set_server_status(false);
     }
 }

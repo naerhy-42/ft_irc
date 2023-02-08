@@ -37,7 +37,6 @@ namespace ft
 			Channel& get_channel_from_name(std::string const& name);
 			std::string get_enabled_modes(int id) const;
 			std::string get_user_channels_list(Client const* client) const;
-			bool get_server_status(void) const;
 
 			bool is_socket_ignored(int socket) const;
 			bool is_client_connected(Client const* client) const;
@@ -102,7 +101,6 @@ namespace ft
 			std::string _channel_modes;
 			std::string _user_chan_modes;
 			std::vector<int> _ignored_sockets;
-			bool _SERVER_RUNNING;
 	};
 }
 

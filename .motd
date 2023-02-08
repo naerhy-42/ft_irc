@@ -1,0 +1,18 @@
+An IRC server in C++ 98
+Made by qduarte and ddordain
+
+Implemented commands:
+- DIE [o]
+- JOIN
+- KICK [o]
+- MODE
+- NICK
+- OPER [o]
+- PART
+- PASS
+- PING
+- PRIVMSG
+- QUIT
+- TOPIC
+- WHOIS
+- USER
