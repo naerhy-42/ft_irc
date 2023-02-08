@@ -15,6 +15,7 @@ namespace ft
 	{
 		_commands.insert(std::pair<std::string, fncts>("AWAY", &Protocol::cmd_away));
 		_commands.insert(std::pair<std::string, fncts>("DIE", &Protocol::cmd_die));
+		_commands.insert(std::pair<std::string, fncts>("INVITE", &Protocol::cmd_invite));
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));
 		_commands.insert(std::pair<std::string, fncts>("KILL", &Protocol::cmd_kill));

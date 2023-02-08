@@ -71,6 +71,7 @@ namespace ft
 
 			void cmd_away(ClientMessage const& cmessage);
 		    void cmd_die(ClientMessage const& cmessage);
+		    void cmd_invite(ClientMessage const& cmessage);
 			void cmd_join(ClientMessage const& cmessage);
 			void cmd_kick(ClientMessage const& cmessage);
 			void cmd_kill(ClientMessage const& cmessage);
@@ -88,7 +89,6 @@ namespace ft
 			void cmd_topic(ClientMessage const& cmessage);
 			void cmd_user(ClientMessage const& cmessage);
 			void cmd_whois(ClientMessage const& cmessage);
-
 
 		private:
 			Protocol(Protocol const& x);

@@ -10,6 +10,7 @@ SRCS =	source/ft_irc.cpp \
 		source/ServerReplies.cpp \
 		source/command/AWAY.cpp \
 		source/command/DIE.cpp \
+		source/command/INVITE.cpp \
 		source/command/JOIN.cpp \
 		source/command/KICK.cpp \
 		source/command/KILL.cpp \

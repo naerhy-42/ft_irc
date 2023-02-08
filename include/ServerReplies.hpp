@@ -71,6 +71,9 @@ namespace ft
 		// RPL_TOPIC (332)
 		std::string rpl_topic(std::string const &client_name, std::string const &channel_name, std::string const &topic) const;
 
+		// RPL_INVITING (341)
+		std::string rpl_inviting(std::string const& client_name, std::string const& nickname, std::string const& channel) const;
+
 		// RPL_NAMREPLY (353)
 		std::string rpl_namreply(std::string const& client_name, std::string const& channel_name,
 				std::string const& users_list) const;
@@ -123,6 +126,10 @@ namespace ft
 
 		// ERR_NOTONCHANNEL (442)
 		std::string err_notonchannel(std::string const &client_name, std::string const &channel_name) const;
+
+		// ERR_USERONCHANNEL (443)
+		std::string err_useronchannel(std::string const& client_name, std::string const& nickname,
+				std::string const& channel) const;
 
 		// ERR_NOTREGISTERED (451)
 		std::string err_notregistered(std::string const &client_name) const;

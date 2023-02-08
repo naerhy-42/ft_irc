@@ -142,6 +142,13 @@ namespace ft
 		return _server_prefix + " 332 " + client_name + " " + channel_name + " " + description + _endl;
 	}
 
+	// RPL_INVITING (341)
+	std::string ServerReplies::rpl_inviting(std::string const& client_name, std::string const& nickname,
+			std::string const& channel) const
+	{
+		return _server_prefix + " 341 " + client_name + " " + nickname + " " + channel + _endl;
+	}
+
 	// RPL_NAMREPLY (353)
 	std::string ServerReplies::rpl_namreply(std::string const& client_name, std::string const& channel_name,
 			std::string const& users_list) const
@@ -272,6 +279,15 @@ namespace ft
 	{
 		std::string description = ":You're not on that channel";
 		return _server_prefix + " 442 " + client_name + " " + channel_name + " " + description + _endl;
+	}
+
+	// ERR_USERONCHANNEL (443)
+	std::string ServerReplies::err_useronchannel(std::string const& client_name, std::string const& nickname,
+			std::string const& channel) const
+	{
+		std::string description = ":is already on channel";
+
+		return _server_prefix + " 443 " + client_name + " " + nickname + " " + channel + " " + description + _endl;
 	}
 
 	// ERR_NOTREGISTERED (451)
