@@ -29,7 +29,8 @@ namespace ft
 				std::string message = ":" + client->get_prefix() + " MODE " + parameters[0] + " " + parameters[1] + _IRC_ENDL;
 				Modes& modes = client->get_modes_obj();
 
-				if (parameters[1] != "+o" && ((parameters[1][0] == '+'
+				if (parameters[1] != "+o" && parameters[1] != "+a" && parameters[1] != "-a"
+						&& ((parameters[1][0] == '+'
 						&& !modes.has_mode(parameters[1][1])) || (parameters[1][0] == '-'
 						&& modes.has_mode(parameters[1][1]))))
 				{

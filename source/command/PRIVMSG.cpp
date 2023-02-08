@@ -34,10 +34,14 @@ namespace ft
 		}
 		else
 		{
+			Client* target = get_client_from_name(parameters[0]);
 			std::string message = ":" + client->get_prefix() + " PRIVMSG " + parameters[0] + " :"
 					+ cmessage.get_remainder() + _IRC_ENDL;
 
-			send_message_to_client(get_client_from_name(parameters[0]), message);
+			if (target->is_away())
+				send_message_to_client(client, _replies.rpl_away(client->get_nickname(),
+						target->get_nickname(), target->get_away_reason()));
+			send_message_to_client(target, message);
         }
     }
 }

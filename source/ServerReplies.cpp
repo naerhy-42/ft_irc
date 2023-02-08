@@ -57,6 +57,29 @@ namespace ft
 		return _server_prefix + " 221 " + client_name + " " + modes + _endl;
 	}
 
+	// RPL_AWAY (301)
+	std::string ServerReplies::rpl_away(std::string const& client_name, std::string const& target_nick,
+			std::string const& reason) const
+	{
+		return _server_prefix + " 301 " + client_name + " " + target_nick + " :" + reason + _endl;
+	}
+
+	// RPL_UNAWAY (305)
+	std::string ServerReplies::rpl_unaway(std::string const& client_name) const
+	{
+		std::string description = ":You are no longer marked as being away";
+
+		return _server_prefix + " 305 " + client_name + " " + description + _endl;
+	}
+
+	// RPL_NOWAWAY (306)
+	std::string ServerReplies::rpl_nowaway(std::string const& client_name) const
+	{
+		std::string description = ":You have been marked as being away";
+
+		return _server_prefix + " 306 " + client_name + " " + description + _endl;
+	}
+
 	// RPL_WHOISUSER (311)
 	std::string ServerReplies::rpl_whoisuser(const std::string &client, const std::string &nick,
 							  const std::string &username, const std::string &host,

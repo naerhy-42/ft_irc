@@ -69,6 +69,7 @@ namespace ft
 			void send_message_to_client_channels(Client const* client, std::string const& message);
 			void send_welcome_messages(Client const* client);
 
+			void cmd_away(ClientMessage const& cmessage);
 			void cmd_join(ClientMessage const& cmessage);
 			void cmd_kick(ClientMessage const& cmessage);
 			void cmd_mode(ClientMessage const& cmessage);

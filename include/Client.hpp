@@ -27,9 +27,11 @@ namespace ft
 		bool get_registration_status(void) const;
 		Modes& get_modes_obj(void);
 		Modes const& get_modes_obj(void) const;
+		std::string const& get_away_reason(void) const;
 
 		bool is_global_operator(void) const;
 		bool is_invisible(void) const;
+		bool is_away(void) const;
 
 		void set_nickname(std::string const &nickname);
 		void set_username(std::string const &username);
@@ -39,6 +41,7 @@ namespace ft
 		void set_password_status(bool status);
 		void set_nickname_status(bool status);
 		void set_registration_status(bool status);
+		void set_away_reason(std::string const& reason);
 
 	private:
 		Client(Client const& x);
@@ -54,6 +57,7 @@ namespace ft
 		bool _nickname_status;
 		bool _registration_status;
 		Modes _modes;
+		std::string _away_reason;
 	};
 }
 

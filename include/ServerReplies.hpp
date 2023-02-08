@@ -36,6 +36,15 @@ namespace ft
 		// RPL_UMODEIS (221)
 		std::string rpl_umodeis(std::string const& client_name, std::string const& modes) const;
 
+		// RPL_AWAY (301)
+		std::string rpl_away(std::string const& client_name, std::string const& target_nick, std::string const& reason) const;
+
+		// RPL_UNAWAY (305)
+		std::string rpl_unaway(std::string const& client_name) const;
+
+		// RPL_NOWAWAY (306)
+		std::string rpl_nowaway(std::string const& client_name) const;
+
 		// RPL_WHOISUSER (311)
 		std::string rpl_whoisuser(const std::string &client, const std::string &nick,
 								  const std::string &username, const std::string &host,

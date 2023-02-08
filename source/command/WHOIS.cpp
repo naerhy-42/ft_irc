@@ -35,6 +35,9 @@ namespace ft
 			if (target->is_global_operator())
 				send_message_to_client(client, _replies.rpl_whoisoperator(client->get_nickname(),
 						target->get_nickname()));
+			if (target->is_away())
+				send_message_to_client(client, _replies.rpl_away(client->get_nickname(),
+						target->get_nickname(), target->get_away_reason()));
 			send_message_to_client(client, _replies.rpl_endofwhois(client->get_nickname(),
 					target->get_nickname()));
 		}

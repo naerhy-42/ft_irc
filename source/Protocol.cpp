@@ -10,9 +10,10 @@ namespace ft
 	std::string const Protocol::_IRC_ENDL = "\r\n";
 
 	Protocol::Protocol(Server &server, std::string const &hostname)
-		: _server(server), _replies(":" + hostname, _IRC_ENDL), _user_modes("io"),
+		: _server(server), _replies(":" + hostname, _IRC_ENDL), _user_modes("aio"),
 		_channel_modes("mt"), _user_chan_modes("ov")
 	{
+		_commands.insert(std::pair<std::string, fncts>("AWAY", &Protocol::cmd_away));
 		_commands.insert(std::pair<std::string, fncts>("DIE", &Protocol::cmd_die));
 		_commands.insert(std::pair<std::string, fncts>("JOIN", &Protocol::cmd_join));
 		_commands.insert(std::pair<std::string, fncts>("KICK", &Protocol::cmd_kick));

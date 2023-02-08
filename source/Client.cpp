@@ -34,9 +34,13 @@ namespace ft
 	Modes& Client::get_modes_obj(void) { return _modes; }
 	Modes const& Client::get_modes_obj(void) const { return _modes; }
 
+	std::string const& Client::get_away_reason(void) const { return _away_reason; }
+
 	bool Client::is_global_operator(void) const { return get_modes_obj().has_mode('o'); }
 
 	bool Client::is_invisible(void) const { return get_modes_obj().has_mode('i'); }
+
+	bool Client::is_away(void) const { return get_modes_obj().has_mode('a'); }
 
 	void Client::set_nickname(std::string const &nickname) { _nickname = nickname; }
 
@@ -53,4 +57,6 @@ namespace ft
 	void Client::set_nickname_status(bool status) { _nickname_status = status; }
 
 	void Client::set_registration_status(bool status) { _registration_status = status; }
+
+	void Client::set_away_reason(std::string const& reason) { _away_reason = reason; }
 }
