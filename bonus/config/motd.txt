@@ -1,0 +1,33 @@
+
+      ___    _                _                    
+    .' ..]  / |_             (_)                   
+   _| |_   `| |-'            __    _ .--.   .---.  
+  '-| |-'   | |             [  |  [ `/'`\] / /'`\] 
+    | |     | |,   _______   | |   | |     | \__.  
+   [___]    \__/  |_______| [___] [___]    '.___.' 
+                                                 
+
+  An IRC server in C++ 98
+  Made by qduarte and ddordain
+
+  Implemented commands:
+    - AWAY
+    - DIE [o]
+    - INVITE
+    - JOIN
+    - KICK [o]
+    - KILL [o]
+    - MODE
+    - MOTD
+    - NAMES
+    - NICK
+    - NOTICE
+    - OPER [o]
+    - PART
+    - PASS
+    - PING
+    - PRIVMSG
+    - QUIT
+    - TOPIC
+    - USER
+    - WHOIS
