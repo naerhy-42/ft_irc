@@ -289,8 +289,6 @@ namespace ft
 		{
 			pos = message.find(_IRC_ENDL);
 			line = message.substr(0, pos);
-			// debugging:
-			std::cout << "line = " << line << std::endl;
 			if (!line.empty())
 				lines.push_back(line);
 			message.erase(0, pos + 2);
