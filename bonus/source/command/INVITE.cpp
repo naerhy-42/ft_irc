@@ -16,6 +16,8 @@ namespace ft
 			send_message_to_client(client, _replies.err_needmoreparams(client->get_nickname(), "INVITE"));
 		else if (!is_channel_active(parameters[1]))
 			send_message_to_client(client, _replies.err_nosuchchannel(client->get_nickname(), parameters[1]));
+		else if (!is_client_active(parameters[0]))
+			send_message_to_client(client, _replies.err_nosuchnick(client->get_nickname(), parameters[0]));
 		else
 		{
 			Client* target = get_client_from_name(parameters[0]);
