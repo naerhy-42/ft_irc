@@ -312,7 +312,6 @@ namespace ft
 
 	void Protocol::send_message_to_client(Client const *client, std::string const &message)
 	{
-		// disconnect the user if send return -1 ?
 		if (send(client->get_socket(), message.c_str(), message.size(), 0) == -1)
 			std::cout << "Could not write to socket..." << std::endl;
 	}
