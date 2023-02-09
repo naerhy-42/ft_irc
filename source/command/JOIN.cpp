@@ -25,6 +25,8 @@ namespace ft
 			if (is_channel_active(channel_name))
 			{
 				Channel& channel = get_channel_from_name(channel_name);
+				if (channel.has_client(client))
+					return ;
 				channel.add_client(client);
 			}
 			else
