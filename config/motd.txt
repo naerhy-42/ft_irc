@@ -11,12 +11,17 @@
   Made by qduarte and ddordain
 
   Implemented commands:
+    - AWAY
     - DIE [o]
+    - INVITE
     - JOIN
     - KICK [o]
+    - KILL [o]
     - MODE
     - MOTD
+    - NAMES
     - NICK
+    - NOTICE
     - OPER [o]
     - PART
     - PASS
@@ -24,5 +29,5 @@
     - PRIVMSG
     - QUIT
     - TOPIC
-    - WHOIS
     - USER
+    - WHOIS
