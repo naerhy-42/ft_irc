@@ -17,7 +17,7 @@ namespace ft
 			send_message_to_client(client, _replies.err_noorigin(client->get_nickname()));
 		else
 		{
-			std::string pong_reply = "PONG " + parameters[0] + _IRC_ENDL;
+			std::string pong_reply = ":" + _server.get_hostname() + " PONG " + parameters[0] + _IRC_ENDL;
 
 			send_message_to_client(client, pong_reply);
 		}

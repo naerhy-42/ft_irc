@@ -29,6 +29,21 @@ namespace ft
 		}
 	}
 
+	ClientMessage::ClientMessage(ClientMessage const& x)
+			: _client(x._client), _command(x._command), _parameters(x._parameters), _remainder(x._remainder) {}
+
+	ClientMessage& ClientMessage::operator=(ClientMessage const& x)
+	{
+		if (this != &x)
+		{
+			_client = x._client;
+			_command = x._command;
+			_parameters = x._parameters;
+			_remainder = x._remainder;
+		}
+		return *this;
+	}
+
 	ClientMessage::~ClientMessage(void) {}
 
 	Client* ClientMessage::get_client(void) const { return _client; }

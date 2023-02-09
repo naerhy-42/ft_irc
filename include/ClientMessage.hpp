@@ -14,6 +14,8 @@ namespace ft
 	{
 		public:
 			ClientMessage(Client* client, std::string message);
+			ClientMessage(ClientMessage const& x);
+			ClientMessage& operator=(ClientMessage const& x);
 			~ClientMessage(void);
 
 			Client* get_client(void) const;
@@ -22,9 +24,6 @@ namespace ft
 			std::string const& get_remainder(void) const;
 
 		private:
-			ClientMessage(ClientMessage const& x);
-			ClientMessage& operator=(ClientMessage const& x);
-
 			Client* _client;
 			std::string _command;
 			std::vector<std::string> _parameters;
